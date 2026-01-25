@@ -2012,24 +2012,17 @@
               issue_reported_date: status === 'broken' || status === 'maintenance' ? new Date().toISOString() : null,
               is_archived: false
             }
-            if (!hasQuantity) {
-              submitEquipmentBtn.disabled = false;
-              submitEquipmentBtn.textContent = 'Add Equipment';
-              showToast('Please enter at least one size quantity', 'error');
-              return;
-            }
-
             const result = await window.dataSdk.create(newEquipment);
-            const quantity = parseInt(document.getElementById('equipmentQuantity').value);
-            if (!quantity || quantity < 1) {
-              submitEquipmentBtn.disabled = false;
-              submitEquipmentBtn.textContent = 'Add Equipment';
-              showToast('Please enter a valid quantity', 'error');
-              return;
-            }
+            if (!result.isOk) {
               console.error('Failed to add equipment:', result.error);
             }
           }
+        }
+        if (!hasQuantity) {
+          submitEquipmentBtn.disabled = false;
+          submitEquipmentBtn.textContent = 'Add Equipment';
+          showToast('Please enter at least one size quantity', 'error');
+          return;
         }
       } else {
         // Regular item
