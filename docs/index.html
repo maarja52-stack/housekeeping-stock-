@@ -1718,7 +1718,8 @@
       });
     });
 
-    backButton.addEventListener('click', function() {
+    if (backButton) {
+      backButton.addEventListener('click', function() {
       if (currentPage === 'expiration' || currentPage === 'stockcount') {
         navigateTo('minibar');
       } else if (currentPage === 'orders') {
@@ -1728,7 +1729,8 @@
       } else {
         navigateTo('main');
       }
-    });
+      });
+    }
 
     function navigateTo(page) {
       const mainTitle = document.getElementById('mainTitle');
@@ -2801,17 +2803,22 @@
     });
 
     // Backspace button
-    document.querySelector('.num-button[data-action="backspace"]').addEventListener('click', function() {
-      const str = currentStockValue.toString();
-      currentStockValue = str.length > 1 ? parseInt(str.slice(0, -1)) : 0;
-      displayNumber.textContent = currentStockValue;
-    });
+    const backspaceBtn = document.querySelector('.num-button[data-action="backspace"]');
+    if (backspaceBtn) {
+      backspaceBtn.addEventListener('click', function() {
+        const str = currentStockValue.toString();
+        currentStockValue = str.length > 1 ? parseInt(str.slice(0, -1)) : 0;
+        displayNumber.textContent = currentStockValue;
+      });
+    }
 
     // Display area click to clear
-    displayArea.addEventListener('click', function() {
-      currentStockValue = 0;
-      displayNumber.textContent = '0';
-    });
+    if (displayArea) {
+      displayArea.addEventListener('click', function() {
+        currentStockValue = 0;
+        displayNumber.textContent = '0';
+      });
+    }
 
     // Quick buttons
     document.querySelectorAll('.quick-btn').forEach(btn => {
