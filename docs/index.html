@@ -1679,6 +1679,8 @@
       font_family: "Segoe UI"
     };
 
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxF_-VOyrRNru7kVpaUoisZA29fQCdDQWN0JkExMnAEdbzrpLkob0N5RuHh-Dw0znwlqg/exec';
+
     const mainMenu = document.getElementById('mainMenu');
     const minibarMenu = document.getElementById('minibarMenu');
     const housekeepingMenu = document.getElementById('housekeepingMenu');
@@ -1809,9 +1811,60 @@
       };
     }
 
+    function createGoogleDataSdk(url, handler) {
+      async function request(action, payload) {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, payload })
+        });
+
+        if (!response.ok) {
+          return { isOk: false, error: `HTTP ${response.status}` };
+        }
+
+        const data = await response.json();
+        return { isOk: true, data };
+      }
+
+      return {
+        async init() {
+          const result = await request('read');
+          if (!result.isOk) return result;
+          handler.onDataChanged(result.data || []);
+          return { isOk: true };
+        },
+        async create(item) {
+          const result = await request('create', item);
+          if (result.isOk) {
+            await this.init();
+          }
+          return result;
+        },
+        async update(item) {
+          const result = await request('update', item);
+          if (result.isOk) {
+            await this.init();
+          }
+          return result;
+        },
+        async delete(item) {
+          const result = await request('delete', { id: item.id });
+          if (result.isOk) {
+            await this.init();
+          }
+          return result;
+        }
+      };
+    }
+
     async function initializeDataSDK() {
       if (!window.dataSdk) {
-        window.dataSdk = createLocalDataSdk(dataHandler);
+        if (GOOGLE_APPS_SCRIPT_URL) {
+          window.dataSdk = createGoogleDataSdk(GOOGLE_APPS_SCRIPT_URL, dataHandler);
+        } else {
+          window.dataSdk = createLocalDataSdk(dataHandler);
+        }
       }
       const result = await window.dataSdk.init(dataHandler);
       if (!result.isOk) {
