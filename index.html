@@ -1979,7 +1979,10 @@
       const location = document.getElementById('equipmentLocation').value;
       const notes = document.getElementById('equipmentNotes').value;
 
-      if (!itemName || !purchaseDate || !status) return;
+      if (!itemName || !purchaseDate || !status) {
+        showToast('Please fill all required fields', 'error');
+        return;
+      }
 
       submitEquipmentBtn.disabled = true;
       submitEquipmentBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
@@ -1987,9 +1990,11 @@
       if (itemName === 'T-shirts') {
         // Handle T-shirt sizes separately
         const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        let hasQuantity = false;
         for (const size of sizes) {
           const qty = parseInt(document.getElementById(`size${size}`).value) || 0;
           if (qty > 0) {
+            hasQuantity = true;
             const newEquipment = {
               id: Date.now().toString() + '-' + size,
               equipment_type: 'housekeeping',
@@ -2006,10 +2011,22 @@
               issue_description: status === 'broken' || status === 'maintenance' ? 'Initial status' : null,
               issue_reported_date: status === 'broken' || status === 'maintenance' ? new Date().toISOString() : null,
               is_archived: false
-            };
+            }
+            if (!hasQuantity) {
+              submitEquipmentBtn.disabled = false;
+              submitEquipmentBtn.textContent = 'Add Equipment';
+              showToast('Please enter at least one size quantity', 'error');
+              return;
+            }
 
             const result = await window.dataSdk.create(newEquipment);
-            if (!result.isOk) {
+            const quantity = parseInt(document.getElementById('equipmentQuantity').value);
+            if (!quantity || quantity < 1) {
+              submitEquipmentBtn.disabled = false;
+              submitEquipmentBtn.textContent = 'Add Equipment';
+              showToast('Please enter a valid quantity', 'error');
+              return;
+            }
               console.error('Failed to add equipment:', result.error);
             }
           }
@@ -2064,7 +2081,10 @@
       const location = document.getElementById('publicEquipmentLocation').value;
       const notes = document.getElementById('publicEquipmentNotes').value;
 
-      if (!itemName || !quantity || !purchaseDate || !status) return;
+      if (!itemName || !quantity || !purchaseDate || !status) {
+        showToast('Please fill all required fields', 'error');
+        return;
+      }
 
       submitPublicEquipmentBtn.disabled = true;
       submitPublicEquipmentBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
