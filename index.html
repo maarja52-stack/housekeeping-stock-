@@ -2425,6 +2425,22 @@
         closeModal();
         
         if (result.isOk) {
+          const today = new Date().toISOString().split('T')[0];
+          const notification = {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            type: 'broken',
+            item_name: equip.item_name,
+            source: 'Housekeeping Equipment',
+            location: location || equip.location || 'N/A',
+            description: description,
+            added_timestamp: new Date().toISOString(),
+            date_added: today,
+            is_archived: false
+          };
+          const notifResult = await window.dataSdk.create(notification);
+          if (!notifResult.isOk) {
+            console.error('Failed to create notification:', notifResult.error);
+          }
           showToast('Issue reported successfully', 'success');
         } else {
           showToast('Failed to report issue', 'error');
@@ -2472,6 +2488,22 @@
         closeModal();
         
         if (result.isOk) {
+          const today = new Date().toISOString().split('T')[0];
+          const notification = {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            type: 'broken',
+            item_name: equip.item_name,
+            source: 'Public Area Equipment',
+            location: location || equip.location || 'N/A',
+            description: description,
+            added_timestamp: new Date().toISOString(),
+            date_added: today,
+            is_archived: false
+          };
+          const notifResult = await window.dataSdk.create(notification);
+          if (!notifResult.isOk) {
+            console.error('Failed to create notification:', notifResult.error);
+          }
           showToast('Issue reported successfully', 'success');
         } else {
           showToast('Failed to report issue', 'error');
