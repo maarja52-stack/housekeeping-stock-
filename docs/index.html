@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Housekeeping Inventory &amp; Stock</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -3289,9 +3287,11 @@
       'other': 'Other Issue'
     };
 
-    addNotificationBtn.addEventListener('click', function() {
-      notificationFormContainer.classList.toggle('hidden');
-    });
+    if (addNotificationBtn) {
+      addNotificationBtn.addEventListener('click', function() {
+        notificationFormContainer.classList.toggle('hidden');
+      });
+    }
 
     cancelNotificationBtn.addEventListener('click', function() {
       notificationFormContainer.classList.add('hidden');
