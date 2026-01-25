@@ -576,6 +576,18 @@
       opacity: 1;
     }
 
+    .order-qty-badge {
+      display: inline-block;
+      margin-left: 0.35rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid rgba(220, 53, 69, 0.6);
+      color: #f5c2c7;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
     .notification-actions {
       display: flex;
       gap: 0.75rem;
@@ -3555,7 +3567,7 @@
       if (notif.type === 'low_stock') {
         bodyContent = `
           <div class="notification-detail"><strong>Current Stock:</strong> ${notif.total_stock} units</div>
-          <div class="notification-detail"><strong>Order Quantity:</strong> ${notif.order_quantity} units (to reach 40)</div>
+          <div class="notification-detail"><strong>Order Quantity:</strong> <span class="order-qty-badge">${notif.order_quantity} units</span> (to reach 40)</div>
           <div class="notification-detail"><strong>Breakdown:</strong> F1: ${notif.stock_f1} | F2: ${notif.stock_f2} | F3: ${notif.stock_f3} | Office: ${notif.stock_office}</div>
         `;
         actionButtons = `
