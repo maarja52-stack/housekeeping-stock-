@@ -84,6 +84,15 @@
       position: absolute;
       top: 10px;
       right: 10px;
+      .notification-section-title {
+        margin: 1rem 0 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #d4af37;
+        opacity: 0.9;
+      }
       background: #dc3545;
       color: white;
       border-radius: 50%;
@@ -3490,8 +3499,11 @@
       // Sort dates (most recent first)
       const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
 
-      container.innerHTML = sortedDates.map(date => {
+      container.innerHTML = sortedDates.map(date => {      
         const notifications = groupedByDate[date];
+        const issueTypes = ['broken', 'damaged', 'missing', 'stolen', 'other'];
+        const issueNotifications = notifications.filter(notif => issueTypes.includes(notif.type));
+        const otherNotifications = notifications.filter(notif => !issueTypes.includes(notif.type));
         const formattedDate = new Date(date).toLocaleDateString('en-US', {
           weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
@@ -3506,8 +3518,9 @@
               </div>
               <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteAll('${date}', ${notifications.length})">🗑️ Delete All</button>
             </div>
-            <div class="notifications-list" id="list-${date}">
-              ${notifications.map(notif => createNotificationCard(notif)).join('')}
+            <div class="notifications-list" id="list-${date}">                                                              
+              ${issueNotifications.length ? `<div class="notification-section-title">Reported Issues (${issueNotifications.length})</div>${issueNotifications.map(notif => createNotificationCard(notif)).join('')}` : ''}
+              ${otherNotifications.length ? `<div class="notification-section-title">Other Notifications (${otherNotifications.length})</div>${otherNotifications.map(notif => createNotificationCard(notif)).join('')}` : ''}
             </div>
           </div>
         `;
