@@ -567,6 +567,82 @@
       opacity: 1;
     }
 
+    .order-summary {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .order-summary-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #d4af37;
+      letter-spacing: 0.4px;
+    }
+
+    .order-summary-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .order-summary-btn {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .order-summary-btn:hover {
+      background: rgba(212, 175, 55, 0.3);
+    }
+
+    .order-summary-btn.primary {
+      background: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+
+    .order-summary-list {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .order-summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d4af37;
+      font-size: 1rem;
+    }
+
+    .order-summary-qty {
+      font-weight: 700;
+      color: #f5c2c7;
+    }
+
+    .order-summary-empty {
+      margin-top: 0.75rem;
+      color: #d4af37;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
     .order-qty-badge {
       display: inline-block;
       margin-left: 0.35rem;
@@ -1375,6 +1451,18 @@
     </div><!-- Order Management / Notification Center Page -->
     <div id="ordersPage" class="expiration-page hidden"> 
      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">Notification Center</h2>
+     <div class="order-summary" id="orderSummaryContainer">
+      <div class="order-summary-header">
+       <div class="order-summary-title">Order Summary</div>
+       <div class="order-summary-actions">
+      <button class="order-summary-btn" id="clearOrderSummaryBtn">Clear Summary</button>
+      <button class="order-summary-btn" id="rebuildOrderSummaryBtn">Rebuild Summary</button>
+      <button class="order-summary-btn primary" id="printOrderSummaryBtn">Print PDF</button>
+       </div>
+      </div>
+      <div class="order-summary-list" id="orderSummaryList"></div>
+      <div class="order-summary-empty" id="orderSummaryEmpty"></div>
+     </div>
      <div id="notificationFormContainer" class="form-container hidden">
       <form id="notificationForm">
        <div class="form-row">
@@ -3280,6 +3368,12 @@
     const notificationForm = document.getElementById('notificationForm');
     const cancelNotificationBtn = document.getElementById('cancelNotificationBtn');
     const submitNotificationBtn = document.getElementById('submitNotificationBtn');
+    const orderSummaryContainer = document.getElementById('orderSummaryContainer');
+    const orderSummaryList = document.getElementById('orderSummaryList');
+    const orderSummaryEmpty = document.getElementById('orderSummaryEmpty');
+    const clearOrderSummaryBtn = document.getElementById('clearOrderSummaryBtn');
+    const rebuildOrderSummaryBtn = document.getElementById('rebuildOrderSummaryBtn');
+    const printOrderSummaryBtn = document.getElementById('printOrderSummaryBtn');
     const notificationTypeSelect = document.getElementById('notificationType');
     const dynamicFormFields = document.getElementById('dynamicFormFields');
 
@@ -3304,6 +3398,96 @@
     if (addNotificationBtn) {
       addNotificationBtn.addEventListener('click', function() {
         notificationFormContainer.classList.toggle('hidden');
+      });
+    }
+
+    function getOrderSummaryItems() {
+      const summary = new Map();
+      allNotifications
+        .filter(notif => notif.type === 'low_stock')
+        .forEach(notif => {
+          const key = notif.item_name || 'Unknown Item';
+          const current = summary.get(key) || 0;
+          summary.set(key, current + (notif.order_quantity || 0));
+        });
+      return Array.from(summary.entries())
+        .map(([item, qty]) => ({ item, qty }))
+        .sort((a, b) => b.qty - a.qty);
+    }
+
+    function renderOrderSummary() {
+      if (!orderSummaryContainer || !orderSummaryList || !orderSummaryEmpty) return;
+      const isCleared = localStorage.getItem('orderSummaryCleared') === '1';
+      if (rebuildOrderSummaryBtn) {
+        rebuildOrderSummaryBtn.style.display = isCleared ? 'inline-block' : 'none';
+      }
+      if (isCleared) {
+        orderSummaryList.innerHTML = '';
+        orderSummaryEmpty.textContent = 'Summary cleared.';
+        return;
+      }
+
+      const items = getOrderSummaryItems();
+      if (items.length === 0) {
+        orderSummaryList.innerHTML = '';
+        orderSummaryEmpty.textContent = 'No low stock orders right now.';
+        return;
+      }
+
+      orderSummaryEmpty.textContent = '';
+      orderSummaryList.innerHTML = items
+        .map(item => `<div class="order-summary-item"><span>${item.item}</span><span class="order-summary-qty">${item.qty}</span></div>`)
+        .join('');
+    }
+
+    if (clearOrderSummaryBtn) {
+      clearOrderSummaryBtn.addEventListener('click', function() {
+        localStorage.setItem('orderSummaryCleared', '1');
+        renderOrderSummary();
+      });
+    }
+
+    if (rebuildOrderSummaryBtn) {
+      rebuildOrderSummaryBtn.addEventListener('click', function() {
+        localStorage.setItem('orderSummaryCleared', '0');
+        renderOrderSummary();
+      });
+    }
+
+    if (printOrderSummaryBtn) {
+      printOrderSummaryBtn.addEventListener('click', function() {
+        const items = getOrderSummaryItems();
+        if (items.length === 0) {
+          showToast('No items to print', 'error');
+          return;
+        }
+
+        const formattedDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        const htmlContent = `
+          <html>
+          <head>
+            <title>Order Summary - ${formattedDate}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 40px; }
+              h1 { color: #0d1b2a; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
+              .item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+              .qty { font-weight: bold; }
+            </style>
+          </head>
+          <body>
+            <h1>Order Summary - ${formattedDate}</h1>
+            ${items.map(item => `<div class="item"><span>${item.item}</span><span class="qty">${item.qty}</span></div>`).join('')}
+          </body>
+          </html>
+        `;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+        printWindow.print();
       });
     }
 
@@ -3543,6 +3727,8 @@
           }
         }
       });
+
+      renderOrderSummary();
     }
 
     function createNotificationCard(notif) {
