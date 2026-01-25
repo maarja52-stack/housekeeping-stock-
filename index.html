@@ -643,6 +643,11 @@
       font-size: 0.95rem;
     }
 
+    .order-summary.collapsed .order-summary-list,
+    .order-summary.collapsed .order-summary-empty {
+      display: none;
+    }
+
     .order-qty-badge {
       display: inline-block;
       margin-left: 0.35rem;
@@ -1455,6 +1460,7 @@
       <div class="order-summary-header">
        <div class="order-summary-title">Order Summary</div>
        <div class="order-summary-actions">
+        <button class="order-summary-btn" id="toggleOrderSummaryBtn">Collapse</button>
       <button class="order-summary-btn" id="clearOrderSummaryBtn">Clear Summary</button>
       <button class="order-summary-btn" id="rebuildOrderSummaryBtn">Rebuild Summary</button>
       <button class="order-summary-btn primary" id="printOrderSummaryBtn">Print PDF</button>
@@ -3371,6 +3377,7 @@
     const orderSummaryContainer = document.getElementById('orderSummaryContainer');
     const orderSummaryList = document.getElementById('orderSummaryList');
     const orderSummaryEmpty = document.getElementById('orderSummaryEmpty');
+    const toggleOrderSummaryBtn = document.getElementById('toggleOrderSummaryBtn');
     const clearOrderSummaryBtn = document.getElementById('clearOrderSummaryBtn');
     const rebuildOrderSummaryBtn = document.getElementById('rebuildOrderSummaryBtn');
     const printOrderSummaryBtn = document.getElementById('printOrderSummaryBtn');
@@ -3418,6 +3425,11 @@
     function renderOrderSummary() {
       if (!orderSummaryContainer || !orderSummaryList || !orderSummaryEmpty) return;
       const isCleared = localStorage.getItem('orderSummaryCleared') === '1';
+      const isCollapsed = localStorage.getItem('orderSummaryCollapsed') === '1';
+      if (toggleOrderSummaryBtn) {
+        toggleOrderSummaryBtn.textContent = isCollapsed ? 'Expand' : 'Collapse';
+      }
+      orderSummaryContainer.classList.toggle('collapsed', isCollapsed);
       if (rebuildOrderSummaryBtn) {
         rebuildOrderSummaryBtn.style.display = isCleared ? 'inline-block' : 'none';
       }
@@ -3438,6 +3450,14 @@
       orderSummaryList.innerHTML = items
         .map(item => `<div class="order-summary-item"><span>${item.item}</span><span class="order-summary-qty">${item.qty}</span></div>`)
         .join('');
+    }
+
+    if (toggleOrderSummaryBtn) {
+      toggleOrderSummaryBtn.addEventListener('click', function() {
+        const isCollapsed = localStorage.getItem('orderSummaryCollapsed') === '1';
+        localStorage.setItem('orderSummaryCollapsed', isCollapsed ? '0' : '1');
+        renderOrderSummary();
+      });
     }
 
     if (clearOrderSummaryBtn) {
