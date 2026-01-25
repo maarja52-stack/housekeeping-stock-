@@ -1635,12 +1635,72 @@
       }
     };
 
-    async function initializeDataSDK() {
-      if (window.dataSdk) {
-        const result = await window.dataSdk.init(dataHandler);
-        if (!result.isOk) {
-          console.error("Failed to initialize Data SDK:", result.error);
+    function createLocalDataSdk(handler) {
+      const storageKey = 'housekeeping-data';
+      let data = [];
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(storageKey);
+          const parsed = raw ? JSON.parse(raw) : [];
+          data = Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+          console.error('Failed to load local data:', err);
+          data = [];
         }
+      }
+
+      function persist() {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(data));
+        } catch (err) {
+          console.error('Failed to save local data:', err);
+        }
+      }
+
+      function emit() {
+        handler.onDataChanged([...data]);
+      }
+
+      return {
+        async init() {
+          load();
+          emit();
+          return { isOk: true };
+        },
+        async create(item) {
+          data.push(item);
+          persist();
+          emit();
+          return { isOk: true };
+        },
+        async update(item) {
+          const idx = data.findIndex(existing => existing.id === item.id);
+          if (idx >= 0) {
+            data[idx] = item;
+          } else {
+            data.push(item);
+          }
+          persist();
+          emit();
+          return { isOk: true };
+        },
+        async delete(item) {
+          data = data.filter(existing => existing.id !== item.id);
+          persist();
+          emit();
+          return { isOk: true };
+        }
+      };
+    }
+
+    async function initializeDataSDK() {
+      if (!window.dataSdk) {
+        window.dataSdk = createLocalDataSdk(dataHandler);
+      }
+      const result = await window.dataSdk.init(dataHandler);
+      if (!result.isOk) {
+        console.error("Failed to initialize Data SDK:", result.error);
       }
     }
 
