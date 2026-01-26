@@ -1531,11 +1531,18 @@
       }
 
       .date-banner-left {
-        flex-wrap: wrap !important;
+        display: block !important;
         width: 100%;
-        gap: 0.5rem;
-        flex-direction: column !important;
-        align-items: flex-start !important;
+      }
+
+      .date-banner-left > * {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.35rem;
+      }
+
+      .date-banner-left > *:last-child {
+        margin-bottom: 0;
       }
 
       .date-title {
