@@ -1999,12 +1999,12 @@
       let cachedData = [];
       let refreshTimer = null;
 
-      function scheduleRefresh() {
+      function scheduleRefresh(delay = 3000) {
         if (refreshTimer) clearTimeout(refreshTimer);
         refreshTimer = setTimeout(() => {
           refreshTimer = null;
           api.init();
-        }, 3000);
+        }, delay);
       }
       function compactPayload(payload) {
         if (!payload || typeof payload !== 'object') return payload;
@@ -2127,12 +2127,13 @@
         async create(item) {
           cachedData = [...cachedData, item];
           handler.onDataChanged(cachedData);
-          scheduleRefresh();
           jsonpRequest('create', item).then(result => {
             if (!result.isOk) {
               showToast('Save failed. Sync will retry.', 'error');
-              api.init();
+              scheduleRefresh(12000);
+              return;
             }
+            scheduleRefresh(6000);
           });
           return { isOk: true, optimistic: true };
         },
@@ -2142,24 +2143,26 @@
           );
           cachedData = next;
           handler.onDataChanged(cachedData);
-          scheduleRefresh();
           jsonpRequest('update', item).then(result => {
             if (!result.isOk) {
               showToast('Update failed. Sync will retry.', 'error');
-              api.init();
+              scheduleRefresh(12000);
+              return;
             }
+            scheduleRefresh(6000);
           });
           return { isOk: true, optimistic: true };
         },
         async delete(item) {
           cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
           handler.onDataChanged(cachedData);
-          scheduleRefresh();
           jsonpRequest('delete', { id: item.id }).then(result => {
             if (!result.isOk) {
               showToast('Delete failed. Sync will retry.', 'error');
-              api.init();
+              scheduleRefresh(12000);
+              return;
             }
+            scheduleRefresh(6000);
           });
           return { isOk: true, optimistic: true };
         }
