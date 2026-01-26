@@ -1531,14 +1531,17 @@
       }
 
       .date-banner {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: column !important;
+        align-items: flex-start !important;
         gap: 0.75rem;
         padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .date-banner-left {
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
+        width: 100%;
         gap: 0.5rem;
       }
 
@@ -1553,13 +1556,16 @@
       }
 
       .date-banner .btn-delete-all {
-        width: 100%;
+        width: 100% !important;
         align-self: stretch;
       }
 
       .date-banner-actions {
-        width: 100%;
+        width: 100% !important;
         justify-content: flex-start;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
       }
     }
   </style>
