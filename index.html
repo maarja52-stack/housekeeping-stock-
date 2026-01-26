@@ -1820,17 +1820,24 @@
           const compacted = compactPayload(payload);
           const payloadParam = compacted ? `&payload=${encodeURIComponent(JSON.stringify(compacted))}` : '';
           const script = document.createElement('script');
+          const timeoutId = setTimeout(() => {
+            delete window[callbackName];
+            script.remove();
+            resolve({ isOk: false, error: 'JSONP request timed out' });
+          }, 8000);
 
           window[callbackName] = (data) => {
+            clearTimeout(timeoutId);
             delete window[callbackName];
             script.remove();
             resolve({ isOk: true, data });
           };
 
           script.onerror = () => {
+            clearTimeout(timeoutId);
             delete window[callbackName];
             script.remove();
-            reject(new Error('JSONP request failed'));
+            resolve({ isOk: false, error: 'JSONP request failed' });
           };
 
           script.src = `${url}?action=${action}${payloadParam}&callback=${callbackName}&ts=${Date.now()}`;
