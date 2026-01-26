@@ -1838,9 +1838,9 @@
         </div>
         <div class="form-group"><label class="form-label" for="expirationDate">Expiration Date *</label> <input type="date" class="form-input" id="expirationDate" required>
         </div>
-        <div class="form-group"><label class="form-label" for="location">Location *</label> <input type="text" class="form-input" id="location" placeholder="e.g., Room 305" required>
+        <div class="form-group"><label class="form-label" for="location">Location *</label> <input type="text" class="form-input" id="location" placeholder="e.g., Room 305" inputmode="numeric" pattern="[0-9]*" required>
         </div>
-        <div class="form-group"><label class="form-label" for="quantity">Quantity</label> <input type="number" class="form-input" id="quantity" placeholder="Optional" min="1">
+        <div class="form-group"><label class="form-label" for="quantity">Quantity</label> <input type="number" class="form-input" id="quantity" placeholder="Optional" min="1" inputmode="numeric" pattern="[0-9]*">
         </div>
        </div>
        <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitBtn">Add Item</button>
