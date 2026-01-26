@@ -1803,44 +1803,52 @@
     }
 
     function createGoogleDataSdk(url, handler) {
-      async function request(action, payload) {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action, payload })
+      function jsonpRequest(action, payload) {
+        return new Promise((resolve, reject) => {
+          const callbackName = `__gsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+          const payloadParam = payload ? `&payload=${encodeURIComponent(JSON.stringify(payload))}` : '';
+          const script = document.createElement('script');
+
+          window[callbackName] = (data) => {
+            delete window[callbackName];
+            script.remove();
+            resolve({ isOk: true, data });
+          };
+
+          script.onerror = () => {
+            delete window[callbackName];
+            script.remove();
+            reject(new Error('JSONP request failed'));
+          };
+
+          script.src = `${url}?action=${action}${payloadParam}&callback=${callbackName}&ts=${Date.now()}`;
+          document.body.appendChild(script);
         });
-
-        if (!response.ok) {
-          return { isOk: false, error: `HTTP ${response.status}` };
-        }
-
-        const data = await response.json();
-        return { isOk: true, data };
       }
 
       return {
         async init() {
-          const result = await request('read');
+          const result = await jsonpRequest('read');
           if (!result.isOk) return result;
           handler.onDataChanged(result.data || []);
           return { isOk: true };
         },
         async create(item) {
-          const result = await request('create', item);
+          const result = await jsonpRequest('create', item);
           if (result.isOk) {
             await this.init();
           }
           return result;
         },
         async update(item) {
-          const result = await request('update', item);
+          const result = await jsonpRequest('update', item);
           if (result.isOk) {
             await this.init();
           }
           return result;
         },
         async delete(item) {
-          const result = await request('delete', { id: item.id });
+          const result = await jsonpRequest('delete', { id: item.id });
           if (result.isOk) {
             await this.init();
           }
