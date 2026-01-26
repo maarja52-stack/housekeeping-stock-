@@ -1864,6 +1864,12 @@
     };
 
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsojKnOgsgaKguFQFG7tA9nPijTmCyCWFqU0lu7bJCYfkunqduV4_meJiZOricnjr6/exec';
+    function getLocalDateString(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
 
     const mainMenu = document.getElementById('mainMenu');
     const minibarMenu = document.getElementById('minibarMenu');
@@ -2921,7 +2927,7 @@
         closeModal();
         
         if (result.isOk) {
-          const today = new Date().toISOString().split('T')[0];
+          const today = getLocalDateString();
           const notification = {
             id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
             type: 'broken',
@@ -2984,7 +2990,7 @@
         closeModal();
         
         if (result.isOk) {
-          const today = new Date().toISOString().split('T')[0];
+          const today = getLocalDateString();
           const notification = {
             id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
             type: 'broken',
@@ -3319,7 +3325,7 @@
       saveStockBtn.disabled = true;
       saveStockBtn.innerHTML = '<span class="loading-spinner"></span>Saving...';
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
 
       // Check if we need to auto-archive old stock counts
       const todayStockCounts = allStockCounts.filter(item => item.date_added === today);
@@ -3435,7 +3441,7 @@
     }
 
     function updateStockProgress() {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       const todayCount = allStockCounts.filter(sc => sc.date_added === today).length;
       
       // Calculate total unique items that need counting (20 items across 4 floors = 80 max)
@@ -3449,7 +3455,7 @@
 
     function updateTodayStockBanner() {
       const bannerContainer = document.getElementById('todayStockCountBanner');
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       const todayCounts = allStockCounts.filter(sc => sc.date_added === today);
 
       if (todayCounts.length === 0) {
@@ -3547,7 +3553,7 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       
       // Check if we need to auto-archive - compare dates of existing items
       const hasOldItems = allItems.some(item => item.date_added !== today);
@@ -3995,7 +4001,7 @@
       submitNotificationBtn.disabled = true;
       submitNotificationBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       const itemName = document.getElementById('notifItemName').value;
 
       let newNotification = {
