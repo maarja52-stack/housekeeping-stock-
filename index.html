@@ -1803,10 +1803,22 @@
     }
 
     function createGoogleDataSdk(url, handler) {
+      function compactPayload(payload) {
+        if (!payload || typeof payload !== 'object') return payload;
+        const compacted = {};
+        Object.keys(payload).forEach(key => {
+          const value = payload[key];
+          if (value === null || value === undefined || value === '') return;
+          compacted[key] = value;
+        });
+        return compacted;
+      }
+
       function jsonpRequest(action, payload) {
         return new Promise((resolve, reject) => {
           const callbackName = `__gsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-          const payloadParam = payload ? `&payload=${encodeURIComponent(JSON.stringify(payload))}` : '';
+          const compacted = compactPayload(payload);
+          const payloadParam = compacted ? `&payload=${encodeURIComponent(JSON.stringify(compacted))}` : '';
           const script = document.createElement('script');
 
           window[callbackName] = (data) => {
