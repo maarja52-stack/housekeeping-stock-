@@ -1932,34 +1932,43 @@
           return { isOk: true };
         },
         async create(item) {
-          const result = await jsonpRequest('create', item);
-          if (result.isOk) {
-            cachedData = [...cachedData, item];
-            handler.onDataChanged(cachedData);
-            scheduleRefresh();
-          }
-          return result;
+          cachedData = [...cachedData, item];
+          handler.onDataChanged(cachedData);
+          scheduleRefresh();
+          jsonpRequest('create', item).then(result => {
+            if (!result.isOk) {
+              showToast('Save failed. Sync will retry.', 'error');
+              api.init();
+            }
+          });
+          return { isOk: true, optimistic: true };
         },
         async update(item) {
-          const result = await jsonpRequest('update', item);
-          if (result.isOk) {
-            const next = cachedData.map(existing =>
-              String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
-            );
-            cachedData = next;
-            handler.onDataChanged(cachedData);
-            scheduleRefresh();
-          }
-          return result;
+          const next = cachedData.map(existing =>
+            String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
+          );
+          cachedData = next;
+          handler.onDataChanged(cachedData);
+          scheduleRefresh();
+          jsonpRequest('update', item).then(result => {
+            if (!result.isOk) {
+              showToast('Update failed. Sync will retry.', 'error');
+              api.init();
+            }
+          });
+          return { isOk: true, optimistic: true };
         },
         async delete(item) {
-          const result = await jsonpRequest('delete', { id: item.id });
-          if (result.isOk) {
-            cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
-            handler.onDataChanged(cachedData);
-            scheduleRefresh();
-          }
-          return result;
+          cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
+          handler.onDataChanged(cachedData);
+          scheduleRefresh();
+          jsonpRequest('delete', { id: item.id }).then(result => {
+            if (!result.isOk) {
+              showToast('Delete failed. Sync will retry.', 'error');
+              api.init();
+            }
+          });
+          return { isOk: true, optimistic: true };
         }
       };
 
