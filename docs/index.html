@@ -1922,15 +1922,27 @@
     // Initialize Data SDK
     const dataHandler = {
       onDataChanged(data) {
+        const normalizeArchived = (value) => {
+          if (value === true || value === false) return value;
+          if (value === null || value === undefined || value === '') return false;
+          const normalized = String(value).toLowerCase().trim();
+          return normalized === 'true' || normalized === 'yes' || normalized === '1';
+        };
+
+        const normalizedData = data.map(item => ({
+          ...item,
+          is_archived: normalizeArchived(item.is_archived)
+        }));
+
         // Separate different types of data
-        allItems = data.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.is_archived);
-        allNotifications = data.filter(item => item.type && !item.is_archived);
-        allStockCounts = data.filter(item => item.stock_type && !item.is_archived);
-        allEquipment = data.filter(item => item.equipment_type === 'housekeeping' && !item.is_archived);
-        allPublicEquipment = data.filter(item => item.equipment_type === 'public_area' && !item.is_archived);
-        archivedItems = data.filter(item => !item.type && !item.stock_type && !item.equipment_type && item.is_archived);
-        archivedNotifications = data.filter(item => item.type && item.is_archived);
-        archivedStockCounts = data.filter(item => item.stock_type && item.is_archived);
+        allItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.is_archived);
+        allNotifications = normalizedData.filter(item => item.type && !item.is_archived);
+        allStockCounts = normalizedData.filter(item => item.stock_type && !item.is_archived);
+        allEquipment = normalizedData.filter(item => item.equipment_type === 'housekeeping' && !item.is_archived);
+        allPublicEquipment = normalizedData.filter(item => item.equipment_type === 'public_area' && !item.is_archived);
+        archivedItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && item.is_archived);
+        archivedNotifications = normalizedData.filter(item => item.type && item.is_archived);
+        archivedStockCounts = normalizedData.filter(item => item.stock_type && item.is_archived);
         
         updateExpirationDisplay();
         updateNotificationsDisplay();
