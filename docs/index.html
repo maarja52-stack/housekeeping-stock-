@@ -1332,6 +1332,12 @@
         padding: 1.5rem 1rem;
       }
 
+      .stock-counter-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+        margin-bottom: 1rem !important;
+      }
+
       .dropdown-group {
         margin-bottom: 1rem;
       }
@@ -1540,7 +1546,7 @@
        Progress: 0/0 items entered ✓
       </div>
       <div class="counter-panel">
-       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+       <div class="stock-counter-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
         <div class="dropdown-group" style="margin-bottom: 0;"><label class="form-label">Floor *</label> <select class="form-select" id="floorSelect"> <option value="">Select floor...</option> <option value="F1">F1 - Floor 1</option> <option value="F2">F2 - Floor 2</option> <option value="F3">F3 - Floor 3</option> <option value="Office">Office</option> </select>
         </div>
         <div class="dropdown-group" style="margin-bottom: 0;"><label class="form-label">Item *</label> <select class="form-select" id="stockItemSelect"> <option value="">Select an item...</option> <optgroup label="🥨 Snacks"> <option value="Fudge">Fudge</option> <option value="Cheese Nibbles">Cheese Nibbles</option> <option value="Chips">Chips</option> <option value="Almonds">Almonds</option> <option value="Chocolate Peanuts">Chocolate Peanuts</option> </optgroup> <optgroup label="🥤 Soft Drinks"> <option value="Sparkling Water">Sparkling Water</option> <option value="Coca-Cola">Coca-Cola</option> <option value="Coca-Cola Zero">Coca-Cola Zero</option> <option value="Tonic">Tonic</option> <option value="Apple Juice">Apple Juice</option> <option value="Ginger Ale">Ginger Ale</option> <option value="Lemonade">Lemonade</option> </optgroup> <optgroup label="🍺 Alcohol"> <option value="Heineken">Heineken</option> <option value="Red Wine">Red Wine</option> <option value="White Wine">White Wine</option> <option value="Vodka">Vodka</option> <option value="Gin">Gin</option> <option value="Rum">Rum</option> <option value="Jack Daniels">Jack Daniels</option> <option value="Johnnie Walker">Johnnie Walker</option> </optgroup> </select>
