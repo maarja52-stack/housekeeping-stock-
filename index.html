@@ -1814,10 +1814,78 @@
         return compacted;
       }
 
+      function selectPayload(payload) {
+        if (!payload || typeof payload !== 'object') return payload;
+        if (payload.type) {
+          return {
+            id: payload.id,
+            type: payload.type,
+            item_name: payload.item_name,
+            source: payload.source,
+            location: payload.location,
+            description: payload.description,
+            added_timestamp: payload.added_timestamp,
+            date_added: payload.date_added,
+            is_archived: payload.is_archived,
+            stock_f1: payload.stock_f1,
+            stock_f2: payload.stock_f2,
+            stock_f3: payload.stock_f3,
+            stock_office: payload.stock_office,
+            total_stock: payload.total_stock,
+            order_quantity: payload.order_quantity
+          };
+        }
+
+        if (payload.stock_type) {
+          return {
+            id: payload.id,
+            stock_type: payload.stock_type,
+            item_name: payload.item_name,
+            floor: payload.floor,
+            quantity: payload.quantity,
+            added_timestamp: payload.added_timestamp,
+            date_added: payload.date_added,
+            is_archived: payload.is_archived
+          };
+        }
+
+        if (payload.equipment_type) {
+          return {
+            id: payload.id,
+            equipment_type: payload.equipment_type,
+            item_name: payload.item_name,
+            base_item: payload.base_item,
+            size: payload.size,
+            category: payload.category,
+            quantity: payload.quantity,
+            purchase_date: payload.purchase_date,
+            status: payload.status,
+            location: payload.location,
+            notes: payload.notes,
+            added_timestamp: payload.added_timestamp,
+            issue_description: payload.issue_description,
+            issue_reported_date: payload.issue_reported_date,
+            is_archived: payload.is_archived
+          };
+        }
+
+        return {
+          id: payload.id,
+          item_name: payload.item_name,
+          expiration_date: payload.expiration_date,
+          location: payload.location,
+          quantity: payload.quantity,
+          notes: payload.notes,
+          added_timestamp: payload.added_timestamp,
+          date_added: payload.date_added,
+          is_archived: payload.is_archived
+        };
+      }
+
       function jsonpRequest(action, payload) {
         return new Promise((resolve, reject) => {
           const callbackName = `__gsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-          const compacted = compactPayload(payload);
+          const compacted = compactPayload(selectPayload(payload));
           const payloadParam = compacted ? `&payload=${encodeURIComponent(JSON.stringify(compacted))}` : '';
           const script = document.createElement('script');
           const timeoutId = setTimeout(() => {
