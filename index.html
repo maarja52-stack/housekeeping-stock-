@@ -129,6 +129,79 @@
       display: none;
     }
 
+    .pin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 20, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 2rem;
+    }
+
+    .pin-panel {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(13, 27, 42, 0.95);
+      border: 2px solid #d4af37;
+      border-radius: 18px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .pin-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+    }
+
+    .pin-subtitle {
+      color: #d4af37;
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .pin-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid #d4af37;
+      border-radius: 10px;
+      padding: 0.85rem;
+      text-align: center;
+      font-size: 1.3rem;
+      letter-spacing: 0.4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .pin-error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      min-height: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .pin-button {
+      width: 100%;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pin-button:hover {
+      background: #218838;
+    }
+
     .expiration-page {
       max-width: 1200px;
       margin: 0 auto;
@@ -1580,6 +1653,15 @@
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full">
+  <div class="pin-overlay hidden" id="pinOverlay">
+   <div class="pin-panel">
+    <div class="pin-title">Enter PIN</div>
+    <div class="pin-subtitle">Access to Housekeeping Inventory</div>
+    <input class="pin-input" id="pinInput" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••" autocomplete="off">
+    <div class="pin-error" id="pinError"></div>
+    <button class="pin-button" id="pinSubmit">Unlock</button>
+   </div>
+  </div>
   <div class="main-wrapper">
    <div style="padding: 2rem 2rem 3rem 2rem;"><button class="back-button hidden" id="backButton">← Back</button>
     <h1 class="main-title" id="mainTitle">Housekeeping Inventory &amp; Stock</h1><!-- Main Menu -->
@@ -1862,6 +1944,7 @@
     };
 
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsojKnOgsgaKguFQFG7tA9nPijTmCyCWFqU0lu7bJCYfkunqduV4_meJiZOricnjr6/exec';
+    const APP_PIN = '1012';
     function getLocalDateString(date = new Date()) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1870,6 +1953,10 @@
     }
 
     const mainMenu = document.getElementById('mainMenu');
+    const pinOverlay = document.getElementById('pinOverlay');
+    const pinInput = document.getElementById('pinInput');
+    const pinSubmit = document.getElementById('pinSubmit');
+    const pinError = document.getElementById('pinError');
     const minibarMenu = document.getElementById('minibarMenu');
     const housekeepingMenu = document.getElementById('housekeepingMenu');
     const archivePage = document.getElementById('archivePage');
@@ -1881,6 +1968,7 @@
     const backButton = document.getElementById('backButton');
 
     let currentPage = 'main';
+    let isUnlocked = localStorage.getItem('app_unlocked') === 'true';
     let allItems = [];
     let allNotifications = [];
     let allStockCounts = [];
@@ -2219,9 +2307,42 @@
       }
     }
 
+    function showPinLock() {
+      if (!pinOverlay) return;
+      pinOverlay.classList.remove('hidden');
+      if (pinInput) {
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    }
+
+    function hidePinLock() {
+      if (!pinOverlay) return;
+      pinOverlay.classList.add('hidden');
+    }
+
+    function tryUnlock() {
+      if (!pinInput) return;
+      const value = pinInput.value.trim();
+      if (value === APP_PIN) {
+        isUnlocked = true;
+        localStorage.setItem('app_unlocked', 'true');
+        if (pinError) pinError.textContent = '';
+        hidePinLock();
+      } else {
+        if (pinError) pinError.textContent = 'Incorrect PIN. Try again.';
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    }
+
     // Navigation handler
     document.querySelectorAll('.premium-card[data-page]').forEach(card => {
       card.addEventListener('click', function() {
+        if (!isUnlocked) {
+          showPinLock();
+          return;
+        }
         const page = this.getAttribute('data-page');
         navigateTo(page);
       });
@@ -2230,10 +2351,31 @@
     // Add click handler for subpages
     document.querySelectorAll('.premium-card[data-subpage]').forEach(card => {
       card.addEventListener('click', function() {
+        if (!isUnlocked) {
+          showPinLock();
+          return;
+        }
         const subpage = this.getAttribute('data-subpage');
         navigateTo(subpage);
       });
     });
+
+    if (pinSubmit) {
+      pinSubmit.addEventListener('click', tryUnlock);
+    }
+
+    if (pinInput) {
+      pinInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          tryUnlock();
+        }
+      });
+    }
+
+    if (!isUnlocked) {
+      showPinLock();
+    }
 
     if (backButton) {
       backButton.addEventListener('click', function() {
