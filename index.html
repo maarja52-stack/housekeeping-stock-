@@ -1613,12 +1613,26 @@
       .date-banner-left {
         display: block !important;
         width: 100%;
+        position: relative;
+        padding-left: 1.6rem;
       }
 
       .date-banner-left > * {
         display: block;
         width: 100%;
         margin-bottom: 0.35rem;
+      }
+
+      .date-banner-left > .expand-arrow {
+        position: absolute;
+        left: 0;
+        top: 0.1rem;
+        width: auto;
+        margin-bottom: 0;
+      }
+
+      .date-banner-left > *:not(.expand-arrow) {
+        padding-left: 0;
       }
 
       .date-banner-left > *:last-child {
