@@ -2274,33 +2274,25 @@
           return { isOk: true, optimistic: true };
         },
         async update(item) {
-          const next = cachedData.map(existing =>
-            String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
-          );
-          cachedData = next;
-          handler.onDataChanged(cachedData);
-          jsonpRequest('update', item).then(result => {
-            if (!result.isOk) {
-              showToast('Update failed. Sync will retry.', 'error');
-              scheduleRefresh(12000);
-              return;
-            }
+          const result = await jsonpRequest('update', item);
+          if (result.isOk) {
+            const next = cachedData.map(existing =>
+              String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
+            );
+            cachedData = next;
+            handler.onDataChanged(cachedData);
             scheduleRefresh(6000);
-          });
-          return { isOk: true, optimistic: true };
+          }
+          return result;
         },
         async delete(item) {
-          cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
-          handler.onDataChanged(cachedData);
-          jsonpRequest('delete', { id: item.id }).then(result => {
-            if (!result.isOk) {
-              showToast('Delete failed. Sync will retry.', 'error');
-              scheduleRefresh(12000);
-              return;
-            }
+          const result = await jsonpRequest('delete', { id: item.id });
+          if (result.isOk) {
+            cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
+            handler.onDataChanged(cachedData);
             scheduleRefresh(6000);
-          });
-          return { isOk: true, optimistic: true };
+          }
+          return result;
         }
       };
 
