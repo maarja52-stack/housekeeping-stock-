@@ -3660,6 +3660,11 @@
               <span class="date-title">${formattedDate}</span>
               <span class="item-count-badge">${todayCounts.length} entries</span>
             </div>
+            <div class="date-banner-actions">
+              <button class="btn-save-pdf" onclick="event.stopPropagation(); saveActiveStockCountPDF('${today}')">📥 Save PDF</button>
+              <button class="btn-archive" onclick="event.stopPropagation(); confirmArchiveStockGroup('${today}', ${todayCounts.length})">📁 Archive All</button>
+              <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteStockGroup('${today}', ${todayCounts.length})">🗑️ Delete All</button>
+            </div>
           </div>
           <div class="notifications-list" id="list-stock-today">
             ${todayCounts.map(count => createStockCountCard(count)).join('')}
@@ -3840,7 +3845,11 @@
                   <span class="item-count-badge">${items.length} items</span>
                   <span class="item-count-badge">Total Qty: ${totalQty}</span>
                 </div>
-                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteExpirationGroup('${date}', ${items.length})">🗑️ Delete All</button>
+                <div class="date-banner-actions">
+                  <button class="btn-save-pdf" onclick="event.stopPropagation(); saveActiveExpirationPDF('${date}')">📥 Save PDF</button>
+                  <button class="btn-archive" onclick="event.stopPropagation(); confirmArchiveExpirationGroup('${date}', ${items.length})">📁 Archive All</button>
+                  <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteExpirationGroup('${date}', ${items.length})">🗑️ Delete All</button>
+                </div>
               </div>
               <div class="notifications-list" id="list-expiration-${date}">
                 ${items.map(item => createItemCard(item)).join('')}
@@ -4283,7 +4292,11 @@
                 <span class="date-title">${formattedDate}</span>
                 <span class="item-count-badge">${notifications.length} items</span>
               </div>
-              <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteAll('${date}', ${notifications.length})">🗑️ Delete All</button>
+              <div class="date-banner-actions">
+                <button class="btn-save-pdf" onclick="event.stopPropagation(); saveActiveNotificationsPDF('${date}')">📥 Save PDF</button>
+                <button class="btn-archive" onclick="event.stopPropagation(); confirmArchiveNotificationsGroup('${date}', ${notifications.length})">📁 Archive All</button>
+                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteAll('${date}', ${notifications.length})">🗑️ Delete All</button>
+              </div>
             </div>
             <div class="notifications-list" id="list-${date}">                                                              
               ${issueNotifications.length ? `<div class="notification-section-title">Reported Issues (${issueNotifications.length})</div>${issueNotifications.map(notif => createNotificationCard(notif)).join('')}` : ''}
@@ -4404,6 +4417,63 @@
       list.classList.toggle('expanded');
     }
 
+    window.confirmDeleteStockGroup = function(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Confirm Delete All</div>
+          <div class="modal-text">Delete all ${count} stock counts from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="deleteStockGroup('${date}')">Delete All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.deleteStockGroup = async function(date) {
+      const itemsToDelete = allStockCounts.filter(sc => sc.date_added === date);
+      for (const item of itemsToDelete) {
+        await window.dataSdk.delete(item);
+      }
+      closeModal();
+      showToast(`All stock counts from ${date} deleted`, 'success');
+    };
+
+    window.confirmArchiveStockGroup = function(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Archive All</div>
+          <div class="modal-text">Archive all ${count} stock counts from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="archiveStockGroup('${date}')">Archive All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.archiveStockGroup = async function(date) {
+      const itemsToArchive = allStockCounts.filter(sc => sc.date_added === date);
+      for (const item of itemsToArchive) {
+        await window.dataSdk.update({ ...item, is_archived: true });
+      }
+      closeModal();
+      showToast(`All stock counts from ${date} archived`, 'success');
+    };
+
     function confirmDeleteAll(date, count) {
       const formattedDate = new Date(date).toLocaleDateString('en-US', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -4438,6 +4508,34 @@
 
       closeModal();
       showToast(`All notifications from ${date} deleted`, 'success');
+    };
+
+    window.confirmArchiveNotificationsGroup = function(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Archive All</div>
+          <div class="modal-text">Archive all ${count} notifications from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="archiveNotificationsGroup('${date}')">Archive All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.archiveNotificationsGroup = async function(date) {
+      const itemsToArchive = allNotifications.filter(n => n.date_added === date);
+      for (const item of itemsToArchive) {
+        await window.dataSdk.update({ ...item, is_archived: true });
+      }
+      closeModal();
+      showToast(`All notifications from ${date} archived`, 'success');
     };
 
     window.toggleExpirationDateGroup = function(date) {
@@ -4477,6 +4575,34 @@
 
       closeModal();
       showToast(`All items from ${date} deleted`, 'success');
+    };
+
+    window.confirmArchiveExpirationGroup = function(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Archive All</div>
+          <div class="modal-text">Archive all ${count} items from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="archiveExpirationGroup('${date}')">Archive All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.archiveExpirationGroup = async function(date) {
+      const itemsToArchive = allItems.filter(i => i.date_added === date);
+      for (const item of itemsToArchive) {
+        await window.dataSdk.update({ ...item, is_archived: true });
+      }
+      closeModal();
+      showToast(`All items from ${date} archived`, 'success');
     };
 
     function showToast(message, type) {
@@ -4884,6 +5010,46 @@
     };
 
     // PDF Generation Functions for Stock Counts
+    window.saveActiveStockCountPDF = function(date) {
+      const counts = allStockCounts.filter(c => c.date_added === date);
+      if (counts.length === 0) {
+        showToast('No stock counts to save', 'error');
+        return;
+      }
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Minibar Stock Count (Active) - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      const groupedByItem = {};
+      counts.forEach(count => {
+        if (!groupedByItem[count.item_name]) {
+          groupedByItem[count.item_name] = { F1: 0, F2: 0, F3: 0, Office: 0 };
+        }
+        groupedByItem[count.item_name][count.floor] += count.quantity;
+      });
+
+      Object.keys(groupedByItem).sort().forEach(itemName => {
+        const totals = groupedByItem[itemName];
+        const total = totals.F1 + totals.F2 + totals.F3 + totals.Office;
+        pdfContent += `${itemName}\n`;
+        pdfContent += `  F1: ${totals.F1} | F2: ${totals.F2} | F3: ${totals.F3} | Office: ${totals.Office}\n`;
+        pdfContent += `  Total: ${total} units\n`;
+        pdfContent += '—'.repeat(60) + '\n';
+      });
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `minibar-stock-count-active-${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Stock count report downloaded', 'success');
+    };
+
     window.saveStockCountPDF = function(date) {
       const counts = archivedStockCounts.filter(c => c.date_added === date);
       const formattedDate = new Date(date).toLocaleDateString('en-US', {
@@ -5015,6 +5181,77 @@
       a.click();
       URL.revokeObjectURL(url);
       showToast('PDF report downloaded', 'success');
+    };
+
+    window.saveActiveExpirationPDF = function(date) {
+      const items = allItems.filter(i => i.date_added === date);
+      if (items.length === 0) {
+        showToast('No items to save', 'error');
+        return;
+      }
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Expiration Control (Active) - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      items.forEach(item => {
+        const expDate = new Date(item.expiration_date).toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+        pdfContent += `Item: ${item.item_name}\n`;
+        pdfContent += `  Location: ${item.location || 'N/A'}\n`;
+        pdfContent += `  Quantity: ${item.quantity || 'N/A'}\n`;
+        pdfContent += `  Expiration: ${expDate}\n`;
+        pdfContent += `  Notes: ${item.notes || 'N/A'}\n`;
+        pdfContent += '—'.repeat(60) + '\n';
+      });
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `expiration-active-${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Expiration report downloaded', 'success');
+    };
+
+    window.saveActiveNotificationsPDF = function(date) {
+      const items = allNotifications.filter(n => n.date_added === date);
+      if (items.length === 0) {
+        showToast('No notifications to save', 'error');
+        return;
+      }
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Notifications (Active) - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      items.forEach(notif => {
+        const addedDate = new Date(notif.added_timestamp).toLocaleString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+        pdfContent += `Type: ${notificationLabels[notif.type] || notif.type}\n`;
+        pdfContent += `  Item: ${notif.item_name || 'N/A'}\n`;
+        pdfContent += `  Location: ${notif.location || 'N/A'}\n`;
+        pdfContent += `  Description: ${notif.description || 'N/A'}\n`;
+        pdfContent += `  Source: ${notif.source || 'N/A'}\n`;
+        pdfContent += `  Added: ${addedDate}\n`;
+        pdfContent += '—'.repeat(60) + '\n';
+      });
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `notifications-active-${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Notifications report downloaded', 'success');
     };
 
     window.printEquipmentPDF = function(date) {
