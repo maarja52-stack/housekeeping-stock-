@@ -5096,17 +5096,28 @@
         <head>
           <title>Stock Count - ${formattedDate}</title>
           <style>
-            @page { margin: 10mm; }
-            body { font-family: Arial, sans-serif; padding: 0; font-size: 12px; }
-            h1 { color: #0d1b2a; border-bottom: 2px solid #d4af37; padding-bottom: 6px; margin: 0 0 10px; font-size: 16px; }
-            .item { margin-bottom: 10px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; }
-            .item-name { font-size: 13px; font-weight: bold; color: #d4af37; margin-bottom: 4px; }
-            .detail { margin: 3px 0; }
-            .label { font-weight: bold; }
+            @page { size: A4; margin: 6mm; }
+            body { font-family: Arial, sans-serif; padding: 0; font-size: 9px; line-height: 1.2; }
+            h1 { color: #0d1b2a; margin: 0 0 6px; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 2px 4px; text-align: left; }
+            th { background: #f4f4f4; font-weight: 700; }
           </style>
         </head>
         <body>
-          <h1>Minibar Stock Count Report - ${formattedDate}</h1>
+          <h1>Minibar Stock Count - ${formattedDate}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>F1</th>
+                <th>F2</th>
+                <th>F3</th>
+                <th>Office</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
       `;
 
       // Group by item
@@ -5121,17 +5132,21 @@
       Object.keys(groupedByItem).sort().forEach(itemName => {
         const totals = groupedByItem[itemName];
         const total = totals.F1 + totals.F2 + totals.F3 + totals.Office;
-        
         htmlContent += `
-          <div class="item">
-            <div class="item-name">${itemName}</div>
-            <div class="detail"><span class="label">F1:</span> ${totals.F1} | <span class="label">F2:</span> ${totals.F2} | <span class="label">F3:</span> ${totals.F3} | <span class="label">Office:</span> ${totals.Office}</div>
-            <div class="detail"><span class="label">Total:</span> ${total} units</div>
-          </div>
+          <tr>
+            <td>${itemName}</td>
+            <td>${totals.F1}</td>
+            <td>${totals.F2}</td>
+            <td>${totals.F3}</td>
+            <td>${totals.Office}</td>
+            <td>${total}</td>
+          </tr>
         `;
       });
 
       htmlContent += `
+            </tbody>
+          </table>
         </body>
         </html>
       `;
@@ -5263,17 +5278,29 @@
         <head>
           <title>Equipment Report - ${formattedDate}</title>
           <style>
-            @page { margin: 10mm; }
-            body { font-family: Arial, sans-serif; padding: 0; font-size: 12px; }
-            h1 { color: #0d1b2a; border-bottom: 2px solid #d4af37; padding-bottom: 6px; margin: 0 0 10px; font-size: 16px; }
-            .item { margin-bottom: 12px; border: 1px solid #ddd; padding: 10px; border-radius: 6px; }
-            .item-title { font-size: 13px; font-weight: bold; color: #d4af37; margin-bottom: 6px; }
-            .detail { margin: 3px 0; }
-            .label { font-weight: bold; }
+            @page { size: A4; margin: 6mm; }
+            body { font-family: Arial, sans-serif; padding: 0; font-size: 9px; line-height: 1.2; }
+            h1 { color: #0d1b2a; margin: 0 0 6px; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 2px 4px; text-align: left; vertical-align: top; }
+            th { background: #f4f4f4; font-weight: 700; }
           </style>
         </head>
         <body>
-          <h1>Housekeeping Equipment Report - ${formattedDate}</h1>
+          <h1>Equipment Report - ${formattedDate}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Age</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
       `;
 
       items.forEach(item => {
@@ -5284,20 +5311,22 @@
         const ageText = daysDiff === 0 ? 'Today' : daysDiff === 1 ? '1 day' : `${daysDiff} days`;
 
         htmlContent += `
-          <div class="item">
-            <div class="item-title">${item.item_name}</div>
-            <div class="detail"><span class="label">Type:</span> ${notificationLabels[item.type]}</div>
-            <div class="detail"><span class="label">Location:</span> ${item.location || 'N/A'}</div>
-            <div class="detail"><span class="label">Description:</span> ${item.description || 'N/A'}</div>
-            <div class="detail"><span class="label">Date Reported:</span> ${addedDate}</div>
-            <div class="detail"><span class="label">Age:</span> ${ageText}</div>
-            <div class="detail"><span class="label">Source:</span> ${item.source}</div>
-          </div>
+          <tr>
+            <td>${item.item_name}</td>
+            <td>${notificationLabels[item.type] || item.type}</td>
+            <td>${item.location || 'N/A'}</td>
+            <td>${item.description || 'N/A'}</td>
+            <td>${addedDate}</td>
+            <td>${ageText}</td>
+            <td>${item.source || 'N/A'}</td>
+          </tr>
         `;
       });
 
       htmlContent += `
-          <p style="margin-top: 30px; font-weight: bold;">Total Equipment Items: ${items.length}</p>
+            </tbody>
+          </table>
+          <p style="margin-top: 6px; font-weight: bold;">Total Equipment Items: ${items.length}</p>
         </body>
         </html>
       `;
@@ -5356,17 +5385,27 @@
         <head>
           <title>Expired Items Report - ${formattedDate}</title>
           <style>
-            @page { margin: 10mm; }
-            body { font-family: Arial, sans-serif; padding: 0; font-size: 12px; }
-            h1 { color: #0d1b2a; border-bottom: 2px solid #d4af37; padding-bottom: 6px; margin: 0 0 10px; font-size: 16px; }
-            .item { margin-bottom: 12px; border-left: 4px solid #dc3545; padding: 10px; background: #f9f9f9; }
-            .item-title { font-size: 13px; font-weight: bold; color: #dc3545; margin-bottom: 6px; }
-            .detail { margin: 3px 0; }
-            .label { font-weight: bold; }
+            @page { size: A4; margin: 6mm; }
+            body { font-family: Arial, sans-serif; padding: 0; font-size: 9px; line-height: 1.2; }
+            h1 { color: #0d1b2a; margin: 0 0 6px; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 2px 4px; text-align: left; vertical-align: top; }
+            th { background: #f4f4f4; font-weight: 700; }
           </style>
         </head>
         <body>
           <h1>Expired Items Report - ${formattedDate}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Expiration</th>
+                <th>Location</th>
+                <th>Qty</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
       `;
 
       items.forEach(item => {
@@ -5376,20 +5415,21 @@
         const quantityText = item.quantity ? `${item.quantity} units` : 'N/A';
 
         htmlContent += `
-          <div class="item">
-            <div class="item-title">${item.item_name}</div>
-            <div class="detail"><span class="label">Expiration Date:</span> ${expDate}</div>
-            <div class="detail"><span class="label">Location:</span> ${item.location}</div>
-            <div class="detail"><span class="label">Quantity:</span> ${quantityText}</div>
-            <div class="detail"><span class="label">Notes:</span> ${item.notes || 'Found during routine check'}</div>
-          </div>
+          <tr>
+            <td>${item.item_name}</td>
+            <td>${expDate}</td>
+            <td>${item.location}</td>
+            <td>${quantityText}</td>
+            <td>${item.notes || 'Found during routine check'}</td>
+          </tr>
         `;
       });
 
       const totalQty = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
       htmlContent += `
-          <p style="margin-top: 30px; font-weight: bold;">Total Items: ${items.length}</p>
-          <p style="font-weight: bold;">Total Quantity: ${totalQty} units</p>
+            </tbody>
+          </table>
+          <p style="margin-top: 6px; font-weight: bold;">Total Items: ${items.length} | Total Quantity: ${totalQty} units</p>
         </body>
         </html>
       `;
