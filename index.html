@@ -1782,10 +1782,11 @@
         border: 1px solid rgba(212, 175, 55, 0.5);
         width: 100%;
         box-sizing: border-box;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         justify-content: space-between;
         box-shadow: 0 12px 26px rgba(2, 6, 15, 0.3);
+        overflow: hidden;
       }
 
       .checklist-item:hover {
@@ -1808,27 +1809,23 @@
         font-size: 1.2rem;
         cursor: pointer;
         line-height: 1.5;
-        min-width: 180px;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .checklist-qty {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-left: 0;
+        margin-left: auto;
         padding: 0.4rem 0.7rem;
         border-radius: 999px;
         background: rgba(11, 26, 51, 0.95);
         border: 1px solid rgba(212, 175, 55, 0.5);
-        width: 100%;
-        justify-content: flex-end;
-      }
-
-      @media (min-width: 640px) {
-        .checklist-qty {
-          width: auto;
-          margin-left: auto;
-        }
+        width: auto;
+        justify-content: center;
       }
 
       .checklist-qty span {
