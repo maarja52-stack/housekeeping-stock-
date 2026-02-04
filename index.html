@@ -1764,6 +1764,10 @@
         box-sizing: border-box;
         flex-wrap: wrap;
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        justify-content: space-between;
+        background: linear-gradient(135deg, rgba(12, 22, 46, 0.9), rgba(7, 14, 30, 0.95));
+        border-color: rgba(212, 175, 55, 0.45);
+        box-shadow: 0 10px 24px rgba(2, 6, 15, 0.35);
       }
 
       .checklist-item:hover {
@@ -1777,6 +1781,7 @@
         height: 1.25rem;
         cursor: pointer;
         accent-color: #d4af37;
+        margin-top: 2px;
       }
 
       .checklist-label {
@@ -1785,17 +1790,27 @@
         font-size: 1.125rem;
         cursor: pointer;
         line-height: 1.4;
+        min-width: 180px;
       }
 
       .checklist-qty {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-left: auto;
+        margin-left: 0;
         padding: 0.25rem 0.5rem;
         border-radius: 999px;
         background: rgba(11, 26, 51, 0.6);
         border: 1px solid rgba(212, 175, 55, 0.3);
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      @media (min-width: 640px) {
+        .checklist-qty {
+          width: auto;
+          margin-left: auto;
+        }
       }
 
       .checklist-qty span {
