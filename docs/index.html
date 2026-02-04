@@ -2486,8 +2486,9 @@
 
         const normalizedData = data.map(item => ({
           ...item,
-          is_archived: normalizeArchived(item.is_archived)
-          ,date_added: normalizeDate(item.date_added)
+          is_archived: normalizeArchived(item.is_archived),
+          date_added: normalizeDate(item.date_added),
+          location_name: item.location_name || item.location || item.stock_location || item.locationName || ''
         }));
 
         // Separate different types of data
@@ -2622,6 +2623,7 @@
             stock_type: payload.stock_type,
             item_name: payload.item_name,
             location_name: payload.location_name,
+            location: payload.location || payload.location_name,
             floor: payload.floor,
             quantity: payload.quantity,
             unit: payload.unit,
@@ -4880,7 +4882,7 @@
     }
 
     function getStockItemsForLocation(locationName) {
-      return stockLocationItems.filter(item => item.location_name === locationName);
+      return stockLocationItems.filter(item => (item.location_name || item.location) === locationName);
     }
 
     function getLatestChecked(items) {
@@ -5067,10 +5069,13 @@
           return;
         }
 
+        const floorMatch = currentStockLocation.match(/F(\d)/i);
         const payload = {
           id: `${currentStockLocation}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
           stock_type: 'stock_location',
           location_name: currentStockLocation,
+          location: currentStockLocation,
+          floor: floorMatch ? `F${floorMatch[1]}` : null,
           item_name: name,
           quantity: qty,
           unit: unit || null,
