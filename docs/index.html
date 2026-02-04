@@ -518,6 +518,13 @@
       margin-top: 0.5rem;
     }
 
+    .storage-preview.prominent {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f7e7b7;
+      opacity: 1;
+    }
+
     .item-main {
       flex: 1;
       display: flex;
@@ -4970,8 +4977,7 @@
             <div class="storage-card ${items.length ? 'has-items' : ''}" data-stock-location="${locationName}">
               <div class="storage-icon">${icon}</div>
               <div class="storage-id">${shortLabel}</div>
-              <div class="storage-status">${items.length} ${items.length === 1 ? 'Item' : 'Items'}</div>
-              <div class="storage-preview">${preview}</div>
+              <div class="storage-preview prominent">${preview}</div>
             </div>
           `;
         }).join('');
