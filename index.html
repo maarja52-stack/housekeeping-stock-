@@ -2476,11 +2476,19 @@
           return raw;
         };
 
+        const normalizeType = (value) => {
+          if (!value) return '';
+          return String(value).toLowerCase().replace(/\s+/g, '_').replace(/-+/g, '_');
+        };
+
         const normalizedData = data.map(item => ({
           ...item,
           is_archived: normalizeArchived(item.is_archived),
           date_added: normalizeDate(item.date_added),
-          location_name: item.location_name || item.location || item.stock_location || item.locationName || ''
+          location_name: item.location_name || item.location || item.stock_location || item.locationName || '',
+          stock_type: normalizeType(item.stock_type),
+          equipment_type: normalizeType(item.equipment_type),
+          room_type: normalizeType(item.room_type)
         }));
 
         // Separate different types of data
