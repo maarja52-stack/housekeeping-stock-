@@ -1678,6 +1678,26 @@
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.05);
         box-shadow: 0 10px 24px rgba(2, 6, 15, 0.25);
+        flex-wrap: wrap;
+      }
+
+      .room-item > div:first-child {
+        min-width: 220px;
+      }
+
+      @media (max-width: 640px) {
+        .room-item {
+          flex-direction: column;
+          align-items: flex-start;
+          border-radius: 18px;
+        }
+      }
+
+      .room-item-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
 
       .room-item:last-child {
