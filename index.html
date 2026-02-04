@@ -420,6 +420,23 @@
       box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
+    .stock-location-card {
+      padding: 0.9rem 1rem;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .stock-location-card .room-item-name {
+      font-size: 1.05rem;
+    }
+
+    .stock-location-preview {
+      color: #d4af37;
+      opacity: 0.75;
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+    }
+
     .item-main {
       flex: 1;
       display: flex;
@@ -4542,11 +4559,16 @@
         const cards = section.locations.map(locationName => {
           const items = getStockItemsForLocation(locationName);
           const lastChecked = getLatestChecked(items);
+          const firstItem = items[0];
+          const preview = firstItem
+            ? `${firstItem.item_name}${firstItem.quantity ? ` • Qty ${firstItem.quantity}` : ''}`
+            : 'No items yet';
           return `
-            <div class="item-card" data-stock-location="${locationName}">
+            <div class="item-card stock-location-card" data-stock-location="${locationName}">
               <div>
                 <div class="room-item-name">${locationName}</div>
                 <div class="room-item-meta">${items.length} items • Last checked: ${lastChecked}</div>
+                <div class="stock-location-preview">${preview}</div>
               </div>
               <button class="btn-submit" style="width: auto;">Open</button>
             </div>
