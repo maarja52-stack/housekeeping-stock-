@@ -1461,6 +1461,156 @@
         padding: 1rem;
       }
 
+      .room-floor-section {
+        margin-bottom: 2rem;
+      }
+
+      .room-floor-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 1rem;
+      }
+
+      .room-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+
+      .room-card {
+        background: rgba(13, 27, 42, 0.7);
+        border: 2px solid #d4af37;
+        border-radius: 14px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .room-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+      }
+
+      .room-number {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #d4af37;
+      }
+
+      .room-status {
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .room-status.good {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.5);
+      }
+
+      .room-status.issues {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.5);
+      }
+
+      .room-status.setup {
+        background: rgba(108, 117, 125, 0.2);
+        color: #adb5bd;
+        border: 1px solid rgba(173, 181, 189, 0.5);
+      }
+
+      .room-section {
+        background: rgba(13, 27, 42, 0.7);
+        border: 2px solid #d4af37;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .room-section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 1rem;
+      }
+
+      .room-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      }
+
+      .room-item:last-child {
+        border-bottom: none;
+      }
+
+      .room-item-name {
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.3rem;
+      }
+
+      .room-item-meta {
+        font-size: 0.9rem;
+        color: #d4af37;
+        opacity: 0.8;
+      }
+
+      .room-item-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .room-action-btn {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+
+      .room-action-btn.danger {
+        border-color: #dc3545;
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.15);
+      }
+
+      .room-action-btn.warn {
+        border-color: #ffc107;
+        color: #ffc107;
+        background: rgba(255, 193, 7, 0.15);
+      }
+
+      .maintenance-card {
+        background: rgba(13, 27, 42, 0.7);
+        border: 2px solid #d4af37;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .maintenance-title {
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.4rem;
+      }
+
       /* Reduce top/bottom padding on counter page */
       #stockCountPage {
         padding-top: 0.5rem !important;
@@ -1684,7 +1834,8 @@
       <div class="card-title">
        Minibar Operations
       </div>
-     </div>
+
+       </div>
      <div class="premium-card" data-page="orders">
       <div class="notification-badge" id="notificationBadge">
        0
@@ -1703,7 +1854,18 @@
        Archive
       </div>
      </div>
-    </div><!-- Minibar Operations Submenu -->
+     <div class="premium-card" data-page="room-registry"><span class="card-emoji">🏨</span>
+      <div class="card-title">
+       Room Registry
+      </div>
+     </div>
+     <div class="premium-card" data-page="stock-locations"><span class="card-emoji">📍</span>
+      <div class="card-title">
+       Stock Locations
+      </div>
+     </div>
+    </div>
+    <!-- Minibar Operations Submenu -->
     <div id="minibarMenu" class="grid-container hidden">
      <div class="premium-card" data-subpage="expiration"><span class="card-emoji">⏰</span>
       <div class="card-title">
@@ -1780,12 +1942,42 @@
        Public Area Equipment
       </div>
      </div>
-     <div class="premium-card"><span class="card-emoji">🚪</span>
-      <div class="card-title">
-       Room Registry
+    </div><!-- Housekeeping Equipment Page -->
+    <!-- Room Registry Pages -->
+    <div id="roomRegistryPage" class="expiration-page hidden">
+     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; margin: 0;">🏨 Room Registry</h2>
+      <button class="btn-submit" id="maintenanceQueueBtn" style="width: auto;">🛠 Maintenance Queue (<span id="maintenanceCount">0</span>)</button>
+     </div>
+     <div id="roomRegistryContainer"></div>
+     <div id="roomDetailContainer" class="hidden"></div>
+    </div>
+    <div id="roomMaintenancePage" class="expiration-page hidden">
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🛠 Maintenance Queue</h2>
+     <div id="maintenanceList"></div>
+    </div>
+    <!-- Stock Locations Pages -->
+    <div id="stockLocationsPage" class="expiration-page hidden">
+     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; margin: 0;">📍 Stock Locations</h2>
+     </div>
+     <div id="stockLocationsContainer"></div>
+    </div>
+    <div id="stockDetailPage" class="expiration-page hidden">
+     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+      <button class="btn-cancel" id="backToStockLocationsBtn">← Back to Locations</button>
+      <div>
+       <h2 id="stockDetailTitle" style="font-size: 2rem; font-weight: 700; color: #d4af37; margin: 0;">Stock Location</h2>
+       <div id="stockDetailMeta" style="color: #d4af37; opacity: 0.8; margin-top: 0.35rem;"></div>
+      </div>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+       <button class="btn-submit" id="stockCheckedBtn">✅ Mark Checked</button>
+       <button class="btn-submit" id="addStockItemBtn">➕ Add Item</button>
       </div>
      </div>
-    </div><!-- Housekeeping Equipment Page -->
+     <div id="stockDetailContainer"></div>
+    </div>
+    <!-- Housekeeping Equipment Page -->
     <div id="housekeepingEquipmentPage" class="expiration-page hidden">
      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🧹 Equipment Inventory</h2><!-- Tab Navigation -->
      <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;"><button class="equipment-tab active" id="inventoryTab" data-tab="inventory"> 📦 Inventory </button> <button class="equipment-tab" id="issuesTab" data-tab="issues"> ⚠️ Active Issues </button>
@@ -1883,7 +2075,8 @@
      <div id="publicIssuesTabContent" class="hidden">
       <div id="publicEquipmentIssuesContainer"></div>
      </div>
-    </div><!-- Archive Page -->
+    </div>
+    <!-- Archive Page -->
     <div id="archivePage" class="expiration-page hidden">
      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 3rem;">Archive Center</h2><!-- Section 1: Archived Stock Counts -->
      <div class="archive-section">
@@ -1979,8 +2172,15 @@
     const stockCountPage = document.getElementById('stockCountPage');
     const housekeepingEquipmentPage = document.getElementById('housekeepingEquipmentPage');
     const publicAreaEquipmentPage = document.getElementById('publicAreaEquipmentPage');
+    const roomRegistryPage = document.getElementById('roomRegistryPage');
+    const roomMaintenancePage = document.getElementById('roomMaintenancePage');
+    const stockLocationsPage = document.getElementById('stockLocationsPage');
+    const stockDetailPage = document.getElementById('stockDetailPage');
     const backButton = document.getElementById('backButton');
-
+  renderRoomRegistry();
+  renderMaintenanceQueue();
+  renderStockLocations();
+  renderStockDetail();
     let currentPage = 'main';
     let isUnlocked = localStorage.getItem('app_unlocked') === 'true';
     let allItems = [];
@@ -1988,6 +2188,8 @@
     let allStockCounts = [];
     let allEquipment = [];
     let allPublicEquipment = [];
+    let roomItems = [];
+    let stockLocationItems = [];
     let archivedItems = [];
     let archivedNotifications = [];
     let archivedStockCounts = [];
@@ -2053,14 +2255,16 @@
         }));
 
         // Separate different types of data
-        allItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.is_archived);
+        allItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.room_type && !item.is_archived);
         allNotifications = normalizedData.filter(item => item.type && !item.is_archived);
-        allStockCounts = normalizedData.filter(item => item.stock_type && !item.is_archived);
+        allStockCounts = normalizedData.filter(item => item.stock_type === 'minibar_count' && !item.is_archived);
         allEquipment = normalizedData.filter(item => item.equipment_type === 'housekeeping' && !item.is_archived);
         allPublicEquipment = normalizedData.filter(item => item.equipment_type === 'public_area' && !item.is_archived);
+        roomItems = normalizedData.filter(item => item.room_type === 'room_item' && !item.is_archived);
+        stockLocationItems = normalizedData.filter(item => item.stock_type === 'stock_location' && !item.is_archived);
         archivedItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && item.is_archived);
         archivedNotifications = normalizedData.filter(item => item.type && item.is_archived);
-        archivedStockCounts = normalizedData.filter(item => item.stock_type && item.is_archived);
+        archivedStockCounts = normalizedData.filter(item => item.stock_type === 'minibar_count' && item.is_archived);
         
         updateExpirationDisplay();
         updateNotificationsDisplay();
@@ -2069,6 +2273,7 @@
         updateStockProgress();
         updateEquipmentDisplay();
         updatePublicEquipmentDisplay();
+        
       }
     };
 
@@ -2180,8 +2385,12 @@
             id: payload.id,
             stock_type: payload.stock_type,
             item_name: payload.item_name,
+            location_name: payload.location_name,
             floor: payload.floor,
             quantity: payload.quantity,
+            unit: payload.unit,
+            notes: payload.notes,
+            last_checked: payload.last_checked,
             added_timestamp: payload.added_timestamp,
             date_added: payload.date_added,
             is_archived: payload.is_archived
@@ -2391,6 +2600,14 @@
         navigateTo('main');
       } else if (currentPage === 'housekeeping-equipment' || currentPage === 'public-area-equipment') {
         navigateTo('housekeeping');
+      } else if (currentPage === 'room-registry') {
+        navigateTo('main');
+      } else if (currentPage === 'room-maintenance') {
+        navigateTo('room-registry');
+      } else if (currentPage === 'stock-locations') {
+        navigateTo('main');
+      } else if (currentPage === 'stock-detail') {
+        navigateTo('stock-locations');
       } else {
         navigateTo('main');
       }
@@ -2410,6 +2627,10 @@
       stockCountPage.classList.add('hidden');
       housekeepingEquipmentPage.classList.add('hidden');
       publicAreaEquipmentPage.classList.add('hidden');
+      roomRegistryPage.classList.add('hidden');
+      roomMaintenancePage.classList.add('hidden');
+      stockLocationsPage.classList.add('hidden');
+      stockDetailPage.classList.add('hidden');
 
       // Show appropriate menu/page
       if (page === 'main') {
@@ -2450,6 +2671,34 @@
         mainTitle.style.display = 'none';
         currentPage = 'public-area-equipment';
         updatePublicEquipmentDisplay();
+      } else if (page === 'room-registry') {
+        roomRegistryPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Dashboard';
+        mainTitle.style.display = 'none';
+        currentPage = 'room-registry';
+        renderRoomRegistry();
+      } else if (page === 'room-maintenance') {
+        roomMaintenancePage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Room Registry';
+        mainTitle.style.display = 'none';
+        currentPage = 'room-maintenance';
+        renderMaintenanceQueue();
+      } else if (page === 'stock-locations') {
+        stockLocationsPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Dashboard';
+        mainTitle.style.display = 'none';
+        currentPage = 'stock-locations';
+        renderStockLocations();
+      } else if (page === 'stock-detail') {
+        stockDetailPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Stock Locations';
+        mainTitle.style.display = 'none';
+        currentPage = 'stock-detail';
+        renderStockDetail();
       } else if (page === 'archive') {
         archivePage.classList.remove('hidden');
         backButton.classList.remove('hidden');
@@ -3699,6 +3948,748 @@
       arrow.classList.toggle('expanded');
       list.classList.toggle('expanded');
     };
+
+    // ============== ROOM REGISTRY FUNCTIONALITY ==============
+
+    const roomRegistryContainer = document.getElementById('roomRegistryContainer');
+    const roomDetailContainer = document.getElementById('roomDetailContainer');
+    const maintenanceQueueBtn = document.getElementById('maintenanceQueueBtn');
+    const maintenanceList = document.getElementById('maintenanceList');
+    const maintenanceCount = document.getElementById('maintenanceCount');
+
+    let currentRoomNumber = null;
+
+    const roomFloors = [
+      { name: 'Floor 1', rooms: Array.from({ length: 15 }, (_, i) => 101 + i) },
+      { name: 'Floor 2', rooms: Array.from({ length: 15 }, (_, i) => 201 + i) },
+      { name: 'Floor 3', rooms: Array.from({ length: 13 }, (_, i) => 301 + i) }
+    ];
+
+    const roomTemplate = [
+      {
+        category: 'Bedroom',
+        items: [
+          { name: 'Hangers', qty: true },
+          { name: 'Bedside Lamps', qty: true },
+          { name: 'Mattress', qty: true },
+          { name: 'Pillows', qty: true },
+          { name: 'Bed Linen Set', qty: true },
+          { name: 'Alarm Clock', qty: true }
+        ]
+      },
+      {
+        category: 'Furniture',
+        items: [
+          { name: 'Desk', qty: true },
+          { name: 'Chair', qty: true },
+          { name: 'Wardrobe', qty: true },
+          { name: 'Luggage Rack', qty: true }
+        ]
+      },
+      {
+        category: 'Minibar/Refreshments',
+        items: [
+          { name: 'Minibar Unit', qty: true },
+          { name: 'Coffee Maker', qty: true },
+          { name: 'Glasses', qty: true },
+          { name: 'Mugs', qty: true }
+        ]
+      },
+      {
+        category: 'Electronics',
+        items: [
+          { name: 'TV', qty: true },
+          { name: 'Safe', qty: true },
+          { name: 'Hair Dryer', qty: true },
+          { name: 'Iron', qty: true }
+        ]
+      },
+      {
+        category: 'Climate Control',
+        items: [
+          { name: 'AC Unit', qty: true },
+          { name: 'Thermostat', qty: true },
+          { name: 'Fan', qty: true }
+        ]
+      },
+      {
+        category: 'Bathroom',
+        items: [
+          { name: 'Towel Racks', qty: true },
+          { name: 'Shower Head', qty: true },
+          { name: 'Toilet', qty: true },
+          { name: 'Mirror', qty: true }
+        ]
+      }
+    ];
+
+    function getRoomItems(roomNumber) {
+      return roomItems.filter(item => String(item.room_number) === String(roomNumber));
+    }
+
+    function getRoomIssues(items) {
+      return items.filter(item => item.status && item.status !== 'good');
+    }
+
+    function renderRoomRegistry() {
+      if (!roomRegistryContainer || !roomDetailContainer) return;
+      if (currentPage !== 'room-registry') {
+        updateMaintenanceCount();
+        return;
+      }
+
+      roomRegistryContainer.classList.remove('hidden');
+      roomDetailContainer.classList.add('hidden');
+
+      roomRegistryContainer.innerHTML = roomFloors.map(floor => {
+        const roomsMarkup = floor.rooms.map(roomNumber => {
+          const items = getRoomItems(roomNumber);
+          const issues = getRoomIssues(items);
+          let statusClass = 'setup';
+          let statusLabel = 'Not Setup';
+          let statusIcon = '⚪';
+
+          if (items.length > 0) {
+            if (issues.length > 0) {
+              statusClass = 'issues';
+              statusLabel = `${issues.length} Issues`;
+              statusIcon = '⚠️';
+            } else {
+              statusClass = 'good';
+              statusLabel = 'All Good';
+              statusIcon = '✅';
+            }
+          }
+
+          return `
+            <div class="room-card" data-room="${roomNumber}">
+              <div class="room-number">Room ${roomNumber}</div>
+              <div class="room-status ${statusClass}">${statusIcon} ${statusLabel}</div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="room-floor-section">
+            <div class="room-floor-title">${floor.name}</div>
+            <div class="room-grid">${roomsMarkup}</div>
+          </div>
+        `;
+      }).join('');
+
+      roomRegistryContainer.querySelectorAll('.room-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const roomNumber = card.getAttribute('data-room');
+          openRoomDetail(roomNumber);
+        });
+      });
+
+      updateMaintenanceCount();
+    }
+
+    function openRoomDetail(roomNumber) {
+      currentRoomNumber = roomNumber;
+      if (!roomRegistryContainer || !roomDetailContainer) return;
+      roomRegistryContainer.classList.add('hidden');
+      roomDetailContainer.classList.remove('hidden');
+      renderRoomDetail(roomNumber);
+    }
+
+    function renderRoomDetail(roomNumber) {
+      const items = getRoomItems(roomNumber);
+      const header = `
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: #d4af37;">Room ${roomNumber}</div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn-cancel" id="backToRoomsBtn">⬅ Back to Rooms</button>
+            <button class="btn-submit" id="checkRoomBtn">✅ Mark as Checked Now</button>
+            <button class="btn-submit" id="addCustomRoomItemBtn">➕ Add Custom Item</button>
+          </div>
+        </div>
+      `;
+
+      if (items.length === 0) {
+        const setupSections = roomTemplate.map(section => {
+          const itemsHtml = section.items.map(item => {
+            const slug = `${roomNumber}-${section.category}-${item.name}`.replace(/\s+/g, '-');
+            return `
+              <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+                <input type="checkbox" id="${slug}" data-item="${item.name}" data-category="${section.category}">
+                <label for="${slug}" style="color: #d4af37; font-weight: 600;">${item.name}</label>
+                ${item.qty ? `<input type="number" min="1" value="1" class="form-input" style="max-width: 100px;" data-qty-for="${slug}">` : ''}
+              </div>
+            `;
+          }).join('');
+          return `
+            <div class="room-section">
+              <div class="room-section-title">${section.category}</div>
+              ${itemsHtml}
+            </div>
+          `;
+        }).join('');
+
+        roomDetailContainer.innerHTML = `
+          ${header}
+          <div class="room-section">
+            <div class="room-section-title">Setup Checklist</div>
+            <div style="color: #d4af37; opacity: 0.8; margin-bottom: 1rem;">Select items in this room and enter quantities where needed.</div>
+            ${setupSections}
+            <button class="btn-submit" id="saveRoomTemplateBtn">💾 Save Room Template</button>
+          </div>
+        `;
+
+        const saveRoomTemplateBtn = document.getElementById('saveRoomTemplateBtn');
+        saveRoomTemplateBtn.addEventListener('click', async () => {
+          const selectedInputs = roomDetailContainer.querySelectorAll('input[type="checkbox"]:checked');
+          if (!selectedInputs.length) {
+            showToast('Select at least one item', 'error');
+            return;
+          }
+          saveRoomTemplateBtn.disabled = true;
+          saveRoomTemplateBtn.textContent = 'Saving...';
+          for (const checkbox of selectedInputs) {
+            const itemName = checkbox.getAttribute('data-item');
+            const category = checkbox.getAttribute('data-category');
+            const qtyInput = roomDetailContainer.querySelector(`input[data-qty-for="${checkbox.id}"]`);
+            const quantity = qtyInput ? parseInt(qtyInput.value || '1', 10) : 1;
+            const payload = {
+              id: `${roomNumber}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+              room_type: 'room_item',
+              room_number: roomNumber,
+              category,
+              item_name: itemName,
+              quantity: Number.isNaN(quantity) ? 1 : quantity,
+              status: 'good',
+              notes: '',
+              last_checked: new Date().toISOString(),
+              added_timestamp: new Date().toISOString(),
+              date_added: getLocalDateString(),
+              is_archived: false
+            };
+            if (!roomItems.find(i => String(i.id) === String(payload.id))) {
+              roomItems.push(payload);
+            }
+            await window.dataSdk.create(payload);
+          }
+          saveRoomTemplateBtn.disabled = false;
+          saveRoomTemplateBtn.textContent = '💾 Save Room Template';
+          showToast(`Room ${roomNumber} setup saved`, 'success');
+          renderRoomDetail(roomNumber);
+        });
+      } else {
+        const grouped = {};
+        items.forEach(item => {
+          if (!grouped[item.category]) grouped[item.category] = [];
+          grouped[item.category].push(item);
+        });
+
+        const sections = Object.keys(grouped).sort().map(category => {
+          const itemRows = grouped[category].map(item => {
+            const statusLabel = item.status === 'broken' ? 'Broken' : item.status === 'missing' ? 'Missing' : 'Good';
+            return `
+              <div class="room-item">
+                <div>
+                  <div class="room-item-name">${item.item_name}</div>
+                  <div class="room-item-meta">Qty: ${item.quantity || 1} • Status: ${statusLabel}</div>
+                  ${item.notes ? `<div class="room-item-meta">Notes: ${item.notes}</div>` : ''}
+                </div>
+                <div class="room-item-actions">
+                  <button class="room-action-btn" data-action="edit" data-id="${item.id}">✏️ Edit</button>
+                  <button class="room-action-btn warn" data-action="issue" data-id="${item.id}">🔧 Report Issue</button>
+                  <button class="room-action-btn danger" data-action="delete" data-id="${item.id}">❌ Delete</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="room-section">
+              <div class="room-section-title">${category}</div>
+              ${itemRows}
+            </div>
+          `;
+        }).join('');
+
+        roomDetailContainer.innerHTML = `${header}${sections}`;
+
+        roomDetailContainer.querySelectorAll('[data-action="edit"]').forEach(btn => {
+          btn.addEventListener('click', () => openRoomEditModal(btn.getAttribute('data-id')));
+        });
+        roomDetailContainer.querySelectorAll('[data-action="issue"]').forEach(btn => {
+          btn.addEventListener('click', () => openRoomIssueModal(btn.getAttribute('data-id')));
+        });
+        roomDetailContainer.querySelectorAll('[data-action="delete"]').forEach(btn => {
+          btn.addEventListener('click', () => openRoomDeleteModal(btn.getAttribute('data-id')));
+        });
+      }
+
+      const backBtn = document.getElementById('backToRoomsBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          currentRoomNumber = null;
+          renderRoomRegistry();
+        });
+      }
+
+      const checkBtn = document.getElementById('checkRoomBtn');
+      if (checkBtn) {
+        checkBtn.addEventListener('click', async () => {
+          const roomData = getRoomItems(roomNumber);
+          for (const item of roomData) {
+            const updatedItem = { ...item, last_checked: new Date().toISOString() };
+            await window.dataSdk.update(updatedItem);
+            const idx = roomItems.findIndex(i => String(i.id) === String(updatedItem.id));
+            if (idx >= 0) roomItems[idx] = updatedItem;
+          }
+          showToast(`Room ${roomNumber} checked`, 'success');
+        });
+      }
+
+      const addCustomBtn = document.getElementById('addCustomRoomItemBtn');
+      if (addCustomBtn) {
+        addCustomBtn.addEventListener('click', () => openRoomAddModal(roomNumber));
+      }
+    }
+
+    function updateMaintenanceCount() {
+      if (!maintenanceCount) return;
+      const issues = getRoomIssues(roomItems);
+      maintenanceCount.textContent = issues.length;
+    }
+
+    function renderMaintenanceQueue() {
+      if (!maintenanceList) {
+        updateMaintenanceCount();
+        return;
+      }
+      const issues = getRoomIssues(roomItems);
+      updateMaintenanceCount();
+      if (currentPage !== 'room-maintenance') return;
+      if (issues.length === 0) {
+        maintenanceList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <div class="empty-title">No active issues</div>
+            <div class="empty-subtitle">All rooms are in good condition.</div>
+          </div>
+        `;
+        return;
+      }
+      maintenanceList.innerHTML = issues.map(issue => {
+        return `
+          <div class="maintenance-card">
+            <div class="maintenance-title">Room ${issue.room_number} • ${issue.item_name}</div>
+            <div class="room-item-meta">Issue: ${issue.status === 'broken' ? 'Broken' : 'Missing'}${issue.notes ? ` • ${issue.notes}` : ''}</div>
+            <button class="room-action-btn" data-resolve="${issue.id}">✅ Mark Resolved</button>
+          </div>
+        `;
+      }).join('');
+
+      maintenanceList.querySelectorAll('[data-resolve]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-resolve');
+          const item = roomItems.find(i => String(i.id) === String(id));
+          if (!item) return;
+          const updatedItem = { ...item, status: 'good', notes: '' };
+          await window.dataSdk.update(updatedItem);
+          const idx = roomItems.findIndex(i => String(i.id) === String(updatedItem.id));
+          if (idx >= 0) roomItems[idx] = updatedItem;
+          showToast('Issue resolved', 'success');
+          renderMaintenanceQueue();
+          renderRoomRegistry();
+        });
+      });
+    }
+
+    function openRoomModal(title, bodyHtml, confirmText, onConfirm) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">${title}</div>
+          <div class="modal-text">${bodyHtml}</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" id="roomModalConfirm">${confirmText}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      const confirmBtn = document.getElementById('roomModalConfirm');
+      confirmBtn.addEventListener('click', onConfirm);
+    }
+
+    function openRoomEditModal(itemId) {
+      const item = roomItems.find(i => String(i.id) === String(itemId));
+      if (!item) return;
+      openRoomModal(
+        'Edit Item',
+        `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="roomEditName" value="${item.item_name}"></div>
+            <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" id="roomEditQty" type="number" min="1" value="${item.quantity || 1}"></div>
+          </div>
+        `,
+        'Save',
+        async () => {
+          const name = document.getElementById('roomEditName').value.trim();
+          const qty = parseInt(document.getElementById('roomEditQty').value, 10) || 1;
+          const updatedItem = { ...item, item_name: name || item.item_name, quantity: qty };
+          await window.dataSdk.update(updatedItem);
+          const idx = roomItems.findIndex(i => String(i.id) === String(updatedItem.id));
+          if (idx >= 0) roomItems[idx] = updatedItem;
+          closeModal();
+          showToast('Item updated', 'success');
+          if (currentRoomNumber) renderRoomDetail(currentRoomNumber);
+        }
+      );
+    }
+
+    function openRoomIssueModal(itemId) {
+      const item = roomItems.find(i => String(i.id) === String(itemId));
+      if (!item) return;
+      openRoomModal(
+        'Report Issue',
+        `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Issue Type</label>
+              <select class="form-select" id="roomIssueType">
+                <option value="broken">Broken</option>
+                <option value="missing">Missing</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Notes (Optional)</label><input class="form-input" id="roomIssueNotes" placeholder="Add notes"></div>
+          </div>
+        `,
+        'Report',
+        async () => {
+          const issueType = document.getElementById('roomIssueType').value;
+          const notes = document.getElementById('roomIssueNotes').value.trim();
+          const updatedItem = { ...item, status: issueType, notes };
+          await window.dataSdk.update(updatedItem);
+          const idx = roomItems.findIndex(i => String(i.id) === String(updatedItem.id));
+          if (idx >= 0) roomItems[idx] = updatedItem;
+          closeModal();
+          showToast('Issue reported', 'success');
+          if (currentRoomNumber) renderRoomDetail(currentRoomNumber);
+          renderMaintenanceQueue();
+          renderRoomRegistry();
+        }
+      );
+    }
+
+    function openRoomDeleteModal(itemId) {
+      const item = roomItems.find(i => String(i.id) === String(itemId));
+      if (!item) return;
+      openRoomModal(
+        'Delete Item',
+        `Are you sure you want to delete ${item.item_name} from Room ${item.room_number}?`,
+        'Delete',
+        async () => {
+          await window.dataSdk.delete(item);
+          roomItems = roomItems.filter(i => String(i.id) !== String(item.id));
+          closeModal();
+          showToast('Item deleted', 'success');
+          if (currentRoomNumber) renderRoomDetail(currentRoomNumber);
+          renderMaintenanceQueue();
+          renderRoomRegistry();
+        }
+      );
+    }
+
+    function openRoomAddModal(roomNumber) {
+      openRoomModal(
+        'Add Custom Item',
+        `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Category</label><input class="form-input" id="roomAddCategory" placeholder="Category"></div>
+            <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="roomAddName" placeholder="Item name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" id="roomAddQty" type="number" min="1" value="1"></div>
+          </div>
+        `,
+        'Add',
+        async () => {
+          const category = document.getElementById('roomAddCategory').value.trim() || 'Custom';
+          const name = document.getElementById('roomAddName').value.trim();
+          const qty = parseInt(document.getElementById('roomAddQty').value, 10) || 1;
+          if (!name) {
+            showToast('Enter item name', 'error');
+            return;
+          }
+          const payload = {
+            id: `${roomNumber}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            room_type: 'room_item',
+            room_number: roomNumber,
+            category,
+            item_name: name,
+            quantity: qty,
+            status: 'good',
+            notes: '',
+            last_checked: new Date().toISOString(),
+            added_timestamp: new Date().toISOString(),
+            date_added: getLocalDateString(),
+            is_archived: false
+          };
+          await window.dataSdk.create(payload);
+          if (!roomItems.find(i => String(i.id) === String(payload.id))) {
+            roomItems.push(payload);
+          }
+          closeModal();
+          showToast('Item added', 'success');
+          if (currentRoomNumber) renderRoomDetail(currentRoomNumber);
+          renderRoomRegistry();
+        }
+      );
+    }
+
+    if (maintenanceQueueBtn) {
+      maintenanceQueueBtn.addEventListener('click', () => navigateTo('room-maintenance'));
+    }
+
+    // ============== STOCK LOCATIONS FUNCTIONALITY ==============
+
+    const stockLocationsContainer = document.getElementById('stockLocationsContainer');
+    const stockDetailContainer = document.getElementById('stockDetailContainer');
+    const stockDetailTitle = document.getElementById('stockDetailTitle');
+    const stockDetailMeta = document.getElementById('stockDetailMeta');
+    const stockCheckedBtn = document.getElementById('stockCheckedBtn');
+    const addStockItemBtn = document.getElementById('addStockItemBtn');
+    const backToStockLocationsBtn = document.getElementById('backToStockLocationsBtn');
+
+    const stockLocationSections = [
+      {
+        title: 'Floor 1 Stock',
+        locations: Array.from({ length: 13 }, (_, i) => `Storage F1-${String(i + 1).padStart(2, '0')}`)
+      },
+      {
+        title: 'Floor 2 Stock',
+        locations: Array.from({ length: 11 }, (_, i) => `Storage F2-${String(i + 1).padStart(2, '0')}`)
+      },
+      {
+        title: 'Floor 3 Stock',
+        locations: Array.from({ length: 12 }, (_, i) => `Storage F3-${String(i + 1).padStart(2, '0')}`)
+      },
+      {
+        title: 'Other Locations',
+        locations: ['Garage', 'Luggage Room']
+      }
+    ];
+
+    function formatStockDate(value) {
+      if (!value) return 'Never';
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return String(value);
+      return parsed.toLocaleDateString();
+    }
+
+    function getStockItemsForLocation(locationName) {
+      return stockLocationItems.filter(item => item.location_name === locationName);
+    }
+
+    function getLatestChecked(items) {
+      if (!items.length) return 'Never';
+      const latest = items.reduce((acc, item) => {
+        if (!item.last_checked) return acc;
+        if (!acc) return item.last_checked;
+        return new Date(item.last_checked) > new Date(acc) ? item.last_checked : acc;
+      }, null);
+      return formatStockDate(latest);
+    }
+
+    function renderStockLocations() {
+      if (!stockLocationsContainer) return;
+      if (currentPage !== 'stock-locations') return;
+
+      stockLocationsContainer.innerHTML = stockLocationSections.map(section => {
+        const cards = section.locations.map(locationName => {
+          const items = getStockItemsForLocation(locationName);
+          const lastChecked = getLatestChecked(items);
+          return `
+            <div class="item-card" data-stock-location="${locationName}">
+              <div>
+                <div class="room-item-name">${locationName}</div>
+                <div class="room-item-meta">${items.length} items • Last checked: ${lastChecked}</div>
+              </div>
+              <button class="btn-submit" style="width: auto;">Open</button>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="room-section">
+            <div class="room-section-title">${section.title}</div>
+            <div class="items-grid">${cards}</div>
+          </div>
+        `;
+      }).join('');
+
+      stockLocationsContainer.querySelectorAll('[data-stock-location]').forEach(card => {
+        card.addEventListener('click', () => {
+          const locationName = card.getAttribute('data-stock-location');
+          currentStockLocation = locationName;
+          navigateTo('stock-detail');
+        });
+      });
+    }
+
+    function renderStockDetail() {
+      if (!stockDetailContainer || !stockDetailTitle || !stockDetailMeta) return;
+      if (currentPage !== 'stock-detail') return;
+      if (!currentStockLocation) return;
+
+      const items = getStockItemsForLocation(currentStockLocation);
+      stockDetailTitle.textContent = currentStockLocation;
+      stockDetailMeta.textContent = `Items: ${items.length} • Last checked: ${getLatestChecked(items)}`;
+
+      if (!items.length) {
+        stockDetailContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div class="empty-title">No items in this location</div>
+            <div class="empty-subtitle">Add the first item to get started.</div>
+          </div>
+        `;
+      } else {
+        stockDetailContainer.innerHTML = items.map(item => {
+          return `
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div>
+                  <div class="equipment-name">${item.item_name}</div>
+                  <div class="room-item-meta">Qty: ${item.quantity || 0}${item.unit ? ` ${item.unit}` : ''}</div>
+                  ${item.notes ? `<div class="room-item-meta">Notes: ${item.notes}</div>` : ''}
+                </div>
+              </div>
+              <div class="room-item-actions">
+                <button class="room-action-btn" data-stock-edit="${item.id}">✏️ Edit</button>
+                <button class="room-action-btn danger" data-stock-delete="${item.id}">🗑️ Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        stockDetailContainer.querySelectorAll('[data-stock-edit]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const itemId = btn.getAttribute('data-stock-edit');
+            const item = stockLocationItems.find(i => String(i.id) === String(itemId));
+            if (item) openStockItemModal(item);
+          });
+        });
+
+        stockDetailContainer.querySelectorAll('[data-stock-delete]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const itemId = btn.getAttribute('data-stock-delete');
+            const item = stockLocationItems.find(i => String(i.id) === String(itemId));
+            if (!item) return;
+            await window.dataSdk.delete(item);
+            stockLocationItems = stockLocationItems.filter(i => String(i.id) !== String(itemId));
+            renderStockDetail();
+            renderStockLocations();
+            showToast('Item deleted', 'success');
+          });
+        });
+      }
+
+      if (addStockItemBtn) {
+        addStockItemBtn.onclick = () => openStockItemModal();
+      }
+
+      if (backToStockLocationsBtn) {
+        backToStockLocationsBtn.onclick = () => navigateTo('stock-locations');
+      }
+
+      if (stockCheckedBtn) {
+        stockCheckedBtn.onclick = async () => {
+          const itemsToUpdate = getStockItemsForLocation(currentStockLocation);
+          const now = new Date().toISOString();
+          for (const item of itemsToUpdate) {
+            const updatedItem = { ...item, last_checked: now };
+            await window.dataSdk.update(updatedItem);
+            const idx = stockLocationItems.findIndex(i => String(i.id) === String(updatedItem.id));
+            if (idx >= 0) stockLocationItems[idx] = updatedItem;
+          }
+          renderStockDetail();
+          renderStockLocations();
+          showToast('Stock location checked', 'success');
+        };
+      }
+    }
+
+    function openStockItemModal(item = null) {
+      if (!currentStockLocation) return;
+      const isEdit = Boolean(item);
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">${isEdit ? 'Edit Item' : 'Add Item'} • ${currentStockLocation}</div>
+          <div class="modal-text">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Item Name *</label><input class="form-input" id="stockItemName" value="${item ? item.item_name : ''}"></div>
+              <div class="form-group"><label class="form-label">Quantity *</label><input class="form-input" id="stockItemQty" type="number" min="0" value="${item ? item.quantity : ''}"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Unit (Optional)</label><input class="form-input" id="stockItemUnit" value="${item ? (item.unit || '') : ''}"></div>
+              <div class="form-group"><label class="form-label">Notes (Optional)</label><input class="form-input" id="stockItemNotes" value="${item ? (item.notes || '') : ''}"></div>
+            </div>
+          </div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" id="stockModalConfirm">${isEdit ? 'Save' : 'Add'}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const confirmBtn = document.getElementById('stockModalConfirm');
+      confirmBtn.addEventListener('click', async () => {
+        const name = document.getElementById('stockItemName').value.trim();
+        const qty = parseInt(document.getElementById('stockItemQty').value, 10);
+        const unit = document.getElementById('stockItemUnit').value.trim();
+        const notes = document.getElementById('stockItemNotes').value.trim();
+
+        if (!name || Number.isNaN(qty)) {
+          showToast('Please enter item name and quantity', 'error');
+          return;
+        }
+
+        if (isEdit) {
+          const updatedItem = { ...item, item_name: name, quantity: qty, unit: unit || null, notes: notes || null };
+          await window.dataSdk.update(updatedItem);
+          const idx = stockLocationItems.findIndex(i => String(i.id) === String(updatedItem.id));
+          if (idx >= 0) stockLocationItems[idx] = updatedItem;
+          closeModal();
+          renderStockDetail();
+          renderStockLocations();
+          showToast('Item updated', 'success');
+          return;
+        }
+
+        const payload = {
+          id: `${currentStockLocation}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          stock_type: 'stock_location',
+          location_name: currentStockLocation,
+          item_name: name,
+          quantity: qty,
+          unit: unit || null,
+          notes: notes || null,
+          last_checked: new Date().toISOString(),
+          added_timestamp: new Date().toISOString(),
+          date_added: getLocalDateString(),
+          is_archived: false
+        };
+        await window.dataSdk.create(payload);
+        if (!stockLocationItems.find(i => String(i.id) === String(payload.id))) {
+          stockLocationItems.push(payload);
+        }
+        closeModal();
+        renderStockDetail();
+        renderStockLocations();
+        showToast('Item added', 'success');
+      });
+    }
 
     // ============== REST OF THE CODE (EXPIRATION, NOTIFICATIONS, ARCHIVE) ==============
 
