@@ -1817,15 +1817,6 @@
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full">
-  <div class="pin-overlay hidden" id="pinOverlay">
-   <div class="pin-panel">
-    <div class="pin-title">Enter PIN</div>
-    <div class="pin-subtitle">Access to Housekeeping Inventory</div>
-    <input class="pin-input" id="pinInput" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••" autocomplete="off">
-    <div class="pin-error" id="pinError"></div>
-    <button class="pin-button" id="pinSubmit">Unlock</button>
-   </div>
-  </div>
   <div class="main-wrapper">
    <div style="padding: 2rem 2rem 3rem 2rem;"><button class="back-button hidden" id="backButton">← Back</button>
     <h1 class="main-title" id="mainTitle">Housekeeping Inventory &amp; Stock</h1><!-- Main Menu -->
@@ -2182,11 +2173,6 @@
   renderStockDetail();
     let currentPage = 'main';
     let isUnlocked = true;
-    try {
-      isUnlocked = localStorage.getItem('app_unlocked') === 'true';
-    } catch (err) {
-      isUnlocked = true;
-    }
     let allItems = [];
     let allNotifications = [];
     let allStockCounts = [];
