@@ -1839,12 +1839,12 @@
    <div style="padding: 2rem 2rem 3rem 2rem;"><button class="back-button hidden" id="backButton">← Back</button>
     <h1 class="main-title" id="mainTitle">Housekeeping Inventory &amp; Stock</h1><!-- Main Menu -->
     <div id="mainMenu" class="grid-container">
-     <div class="premium-card" data-page="minibar"><span class="card-emoji">🍾</span>
+    <div class="premium-card" data-page="minibar" onclick="goTo('minibar')"><span class="card-emoji">🍾</span>
       <div class="card-title">
        Minibar Operations
       </div>
       </div>
-     <div class="premium-card" data-page="orders">
+    <div class="premium-card" data-page="orders" onclick="goTo('orders')">
       <div class="notification-badge" id="notificationBadge">
        0
       </div><span class="card-emoji">📦</span>
@@ -1852,22 +1852,22 @@
        Order Management
       </div>
      </div>
-     <div class="premium-card" data-page="housekeeping"><span class="card-emoji">🧹</span>
+    <div class="premium-card" data-page="housekeeping" onclick="goTo('housekeeping')"><span class="card-emoji">🧹</span>
       <div class="card-title">
        Housekeeping Stock
       </div>
      </div>
-     <div class="premium-card" data-page="archive"><span class="card-emoji">📚</span>
+    <div class="premium-card" data-page="archive" onclick="goTo('archive')"><span class="card-emoji">📚</span>
       <div class="card-title">
        Archive
       </div>
      </div>
-     <div class="premium-card" data-page="room-registry"><span class="card-emoji">🏨</span>
+    <div class="premium-card" data-page="room-registry" onclick="goTo('room-registry')"><span class="card-emoji">🏨</span>
       <div class="card-title">
        Room Registry
       </div>
      </div>
-     <div class="premium-card" data-page="stock-locations"><span class="card-emoji">📍</span>
+    <div class="premium-card" data-page="stock-locations" onclick="goTo('stock-locations')"><span class="card-emoji">📍</span>
       <div class="card-title">
        Stock Locations
       </div>
@@ -1876,12 +1876,12 @@
     
     <!-- Minibar Operations Submenu -->
     <div id="minibarMenu" class="grid-container hidden">
-     <div class="premium-card" data-subpage="expiration"><span class="card-emoji">⏰</span>
+    <div class="premium-card" data-subpage="expiration" onclick="goTo('expiration')"><span class="card-emoji">⏰</span>
       <div class="card-title">
        Expiration Control
       </div>
      </div>
-     <div class="premium-card" data-subpage="stockcount"><span class="card-emoji">📦</span>
+    <div class="premium-card" data-subpage="stockcount" onclick="goTo('stockcount')"><span class="card-emoji">📦</span>
       <div class="card-title">
        Minibar Counter
       </div>
@@ -1941,12 +1941,12 @@
      <div id="notificationsContainer"></div>
     </div><!-- Housekeeping Stock Submenu -->
     <div id="housekeepingMenu" class="grid-container hidden">
-     <div class="premium-card" data-subpage="housekeeping-equipment"><span class="card-emoji">🧹</span>
+    <div class="premium-card" data-subpage="housekeeping-equipment" onclick="goTo('housekeeping-equipment')"><span class="card-emoji">🧹</span>
       <div class="card-title">
        Housekeeping Equipment
       </div>
      </div>
-    <div class="premium-card" data-subpage="public-area-equipment"><span class="card-emoji">&#128679;</span>
+    <div class="premium-card" data-subpage="public-area-equipment" onclick="goTo('public-area-equipment')"><span class="card-emoji">&#128679;</span>
       <div class="card-title">
        Public Area Equipment
       </div>
@@ -2601,6 +2601,14 @@
         pinInput.value = '';
         pinInput.focus();
       }
+    }
+
+    function goTo(page) {
+      if (!isUnlocked) {
+        showPinLock();
+        return;
+      }
+      navigateTo(page);
     }
 
     // Navigation handler
