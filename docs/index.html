@@ -2178,7 +2178,12 @@
     const stockDetailPage = document.getElementById('stockDetailPage');
     const backButton = document.getElementById('backButton');
     let currentPage = 'main';
-    let isUnlocked = true;
+    var isUnlocked = true;
+    let roomRegistryContainer;
+    let roomDetailContainer;
+    let maintenanceQueueBtn;
+    let maintenanceList;
+    let maintenanceCount;
     let allItems = [];
     let allNotifications = [];
     let allStockCounts = [];
@@ -3993,11 +3998,11 @@
 
     // ============== ROOM REGISTRY FUNCTIONALITY ==============
 
-    const roomRegistryContainer = document.getElementById('roomRegistryContainer');
-    const roomDetailContainer = document.getElementById('roomDetailContainer');
-    const maintenanceQueueBtn = document.getElementById('maintenanceQueueBtn');
-    const maintenanceList = document.getElementById('maintenanceList');
-    const maintenanceCount = document.getElementById('maintenanceCount');
+    roomRegistryContainer = document.getElementById('roomRegistryContainer');
+    roomDetailContainer = document.getElementById('roomDetailContainer');
+    maintenanceQueueBtn = document.getElementById('maintenanceQueueBtn');
+    maintenanceList = document.getElementById('maintenanceList');
+    maintenanceCount = document.getElementById('maintenanceCount');
 
     let currentRoomNumber = null;
 
