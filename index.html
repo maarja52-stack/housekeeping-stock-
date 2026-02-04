@@ -4616,7 +4616,7 @@
           return `
             <div class="setup-category">
               <div class="setup-category-title playfair">${section.category} (${section.items.length} items)</div>
-              <div class="checklist-items">${itemsHtml}</div>
+              <div class="checklist-items" style="display:flex; flex-direction:column; gap:0.9rem;">${itemsHtml}</div>
             </div>
           `;
         }).join('');
