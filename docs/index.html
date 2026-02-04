@@ -2191,7 +2191,12 @@
   renderStockLocations();
   renderStockDetail();
     let currentPage = 'main';
-    let isUnlocked = localStorage.getItem('app_unlocked') === 'true';
+    let isUnlocked = true;
+    try {
+      isUnlocked = localStorage.getItem('app_unlocked') === 'true';
+    } catch (err) {
+      isUnlocked = true;
+    }
     let allItems = [];
     let allNotifications = [];
     let allStockCounts = [];
@@ -2551,7 +2556,11 @@
       const value = pinInput.value.trim();
       if (value === APP_PIN) {
         isUnlocked = true;
-        localStorage.setItem('app_unlocked', 'true');
+        try {
+          localStorage.setItem('app_unlocked', 'true');
+        } catch (err) {
+          // Ignore storage errors and allow navigation
+        }
         if (pinError) pinError.textContent = '';
         hidePinLock();
       } else {
