@@ -93,6 +93,20 @@
       opacity: 0.8;
     }
 
+    .build-badge {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: rgba(8, 15, 34, 0.9);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #f4e4a8;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      z-index: 9999;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
     .notification-badge {
       position: absolute;
       top: 10px;
@@ -2424,6 +2438,7 @@
     <span id="footerCopy">© M.A.2026</span>
     <span id="footerVersion" class="footer-version">v—</span>
   </footer>
+  <div id="buildBadge" class="build-badge">Build v—</div>
   </div>
   <script>
     const defaultConfig = {
@@ -6902,6 +6917,7 @@
 
     async function updateFooterVersion() {
       const versionEl = document.getElementById('footerVersion');
+      const buildBadge = document.getElementById('buildBadge');
       if (!versionEl) return;
       try {
         const response = await fetch(
@@ -6914,9 +6930,12 @@
         const body = await response.json();
         const sha = body && body[0] && body[0].sha ? body[0].sha.slice(0, 7) : '';
         if (!Number.isFinite(count)) count = 1;
-        versionEl.textContent = `v${count}${sha ? ` (${sha})` : ''}`;
+        const versionText = `v${count}${sha ? ` (${sha})` : ''}`;
+        versionEl.textContent = versionText;
+        if (buildBadge) buildBadge.textContent = `Build ${versionText}`;
       } catch (err) {
         versionEl.textContent = 'v—';
+        if (buildBadge) buildBadge.textContent = 'Build v—';
       }
     }
 
