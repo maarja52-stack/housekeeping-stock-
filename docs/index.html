@@ -4167,39 +4167,35 @@
         const roomsMarkup = floor.rooms.map(roomNumber => {
           const items = getRoomItems(roomNumber);
           const issues = getRoomIssues(items);
-          let statusClass = 'setup';
-          let statusLabel = 'Not Setup';
-          let statusIcon = '⚪';
-
-          if (items.length > 0) {
-            if (issues.length > 0) {
-              statusClass = 'issues';
-              statusLabel = `${issues.length} Issues`;
-              statusIcon = '⚠️';
-            } else {
-              statusClass = 'good';
-              statusLabel = 'All Good';
-              statusIcon = '✅';
-            }
-          }
+          const hasItems = items.length > 0;
+          const hasIssues = issues.length > 0;
+          const statusLabel = hasItems
+            ? (hasIssues ? `${issues.length} Issues` : 'All Good')
+            : 'Not Setup';
+          const icon = hasIssues ? '⚠️' : (hasItems ? '📦' : '⚪');
+          const preview = hasIssues
+            ? issues[0].item_name
+            : (hasItems ? 'All good' : 'Not setup');
 
           return `
-            <div class="room-card" data-room="${roomNumber}">
-              <div class="room-number">Room ${roomNumber}</div>
-              <div class="room-status ${statusClass}">${statusIcon} ${statusLabel}</div>
+            <div class="storage-card ${hasItems ? 'has-items' : ''}" data-room="${roomNumber}">
+              <div class="storage-icon">${icon}</div>
+              <div class="storage-id">${roomNumber}</div>
+              <div class="storage-status">${statusLabel}</div>
+              <div class="storage-preview">${preview}</div>
             </div>
           `;
         }).join('');
 
         return `
-          <div class="room-floor-section">
-            <div class="room-floor-title">${floor.name}</div>
-            <div class="room-grid">${roomsMarkup}</div>
+          <div class="room-section" style="margin-bottom: 2rem;">
+            <div class="room-section-title playfair" style="font-size: 1.5rem; color: #d4af37; margin-bottom: 1rem;">${floor.name}</div>
+            <div class="storage-grid">${roomsMarkup}</div>
           </div>
         `;
       }).join('');
 
-      roomRegistryContainer.querySelectorAll('.room-card').forEach(card => {
+      roomRegistryContainer.querySelectorAll('[data-room]').forEach(card => {
         card.addEventListener('click', () => {
           const roomNumber = card.getAttribute('data-room');
           openRoomDetail(roomNumber);
