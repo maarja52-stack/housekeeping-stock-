@@ -488,10 +488,11 @@
     }
 
     .storage-preview {
-      font-size: 0.75rem;
+      font-size: 0.95rem;
       color: #f4e4a8;
-      font-style: italic;
-      opacity: 0.7;
+      font-style: normal;
+      font-weight: 600;
+      opacity: 0.85;
       margin-top: 0.5rem;
     }
 
@@ -4618,7 +4619,7 @@
           const lastChecked = getLatestChecked(items);
           const firstItem = items[0];
           const preview = firstItem
-            ? `${firstItem.item_name}${items.length > 1 ? '...' : ''}`
+            ? `${firstItem.item_name}`
             : 'Empty';
           const icon = items.length ? '📦' : '⚪';
           const shortLabel = locationName.replace(/^Storage\s+/i, '');
