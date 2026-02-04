@@ -4536,12 +4536,12 @@
               const checkboxId = `check_${categoryKey}_${index + 1}`;
               const qtyId = `qty_${categoryKey}_${index + 1}`;
               return `
-                <div class="checklist-item">
+                <div class="checklist-item" style="color: #f4e4a8;">
                   <input class="checklist-checkbox" type="checkbox" id="${checkboxId}" name="items" value="${section.category}|${item.name}|${item.qty ? 'true' : 'false'}" data-item="${item.name}" data-category="${section.category}">
-                  <label class="checklist-label" for="${checkboxId}">${item.name}</label>
+                  <label class="checklist-label" for="${checkboxId}" style="color: #f4e4a8;">${item.name}</label>
                   ${item.qty ? `
                     <div class="checklist-qty">
-                      <span>Qty:</span>
+                      <span style="color: #f4e4a8;">Qty:</span>
                       <input type="number" id="${qtyId}" min="1" value="1" data-qty-for="${checkboxId}">
                     </div>
                   ` : ''}
@@ -4559,12 +4559,12 @@
         }).join('');
 
         roomDetailContainer.innerHTML = `
-          <div class="setup-container">
+          <div class="setup-container" style="color: #f4e4a8;">
             <div class="setup-back">
               <button class="btn-cancel" id="backToRoomsBtn">← Back to Room Registry</button>
             </div>
             <div class="setup-title playfair">Setup Room ${roomNumber}</div>
-            <div class="setup-subtitle">Select items present in this room from the checklist below</div>
+            <div class="setup-subtitle" style="color: #f4e4a8;">Select items present in this room from the checklist below</div>
 
             <div class="setup-add-btn">
               <button class="btn-submit" id="showCustomItemFormBtn">➕ Add Custom Item to Checklist</button>
