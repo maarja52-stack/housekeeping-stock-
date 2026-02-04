@@ -1642,6 +1642,165 @@
         border-bottom: none;
       }
 
+      .setup-container {
+        max-width: 896px;
+        margin: 0 auto;
+        padding: 1.5rem 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .setup-container {
+          padding: 1.5rem 2rem;
+        }
+      }
+
+      .setup-back {
+        margin-bottom: 1.5rem;
+      }
+
+      .setup-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .setup-title {
+          font-size: 2.5rem;
+        }
+      }
+
+      .setup-subtitle {
+        font-size: 1.125rem;
+        color: #f4e4a8;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .setup-category {
+        margin-bottom: 2rem;
+      }
+
+      .setup-category-title {
+        font-size: 1.5rem;
+        color: #d4af37;
+        margin-bottom: 1rem;
+      }
+
+      .checklist-items {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background: rgba(212, 175, 55, 0.05);
+        border: 2px solid #b8941f;
+      }
+
+      .checklist-checkbox {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+        accent-color: #d4af37;
+      }
+
+      .checklist-label {
+        flex: 1;
+        color: #f4e4a8;
+        font-size: 1.125rem;
+        cursor: pointer;
+      }
+
+      .checklist-qty {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .checklist-qty span {
+        font-size: 0.875rem;
+        color: #f4e4a8;
+      }
+
+      .checklist-qty input {
+        width: 5rem;
+        padding: 0.5rem;
+        border-radius: 8px;
+        color: #d4af37;
+        border: 2px solid #b8941f;
+        background: rgba(10, 17, 40, 0.6);
+        text-align: center;
+        outline: none;
+      }
+
+      .checklist-qty input:focus {
+        border-color: #d4af37;
+      }
+
+      .setup-add-btn {
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .setup-form {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(10, 17, 40, 0.9), rgba(5, 10, 26, 0.95));
+        border: 2px solid #d4af37;
+      }
+
+      .setup-form.hidden {
+        display: none;
+      }
+
+      .setup-form-title {
+        font-size: 1.5rem;
+        color: #d4af37;
+        margin-bottom: 1rem;
+      }
+
+      .setup-form label {
+        color: #d4af37;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .setup-form input,
+      .setup-form select {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 8px;
+        color: #d4af37;
+        border: 2px solid #b8941f;
+        background: rgba(10, 17, 40, 0.6);
+        outline: none;
+      }
+
+      .setup-form input:focus,
+      .setup-form select:focus {
+        border-color: #d4af37;
+      }
+
+      .setup-form-actions {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .setup-save {
+        text-align: center;
+        margin-top: 2rem;
+      }
+
       .room-item-name {
         font-weight: 700;
         color: #d4af37;
@@ -4181,6 +4340,8 @@
       }
     ];
 
+    const roomSetupCustomItems = {};
+
     function getRoomItems(roomNumber) {
       return roomItems.filter(item => String(item.room_number) === String(roomNumber));
     }
@@ -4263,32 +4424,74 @@
       `;
 
       if (items.length === 0) {
-        const setupSections = roomTemplate.map(section => {
-          const itemsHtml = section.items.map(item => {
-            const slug = `${roomNumber}-${section.category}-${item.name}`.replace(/\s+/g, '-');
-            return `
-              <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
-                <input type="checkbox" id="${slug}" data-item="${item.name}" data-category="${section.category}">
-                <label for="${slug}" style="color: #d4af37; font-weight: 600;">${item.name}</label>
-                ${item.qty ? `<input type="number" min="1" value="1" class="form-input" style="max-width: 100px;" data-qty-for="${slug}">` : ''}
-              </div>
-            `;
-          }).join('');
+        const customItems = roomSetupCustomItems[roomNumber] || [];
+        const setupSections = [...roomTemplate, { category: 'Custom Items', items: customItems }].map(section => {
+          const categoryKey = section.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+          const itemsHtml = section.items.length
+            ? section.items.map((item, index) => {
+              const checkboxId = `check_${categoryKey}_${index + 1}`;
+              const qtyId = `qty_${categoryKey}_${index + 1}`;
+              return `
+                <div class="checklist-item">
+                  <input class="checklist-checkbox" type="checkbox" id="${checkboxId}" name="items" value="${section.category}|${item.name}|${item.qty ? 'true' : 'false'}" data-item="${item.name}" data-category="${section.category}">
+                  <label class="checklist-label" for="${checkboxId}">${item.name}</label>
+                  ${item.qty ? `
+                    <div class="checklist-qty">
+                      <span>Qty:</span>
+                      <input type="number" id="${qtyId}" min="1" value="1" data-qty-for="${checkboxId}">
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join('')
+            : `<div style="color: #f4e4a8; opacity: 0.7;">No custom items yet.</div>`;
+
           return `
-            <div class="room-section">
-              <div class="room-section-title">${section.category}</div>
-              ${itemsHtml}
+            <div class="setup-category">
+              <div class="setup-category-title playfair">${section.category} (${section.items.length} items)</div>
+              <div class="checklist-items">${itemsHtml}</div>
             </div>
           `;
         }).join('');
 
         roomDetailContainer.innerHTML = `
-          ${header}
-          <div class="room-section">
-            <div class="room-section-title">Setup Checklist</div>
-            <div style="color: #d4af37; opacity: 0.8; margin-bottom: 1rem;">Select items in this room and enter quantities where needed.</div>
+          <div class="setup-container">
+            <div class="setup-back">
+              <button class="btn-cancel" id="backToRoomsBtn">← Back to Room Registry</button>
+            </div>
+            <div class="setup-title playfair">Setup Room ${roomNumber}</div>
+            <div class="setup-subtitle">Select items present in this room from the checklist below</div>
+
+            <div class="setup-add-btn">
+              <button class="btn-submit" id="showCustomItemFormBtn">➕ Add Custom Item to Checklist</button>
+            </div>
+
+            <div class="setup-form hidden" id="customItemForm">
+              <div class="setup-form-title playfair">Add Custom Item to Checklist</div>
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                  <label for="customItemName">Item Name</label>
+                  <input type="text" id="customItemName" placeholder="e.g., Artwork, Decorative Vase, Extra Furniture" required>
+                </div>
+                <div>
+                  <label for="customItemQty">Does this item have a quantity?</label>
+                  <select id="customItemQty">
+                    <option value="false">No - Single item only</option>
+                    <option value="true">Yes - Track quantity</option>
+                  </select>
+                </div>
+                <div class="setup-form-actions">
+                  <button class="btn-submit" id="addCustomItemBtn">Add to Checklist</button>
+                  <button class="btn-cancel" id="cancelCustomItemBtn" style="border: 2px solid #dc2626; color: #dc2626;">Cancel</button>
+                </div>
+              </div>
+            </div>
+
             ${setupSections}
-            <button class="btn-submit" id="saveRoomTemplateBtn">💾 Save Room Template</button>
+
+            <div class="setup-save">
+              <button class="btn-submit" id="saveRoomTemplateBtn">✓ Save Room Setup</button>
+            </div>
           </div>
         `;
 
@@ -4326,10 +4529,48 @@
             await window.dataSdk.create(payload);
           }
           saveRoomTemplateBtn.disabled = false;
-          saveRoomTemplateBtn.textContent = '💾 Save Room Template';
+          saveRoomTemplateBtn.textContent = '✓ Save Room Setup';
           showToast(`Room ${roomNumber} setup saved`, 'success');
           renderRoomDetail(roomNumber);
         });
+
+        const showCustomItemFormBtn = document.getElementById('showCustomItemFormBtn');
+        const customItemForm = document.getElementById('customItemForm');
+        const addCustomItemBtn = document.getElementById('addCustomItemBtn');
+        const cancelCustomItemBtn = document.getElementById('cancelCustomItemBtn');
+        const customItemName = document.getElementById('customItemName');
+        const customItemQty = document.getElementById('customItemQty');
+
+        if (showCustomItemFormBtn && customItemForm) {
+          showCustomItemFormBtn.addEventListener('click', () => {
+            customItemForm.classList.remove('hidden');
+            customItemName && customItemName.focus();
+          });
+        }
+
+        if (cancelCustomItemBtn && customItemForm) {
+          cancelCustomItemBtn.addEventListener('click', () => {
+            customItemForm.classList.add('hidden');
+          });
+        }
+
+        if (addCustomItemBtn) {
+          addCustomItemBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const nameValue = customItemName.value.trim();
+            if (!nameValue) {
+              showToast('Enter a custom item name', 'error');
+              return;
+            }
+            const qtyValue = customItemQty.value === 'true';
+            if (!roomSetupCustomItems[roomNumber]) roomSetupCustomItems[roomNumber] = [];
+            roomSetupCustomItems[roomNumber].push({ name: nameValue, qty: qtyValue });
+            customItemName.value = '';
+            customItemQty.value = 'false';
+            customItemForm.classList.add('hidden');
+            renderRoomDetail(roomNumber);
+          });
+        }
       } else {
         const grouped = {};
         items.forEach(item => {
