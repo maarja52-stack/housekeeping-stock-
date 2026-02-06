@@ -5119,8 +5119,8 @@
           const items = getStockItemsForLocation(locationName);
           const lastChecked = getLatestChecked(items);
           const firstItem = items[0];
-          const preview = firstItem
-            ? `${firstItem.item_name}`
+          const preview = items.length
+            ? items.slice(0, 2).map(item => item.item_name).join('<br>')
             : 'Empty';
           const icon = items.length ? '📦' : '⚪';
           const shortLabel = locationName.replace(/^Storage\s+/i, '');
