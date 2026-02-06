@@ -5128,7 +5128,8 @@
 
       const getSectionLabel = (title) => {
         const match = title.match(/^(Floor\s+\d+)/i);
-        return match ? match[1] : title;
+        if (match) return match[1];
+        return title.replace(/\s*\(.*\)\s*$/, '').trim();
       };
 
       stockLocationsContainer.innerHTML = stockLocationSections.map(section => {
@@ -5150,11 +5151,8 @@
           `;
         }).join('');
 
-        const isFloorSection = /^Floor\s+\d+/i.test(section.title);
         const sectionLabel = getSectionLabel(section.title);
-        const reportButton = isFloorSection
-          ? `<button class="btn-submit floor-report-btn" data-floor-report="${sectionLabel}">🖨️ Print ${sectionLabel}</button>`
-          : '';
+        const reportButton = `<button class="btn-submit floor-report-btn" data-floor-report="${sectionLabel}">🖨️ Print ${sectionLabel}</button>`;
 
         return `
           <div class="room-section" style="margin-bottom: 2rem;">
