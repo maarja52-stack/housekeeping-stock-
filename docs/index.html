@@ -2743,7 +2743,9 @@
         };
 
         const normalizedData = data.map(item => {
-          const normalizedRoomNumber = item.room_number || item.room || item.roomNumber || item.room_no || '';
+          const idPrefix = item && item.id ? String(item.id).split('-')[0] : '';
+          const inferredFromId = /^\d{2,4}$/.test(idPrefix) ? idPrefix : '';
+          const normalizedRoomNumber = item.room_number || item.room || item.roomNumber || item.room_no || inferredFromId || '';
           const inferredRoomType = item.room_type || (normalizedRoomNumber ? 'room_item' : '');
           return {
             ...item,
