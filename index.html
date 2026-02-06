@@ -5160,7 +5160,7 @@
         }).join('');
 
         const sectionLabel = getSectionLabel(section.title);
-        const reportButton = `<button class="btn-submit floor-report-btn" data-floor-report="${sectionLabel}">🖨️ Print ${sectionLabel}</button>`;
+        const reportButton = `<button class="btn-submit floor-report-btn" data-floor-report="${sectionLabel}">📄 Save ${sectionLabel} PDF</button>`;
 
         return `
           <div class="room-section" style="margin-bottom: 2rem;">
@@ -5208,7 +5208,7 @@
       const html = `
         <html>
           <head>
-            <title>${floorLabel} Stock Locations</title>
+            <title>${floorLabel} Stock Locations PDF</title>
             <style>
               body { font-family: Arial, sans-serif; padding: 24px; color: #111; }
               h1 { font-size: 22px; margin: 0 0 6px; }
