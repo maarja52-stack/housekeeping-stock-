@@ -1881,6 +1881,27 @@
         justify-content: center;
       }
 
+      @media (max-width: 640px) {
+        .checklist-item {
+          flex-wrap: wrap;
+        }
+
+        .checklist-label {
+          white-space: normal;
+        }
+
+        .checklist-qty {
+          margin-left: 0;
+          width: 100%;
+          justify-content: flex-end;
+          padding: 0.15rem 0.35rem;
+        }
+
+        .checklist-qty input {
+          width: 3.2rem;
+        }
+      }
+
       .checklist-qty span {
         font-size: 0.85rem;
         color: #f4e4a8;
