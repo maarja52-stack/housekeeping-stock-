@@ -1781,7 +1781,19 @@
 
       @media (min-width: 768px) {
         .setup-container {
+          max-width: 960px;
           padding: 1.5rem 2rem;
+        }
+
+        .checklist-item {
+          flex-wrap: nowrap;
+        }
+
+        .checklist-label {
+          flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
 
