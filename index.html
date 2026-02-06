@@ -2645,15 +2645,20 @@
           return String(value).toLowerCase().replace(/\s+/g, '_').replace(/-+/g, '_');
         };
 
-        const normalizedData = data.map(item => ({
-          ...item,
-          is_archived: normalizeArchived(item.is_archived),
-          date_added: normalizeDate(item.date_added),
-          location_name: item.location_name || item.location || item.stock_location || item.locationName || '',
-          stock_type: normalizeType(item.stock_type),
-          equipment_type: normalizeType(item.equipment_type),
-          room_type: normalizeType(item.room_type)
-        }));
+        const normalizedData = data.map(item => {
+          const normalizedRoomNumber = item.room_number || item.room || item.roomNumber || item.room_no || '';
+          const inferredRoomType = item.room_type || (normalizedRoomNumber ? 'room_item' : '');
+          return {
+            ...item,
+            room_number: normalizedRoomNumber,
+            is_archived: normalizeArchived(item.is_archived),
+            date_added: normalizeDate(item.date_added),
+            location_name: item.location_name || item.location || item.stock_location || item.locationName || '',
+            stock_type: normalizeType(item.stock_type),
+            equipment_type: normalizeType(item.equipment_type),
+            room_type: normalizeType(inferredRoomType)
+          };
+        });
 
         // Separate different types of data
         allItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.room_type && !item.is_archived);
