@@ -2821,6 +2821,23 @@
           };
         }
 
+        if (payload.room_type) {
+          return {
+            id: payload.id,
+            room_type: payload.room_type,
+            room_number: payload.room_number,
+            category: payload.category,
+            item_name: payload.item_name,
+            quantity: payload.quantity,
+            status: payload.status,
+            notes: payload.notes,
+            last_checked: payload.last_checked,
+            added_timestamp: payload.added_timestamp,
+            date_added: payload.date_added,
+            is_archived: payload.is_archived
+          };
+        }
+
         return {
           id: payload.id,
           item_name: payload.item_name,
