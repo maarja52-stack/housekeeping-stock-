@@ -1114,8 +1114,10 @@
 
     /* Stock Counter Styles */
     .stock-counter-container {
-      max-width: 900px;
+      max-width: 1200px;
+      width: 100%;
       margin: 0 auto;
+      padding: 0 1.25rem;
     }
 
     .progress-indicator {
@@ -2225,6 +2227,8 @@
         font-size: 1.1rem;
       }
     }
+
+    @media (max-width: 768px) {
       .stock-counter-container {
         max-width: none;
         width: 100%;
@@ -2246,6 +2250,7 @@
         flex-direction: column;
         align-items: flex-start;
       }
+    }
 
       .date-display {
         font-size: 1.2rem;
