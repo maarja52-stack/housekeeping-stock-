@@ -2151,21 +2151,27 @@
       }
 
       .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 0 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        padding: 0 0.75rem;
       }
 
       .premium-card {
-        padding: 1.5rem;
+        padding: 1rem;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.5rem;
       }
 
       .card-emoji {
-        font-size: 3rem;
+        font-size: 2.4rem;
       }
 
       .card-title {
-        font-size: 1.2rem;
+        font-size: 1rem;
+        line-height: 1.2;
       }
 
       .expiration-page,
@@ -2198,6 +2204,27 @@
         width: 100%;
       }
 
+
+    @media (max-width: 480px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+        padding: 0 0.85rem;
+      }
+
+      .premium-card {
+        padding: 1.1rem;
+        min-height: 132px;
+      }
+
+      .card-emoji {
+        font-size: 2.8rem;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+      }
+    }
       .stock-counter-container {
         max-width: none;
         width: 100%;
