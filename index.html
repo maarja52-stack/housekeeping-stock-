@@ -2721,9 +2721,9 @@
         </div>
         <div class="form-group"><label class="form-label" for="expirationDate">Expiration Date *</label> <input type="date" class="form-input" id="expirationDate" required>
         </div>
-        <div class="form-group"><label class="form-label" for="location">Location *</label> <input type="tel" class="form-input" id="location" placeholder="e.g., Room 305" inputmode="numeric" pattern="[0-9]*" required>
+        <div class="form-group"><label class="form-label" for="location">Location *</label> <input type="text" class="form-input" id="location" placeholder="e.g., Office, Stock Floor 1, Room 305" required>
         </div>
-        <div class="form-group"><label class="form-label" for="quantity">Quantity</label> <input type="tel" class="form-input" id="quantity" placeholder="Optional" inputmode="numeric" pattern="[0-9]*">
+        <div class="form-group"><label class="form-label" for="quantity">Quantity *</label> <input type="number" class="form-input" id="quantity" placeholder="Enter quantity" min="1" required>
         </div>
        </div>
        <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitBtn">Add Item</button>
@@ -5618,10 +5618,11 @@
       
       const itemName = document.getElementById('itemName').value;
       const expirationDate = document.getElementById('expirationDate').value;
-      const location = document.getElementById('location').value;
-      const quantity = document.getElementById('quantity').value;
+      const location = document.getElementById('location').value.trim();
+      const quantity = parseInt(document.getElementById('quantity').value, 10);
 
-      if (!itemName || !expirationDate || !location) {
+      if (!itemName || !expirationDate || !location || !Number.isFinite(quantity) || quantity < 1) {
+        showToast('Please enter item, date, location, and a valid quantity', 'error');
         return;
       }
 
@@ -5654,7 +5655,7 @@
         category: getCategoryFromItem(itemName),
         expiration_date: expirationDate,
         location: location,
-        quantity: quantity ? parseInt(quantity) : null,
+        quantity: quantity,
         added_timestamp: new Date().toISOString(),
         date_added: today,
         is_archived: false
