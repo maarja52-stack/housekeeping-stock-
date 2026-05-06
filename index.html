@@ -735,6 +735,10 @@
       max-height: 70vh;
       overflow-y: auto;
       padding-right: 0.5rem;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      scrollbar-gutter: stable;
     }
 
     .notification-card {
@@ -2340,7 +2344,7 @@
       }
 
       .notifications-list.expanded {
-        max-height: 320px;
+        max-height: 62vh;
       }
 
       .date-banner {
@@ -6179,9 +6183,9 @@
 
         return `
           <div class="date-group" data-date="${date}">
-            <div class="date-banner" onclick="toggleDateGroup('${date}')">
-              <div class="date-banner-left">
-                <span class="expand-arrow" id="arrow-${date}">▶</span>
+            <div class="date-banner">
+              <div class="date-banner-left" onclick="toggleDateGroup('${date}')">
+                <span class="expand-arrow ${isDateGroupExpanded(date) ? 'expanded' : ''}" id="arrow-${date}">▶</span>
                 <span class="date-title">${formattedDate}</span>
                 <span class="item-count-badge">${notifications.length} items</span>
               </div>
@@ -6191,7 +6195,7 @@
                 <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteAll('${date}', ${notifications.length})">🗑️ Delete All</button>
               </div>
             </div>
-            <div class="notifications-list" id="list-${date}">                                                              
+            <div class="notifications-list ${isDateGroupExpanded(date) ? 'expanded' : ''}" id="list-${date}">                                                              
               ${issueNotifications.length ? `<div class="notification-section-title">Reported Issues (${issueNotifications.length})</div>${issueNotifications.map(notif => createNotificationCard(notif)).join('')}` : ''}
               ${otherNotifications.length ? `<div class="notification-section-title">Other Notifications (${otherNotifications.length})</div>${otherNotifications.map(notif => createNotificationCard(notif)).join('')}` : ''}
             </div>
@@ -6302,12 +6306,34 @@
       }
     }
 
+    function getExpandedDateGroups() {
+      try {
+        return JSON.parse(localStorage.getItem('expandedOrderDateGroups') || '[]');
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function isDateGroupExpanded(date) {
+      return getExpandedDateGroups().includes(date);
+    }
+
+    function setDateGroupExpanded(date, expanded) {
+      const current = getExpandedDateGroups();
+      const next = expanded
+        ? Array.from(new Set([...current, date]))
+        : current.filter(item => item !== date);
+      localStorage.setItem('expandedOrderDateGroups', JSON.stringify(next));
+    }
+
     function toggleDateGroup(date) {
       const arrow = document.getElementById(`arrow-${date}`);
       const list = document.getElementById(`list-${date}`);
-      
+      if (!arrow || !list) return;
+
       arrow.classList.toggle('expanded');
       list.classList.toggle('expanded');
+      setDateGroupExpanded(date, list.classList.contains('expanded'));
     }
 
     window.confirmDeleteStockGroup = function(date, count) {
