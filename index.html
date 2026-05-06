@@ -7262,9 +7262,21 @@
         const addedDate = new Date(notif.added_timestamp).toLocaleString('en-US', {
           year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
         });
+        const hasNumericQty = Number.isFinite(Number(notif.quantity));
+        const hasOrderQty = Number.isFinite(Number(notif.order_quantity));
         pdfContent += `Type: ${notificationLabels[notif.type] || notif.type}\n`;
         pdfContent += `  Item: ${notif.item_name || 'N/A'}\n`;
         pdfContent += `  Location: ${notif.location || 'N/A'}\n`;
+        if (hasNumericQty) {
+          pdfContent += `  Quantity: ${notif.quantity} units\n`;
+        }
+        if (hasOrderQty) {
+          pdfContent += `  Order Quantity: ${notif.order_quantity} units\n`;
+        }
+        if (notif.type === 'low_stock') {
+          pdfContent += `  Current Stock: ${notif.total_stock ?? 'N/A'} units\n`;
+          pdfContent += `  Stock Breakdown: F1 ${notif.stock_f1 ?? 0} | F2 ${notif.stock_f2 ?? 0} | F3 ${notif.stock_f3 ?? 0} | Office ${notif.stock_office ?? 0}\n`;
+        }
         pdfContent += `  Description: ${notif.description || 'N/A'}\n`;
         pdfContent += `  Source: ${notif.source || 'N/A'}\n`;
         pdfContent += `  Added: ${addedDate}\n`;
