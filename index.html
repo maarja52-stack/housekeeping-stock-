@@ -6360,11 +6360,11 @@
 
     window.archiveStockGroup = async function(date) {
       const itemsToArchive = allStockCounts.filter(sc => sc.date_added === date);
-      for (const item of itemsToArchive) {
-        await window.dataSdk.update({ ...item, is_archived: true });
-      }
-      closeModal();
-      showToast(`All stock counts from ${date} archived`, 'success');
+      await runBulkArchiveWithCountdown(itemsToArchive, {
+        emptyMessage: `No stock counts found for ${date}.`,
+        successMessage: `All stock counts from ${date} archived`,
+        progressLabel: 'stock counts'
+      });
     };
 
     function confirmDeleteAll(date, count) {
@@ -6440,6 +6440,54 @@
       showToast(successMessage, 'success');
     }
 
+    async function runBulkArchiveWithCountdown(items, options = {}) {
+      const {
+        emptyMessage = 'Nothing to archive.',
+        successMessage = 'Items archived.',
+        progressLabel = 'items'
+      } = options;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        closeModal();
+        showToast(emptyMessage, 'success');
+        return;
+      }
+
+      const modal = document.querySelector('.modal-overlay');
+      const confirmBtn = modal ? modal.querySelector('.btn-modal-confirm') : null;
+      const cancelBtn = modal ? modal.querySelector('.btn-modal-cancel') : null;
+      const modalText = modal ? modal.querySelector('.modal-text') : null;
+      const total = items.length;
+      let remaining = total;
+      let failed = 0;
+
+      const renderProgress = () => {
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = `Archiving... ${remaining} left`;
+        }
+        if (cancelBtn) cancelBtn.disabled = true;
+        if (modalText) modalText.textContent = `Archiving ${progressLabel}... ${remaining} left.`;
+      };
+
+      renderProgress();
+
+      for (const item of items) {
+        const result = await window.dataSdk.update({ ...item, is_archived: true });
+        if (result && result.isOk === false) failed++;
+        remaining -= 1;
+        renderProgress();
+      }
+
+      closeModal();
+      if (failed > 0) {
+        const archivedCount = total - failed;
+        showToast(`Archived ${archivedCount}/${total} ${progressLabel}. ${failed} failed.`, 'error');
+        return;
+      }
+      showToast(successMessage, 'success');
+    }
+
     window.deleteAllFromDate = async function(date) {
       const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
       await runBulkDeleteWithCountdown(notificationsToDelete, {
@@ -6470,11 +6518,11 @@
 
     window.archiveNotificationsGroup = async function(date) {
       const itemsToArchive = allNotifications.filter(n => n.date_added === date);
-      for (const item of itemsToArchive) {
-        await window.dataSdk.update({ ...item, is_archived: true });
-      }
-      closeModal();
-      showToast(`All notifications from ${date} archived`, 'success');
+      await runBulkArchiveWithCountdown(itemsToArchive, {
+        emptyMessage: `No notifications found for ${date}.`,
+        successMessage: `All notifications from ${date} archived`,
+        progressLabel: 'notifications'
+      });
     };
 
     window.toggleExpirationDateGroup = function(date) {
@@ -6535,11 +6583,11 @@
 
     window.archiveExpirationGroup = async function(date) {
       const itemsToArchive = allItems.filter(i => i.date_added === date);
-      for (const item of itemsToArchive) {
-        await window.dataSdk.update({ ...item, is_archived: true });
-      }
-      closeModal();
-      showToast(`All items from ${date} archived`, 'success');
+      await runBulkArchiveWithCountdown(itemsToArchive, {
+        emptyMessage: `No expired items found for ${date}.`,
+        successMessage: `All items from ${date} archived`,
+        progressLabel: 'expired items'
+      });
     };
 
     function showToast(message, type) {
