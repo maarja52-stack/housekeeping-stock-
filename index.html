@@ -77,8 +77,7 @@
 
     .footer-text {
       text-align: center;
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.6);
       padding: 2rem;
       font-size: 0.9rem;
       display: flex;
@@ -122,6 +121,16 @@
       font-size: 0.75rem;
       font-weight: bold;
       box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    }
+
+    .notification-section-title {
+      margin: 1rem 0 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #d4af37;
+      opacity: 0.9;
     }
 
     .grid-container {
@@ -186,8 +195,7 @@
     }
 
     .pin-subtitle {
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.75);
       margin-bottom: 1.5rem;
       font-size: 0.95rem;
     }
@@ -421,8 +429,7 @@
     }
 
     .empty-subtitle {
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.65);
       font-size: 1rem;
     }
 
@@ -573,8 +580,7 @@
     }
 
     .item-detail {
-      color: #d4af37;
-      opacity: 0.9;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 0.95rem;
     }
 
@@ -759,7 +765,7 @@
 
     .notification-body {
       margin-bottom: 1rem;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
     }
 
     .notification-detail {
@@ -833,7 +839,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 1rem;
     }
 
@@ -844,8 +850,7 @@
 
     .order-summary-empty {
       margin-top: 0.75rem;
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.7);
       font-size: 0.95rem;
     }
 
@@ -893,8 +898,7 @@
       padding-top: 1rem;
       border-top: 1px solid rgba(212, 175, 55, 0.3);
       font-size: 0.9rem;
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .modal-overlay {
@@ -927,9 +931,8 @@
     }
 
     .modal-text {
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
       margin-bottom: 1.5rem;
-      opacity: 0.9;
     }
 
     .modal-buttons {
@@ -1059,8 +1062,7 @@
     }
 
     .archive-item-detail {
-      color: #d4af37;
-      opacity: 0.9;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 0.95rem;
     }
 
@@ -1095,10 +1097,9 @@
     .inspirational-quote {
       text-align: center;
       font-style: italic;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.8);
       font-size: 1.1rem;
       margin-bottom: 1rem;
-      opacity: 0.9;
     }
 
     /* Stock Counter Styles */
@@ -1151,8 +1152,7 @@
 
     .display-hint {
       font-size: 0.8rem;
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .number-pad {
@@ -2141,7 +2141,6 @@
         font-size: 1.5rem;
         margin-bottom: 1rem;
       }
-    }
 
     @media (max-width: 768px) {
       .main-wrapper > div {
@@ -2270,7 +2269,6 @@
         flex-direction: column;
         align-items: flex-start;
       }
-    }
 
       .date-display {
         font-size: 1.2rem;
@@ -2934,6 +2932,10 @@
     function createGoogleDataSdk(url, handler) {
       let cachedData = [];
       let refreshTimer = null;
+      const JSONP_TIMEOUT_MS = 20000;
+      const JSONP_RETRY_ATTEMPTS = 3;
+      const JSONP_RETRY_DELAY_MS = 1200;
+      let lastReconnectToastAt = 0;
 
       function scheduleRefresh(delay = 3000) {
         if (refreshTimer) clearTimeout(refreshTimer);
@@ -3044,7 +3046,7 @@
       }
 
       function jsonpRequest(action, payload) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           const callbackName = `__gsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
           const compacted = compactPayload(selectPayload(payload));
           const payloadParam = compacted ? `&payload=${encodeURIComponent(JSON.stringify(compacted))}` : '';
@@ -3053,7 +3055,7 @@
             delete window[callbackName];
             script.remove();
             resolve({ isOk: false, error: 'JSONP request timed out' });
-          }, 8000);
+          }, JSONP_TIMEOUT_MS);
 
           window[callbackName] = (data) => {
             clearTimeout(timeoutId);
@@ -3074,9 +3076,35 @@
         });
       }
 
+      function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function maybeShowReconnectToast(action, attempt, attempts) {
+        if (attempt >= attempts) return;
+        const now = Date.now();
+        if (now - lastReconnectToastAt < 7000) return;
+        lastReconnectToastAt = now;
+        showToast(`Reconnecting to Google Sheet… (${action}, retry ${attempt}/${attempts - 1})`, 'success');
+      }
+
+      async function jsonpRequestWithRetry(action, payload, attempts = JSONP_RETRY_ATTEMPTS) {
+        let lastResult = { isOk: false, error: 'JSONP request not started' };
+        for (let attempt = 1; attempt <= attempts; attempt++) {
+          const result = await jsonpRequest(action, payload);
+          if (result.isOk) return result;
+          lastResult = result;
+          if (attempt < attempts) {
+            maybeShowReconnectToast(action, attempt, attempts);
+            await wait(JSONP_RETRY_DELAY_MS * attempt);
+          }
+        }
+        return lastResult;
+      }
+
       const api = {
         async init() {
-          const result = await jsonpRequest('read');
+          const result = await jsonpRequestWithRetry('read');
           if (!result.isOk) return result;
           cachedData = Array.isArray(result.data) ? result.data : [];
           handler.onDataChanged(cachedData);
@@ -3085,7 +3113,7 @@
         async create(item) {
           cachedData = [...cachedData, item];
           handler.onDataChanged(cachedData);
-          jsonpRequest('create', item).then(result => {
+          jsonpRequestWithRetry('create', item).then(result => {
             if (!result.isOk) {
               showToast('Save failed. Sync will retry.', 'error');
               scheduleRefresh(12000);
@@ -3096,7 +3124,7 @@
           return { isOk: true, optimistic: true };
         },
         async update(item) {
-          const result = await jsonpRequest('update', item);
+          const result = await jsonpRequestWithRetry('update', item);
           if (result.isOk) {
             const next = cachedData.map(existing =>
               String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
@@ -3108,7 +3136,7 @@
           return result;
         },
         async delete(item) {
-          const result = await jsonpRequest('delete', { id: item.id });
+          const result = await jsonpRequestWithRetry('delete', { id: item.id });
           if (result.isOk) {
             cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
             handler.onDataChanged(cachedData);
@@ -6281,11 +6309,11 @@
 
     window.deleteStockGroup = async function(date) {
       const itemsToDelete = allStockCounts.filter(sc => sc.date_added === date);
-      for (const item of itemsToDelete) {
-        await window.dataSdk.delete(item);
-      }
-      closeModal();
-      showToast(`All stock counts from ${date} deleted`, 'success');
+      await runBulkDeleteWithCountdown(itemsToDelete, {
+        emptyMessage: `No stock counts found for ${date}.`,
+        successMessage: `All stock counts from ${date} deleted`,
+        progressLabel: 'stock counts'
+      });
     };
 
     window.confirmArchiveStockGroup = function(date, count) {
@@ -6341,15 +6369,61 @@
       if (modal) modal.remove();
     };
 
-    window.deleteAllFromDate = async function(date) {
-      const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
-      
-      for (const notif of notificationsToDelete) {
-        await window.dataSdk.delete(notif);
+    async function runBulkDeleteWithCountdown(items, options = {}) {
+      const {
+        emptyMessage = 'Nothing to delete.',
+        successMessage = 'Items deleted.',
+        progressLabel = 'items'
+      } = options;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        closeModal();
+        showToast(emptyMessage, 'success');
+        return;
+      }
+
+      const modal = document.querySelector('.modal-overlay');
+      const confirmBtn = modal ? modal.querySelector('.btn-modal-confirm') : null;
+      const cancelBtn = modal ? modal.querySelector('.btn-modal-cancel') : null;
+      const modalText = modal ? modal.querySelector('.modal-text') : null;
+      const total = items.length;
+      let remaining = total;
+      let failed = 0;
+
+      const renderProgress = () => {
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = `Deleting... ${remaining} left`;
+        }
+        if (cancelBtn) cancelBtn.disabled = true;
+        if (modalText) modalText.textContent = `Deleting ${progressLabel}... ${remaining} left.`;
+      };
+
+      renderProgress();
+
+      for (const item of items) {
+        const result = await window.dataSdk.delete(item);
+        if (result && result.isOk === false) failed++;
+        remaining -= 1;
+        renderProgress();
       }
 
       closeModal();
-      showToast(`All notifications from ${date} deleted`, 'success');
+      if (failed > 0) {
+        const deletedCount = total - failed;
+        showToast(`Deleted ${deletedCount}/${total} ${progressLabel}. ${failed} failed.`, 'error');
+        return;
+      }
+      showToast(successMessage, 'success');
+    }
+
+    window.deleteAllFromDate = async function(date) {
+      const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
+      await runBulkDeleteWithCountdown(notificationsToDelete, {
+        emptyMessage: `No notifications found for ${date}.`,
+        successMessage: `All notifications from ${date} deleted`,
+        progressLabel: 'notifications'
+      });
     };
 
     window.confirmArchiveNotificationsGroup = function(date, count) {
@@ -6410,13 +6484,11 @@
 
     window.deleteExpirationGroup = async function(date) {
       const itemsToDelete = allItems.filter(i => i.date_added === date);
-      
-      for (const item of itemsToDelete) {
-        await window.dataSdk.delete(item);
-      }
-
-      closeModal();
-      showToast(`All items from ${date} deleted`, 'success');
+      await runBulkDeleteWithCountdown(itemsToDelete, {
+        emptyMessage: `No expired items found for ${date}.`,
+        successMessage: `All items from ${date} deleted`,
+        progressLabel: 'expired items'
+      });
     };
 
     window.confirmArchiveExpirationGroup = function(date, count) {

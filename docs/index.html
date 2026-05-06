@@ -77,8 +77,7 @@
 
     .footer-text {
       text-align: center;
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.6);
       padding: 2rem;
       font-size: 0.9rem;
       display: flex;
@@ -111,15 +110,6 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      .notification-section-title {
-        margin: 1rem 0 0.5rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        color: #d4af37;
-        opacity: 0.9;
-      }
       background: #dc3545;
       color: white;
       border-radius: 50%;
@@ -131,6 +121,16 @@
       font-size: 0.75rem;
       font-weight: bold;
       box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    }
+
+    .notification-section-title {
+      margin: 1rem 0 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #d4af37;
+      opacity: 0.9;
     }
 
     .grid-container {
@@ -195,8 +195,7 @@
     }
 
     .pin-subtitle {
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.75);
       margin-bottom: 1.5rem;
       font-size: 0.95rem;
     }
@@ -264,9 +263,11 @@
     }
 
     .stats-container {
+      display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.75rem;
         padding: 0 0.75rem;
+    }
 
     .stat-item {
       text-align: center;
@@ -276,15 +277,17 @@
         flex-direction: column;
         justify-content: center;
         gap: 0.5rem;
+    }
 
     .stat-label {
       color: #d4af37;
-        font-size: 2.4rem;
+      font-size: 2.4rem;
       opacity: 0.8;
       margin-bottom: 0.5rem;
+      font-size: 1rem;
+      line-height: 1.2;
     }
-        font-size: 1rem;
-        line-height: 1.2;
+
     .stat-value {
       color: #d4af37;
       font-size: 2rem;
@@ -436,8 +439,7 @@
     }
 
     .empty-subtitle {
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.65);
       font-size: 1rem;
     }
 
@@ -478,8 +480,6 @@
       font-size: 1.1rem;
       font-weight: 700;
       color: #f7e7b7;
-    }
-      }
     }
 
     @media (min-width: 1024px) {
@@ -584,8 +584,7 @@
     }
 
     .item-detail {
-      color: #d4af37;
-      opacity: 0.9;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 0.95rem;
     }
 
@@ -770,7 +769,7 @@
 
     .notification-body {
       margin-bottom: 1rem;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
     }
 
     .notification-detail {
@@ -844,7 +843,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 1rem;
     }
 
@@ -855,8 +854,7 @@
 
     .order-summary-empty {
       margin-top: 0.75rem;
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.7);
       font-size: 0.95rem;
     }
 
@@ -904,8 +902,7 @@
       padding-top: 1rem;
       border-top: 1px solid rgba(212, 175, 55, 0.3);
       font-size: 0.9rem;
-      color: #d4af37;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .modal-overlay {
@@ -938,9 +935,8 @@
     }
 
     .modal-text {
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.85);
       margin-bottom: 1.5rem;
-      opacity: 0.9;
     }
 
     .modal-buttons {
@@ -1070,8 +1066,7 @@
     }
 
     .archive-item-detail {
-      color: #d4af37;
-      opacity: 0.9;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 0.95rem;
     }
 
@@ -1106,10 +1101,9 @@
     .inspirational-quote {
       text-align: center;
       font-style: italic;
-      color: #d4af37;
+      color: rgba(255, 255, 255, 0.8);
       font-size: 1.1rem;
       margin-bottom: 1rem;
-      opacity: 0.9;
     }
 
     /* Stock Counter Styles */
@@ -1162,8 +1156,7 @@
 
     .display-hint {
       font-size: 0.8rem;
-      color: #d4af37;
-      opacity: 0.7;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .number-pad {
@@ -2152,7 +2145,6 @@
         font-size: 1.5rem;
         margin-bottom: 1rem;
       }
-    }
 
     @media (max-width: 768px) {
       .main-wrapper > div {
@@ -2270,7 +2262,6 @@
         flex-direction: column;
         align-items: flex-start;
       }
-    }
 
       .date-display {
         font-size: 1.2rem;
@@ -2339,7 +2330,8 @@
       }
 
       .date-banner {
-        flex-direction: column !important;
+        f
+        lex-direction: column !important;
         align-items: flex-start !important;
         gap: 0.75rem;
         padding: 1rem;
@@ -2357,7 +2349,8 @@
       .date-banner-left > * {
         display: block;
         width: 100%;
-        margin-bottom: 0.35rem;
+      
+        margin-bottom: 0.35rem;`
       }
 
       .date-banner-left > .expand-arrow {
@@ -2834,7 +2827,9 @@
           return String(value).toLowerCase().replace(/\s+/g, '_').replace(/-+/g, '_');
         };
 
-        const normalizedData = data.map(item => {
+        const normalizedData = (Array.isArray(data) ? data : [])
+          .filter(item => item && typeof item === 'object')
+          .map(item => {
           const idPrefix = item && item.id ? String(item.id).split('-')[0] : '';
           const inferredFromId = /^\d{2,4}$/.test(idPrefix) ? idPrefix : '';
           const normalizedRoomNumber = item.room_number || item.room || item.roomNumber || item.room_no || inferredFromId || '';
@@ -2936,6 +2931,14 @@
     function createGoogleDataSdk(url, handler) {
       let cachedData = [];
       let refreshTimer = null;
+      const JSONP_TIMEOUT_MS = 20000;
+      const JSONP_COLD_START_TIMEOUT_MS = 45000;
+      const JSONP_RETRY_ATTEMPTS = 3;
+      const JSONP_RETRY_DELAY_MS = 1200;
+      const BACKEND_WAKE_WINDOW_MS = 2 * 60 * 1000;
+      let lastReconnectToastAt = 0;
+      let lastWakeAttemptAt = 0;
+      let wakePromise = null;
 
       function scheduleRefresh(delay = 3000) {
         if (refreshTimer) clearTimeout(refreshTimer);
@@ -3045,8 +3048,8 @@
         };
       }
 
-      function jsonpRequest(action, payload) {
-        return new Promise((resolve, reject) => {
+      function jsonpRequest(action, payload, timeoutMs = JSONP_TIMEOUT_MS) {
+        return new Promise((resolve) => {
           const callbackName = `__gsCallback_${Date.now()}_${Math.random().toString(16).slice(2)}`;
           const compacted = compactPayload(selectPayload(payload));
           const payloadParam = compacted ? `&payload=${encodeURIComponent(JSON.stringify(compacted))}` : '';
@@ -3055,7 +3058,7 @@
             delete window[callbackName];
             script.remove();
             resolve({ isOk: false, error: 'JSONP request timed out' });
-          }, 8000);
+          }, timeoutMs);
 
           window[callbackName] = (data) => {
             clearTimeout(timeoutId);
@@ -3076,9 +3079,65 @@
         });
       }
 
+      function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function maybeShowReconnectToast(action, attempt, attempts) {
+        if (attempt >= attempts) return;
+        const now = Date.now();
+        if (now - lastReconnectToastAt < 7000) return;
+        lastReconnectToastAt = now;
+        showToast(`Reconnecting to Google Sheet… (${action}, retry ${attempt}/${attempts - 1})`, 'success');
+      }
+
+      async function warmUpBackendIfNeeded(action) {
+        const now = Date.now();
+        if (now - lastWakeAttemptAt < BACKEND_WAKE_WINDOW_MS) return;
+        if (wakePromise) {
+          await wakePromise;
+          return;
+        }
+
+        lastWakeAttemptAt = now;
+        wakePromise = (async() => {
+          try {
+            showToast(`Waking backend… (${action})`, 'success');
+            await fetch(`${url}?action=read&warmup=1&ts=${Date.now()}`, {
+              cache: 'no-store',
+              mode: 'no-cors'
+            });
+          } catch (error) {
+          }
+          await wait(1200);
+        })();
+
+        try {
+          await wakePromise;
+        } finally {
+          wakePromise = null;
+        }
+      }
+
+      async function jsonpRequestWithRetry(action, payload, attempts = JSONP_RETRY_ATTEMPTS) {
+        await warmUpBackendIfNeeded(action);
+        let lastResult = { isOk: false, error: 'JSONP request not started' };
+        for (let attempt = 1; attempt <= attempts; attempt++) {
+          const timeoutMs = attempt === 1 ? JSONP_COLD_START_TIMEOUT_MS : JSONP_TIMEOUT_MS;
+          const result = await jsonpRequest(action, payload, timeoutMs);
+          if (result.isOk) return result;
+          lastResult = result;
+          if (attempt < attempts) {
+            maybeShowReconnectToast(action, attempt, attempts);
+            await wait(JSONP_RETRY_DELAY_MS * attempt);
+          }
+        }
+        return lastResult;
+      }
+
       const api = {
         async init() {
-          const result = await jsonpRequest('read');
+          const result = await jsonpRequestWithRetry('read');
           if (!result.isOk) return result;
           cachedData = Array.isArray(result.data) ? result.data : [];
           handler.onDataChanged(cachedData);
@@ -3087,7 +3146,7 @@
         async create(item) {
           cachedData = [...cachedData, item];
           handler.onDataChanged(cachedData);
-          jsonpRequest('create', item).then(result => {
+          jsonpRequestWithRetry('create', item).then(result => {
             if (!result.isOk) {
               showToast('Save failed. Sync will retry.', 'error');
               scheduleRefresh(12000);
@@ -3098,7 +3157,7 @@
           return { isOk: true, optimistic: true };
         },
         async update(item) {
-          const result = await jsonpRequest('update', item);
+          const result = await jsonpRequestWithRetry('update', item);
           if (result.isOk) {
             const next = cachedData.map(existing =>
               String(existing.id) === String(item.id) ? { ...existing, ...item } : existing
@@ -3110,7 +3169,7 @@
           return result;
         },
         async delete(item) {
-          const result = await jsonpRequest('delete', { id: item.id });
+          const result = await jsonpRequestWithRetry('delete', { id: item.id });
           if (result.isOk) {
             cachedData = cachedData.filter(existing => String(existing.id) !== String(item.id));
             handler.onDataChanged(cachedData);
@@ -3134,6 +3193,7 @@
       const result = await window.dataSdk.init(dataHandler);
       if (!result.isOk) {
         console.error("Failed to initialize Data SDK:", result.error);
+        showToast('Backend is still waking up. Please wait a few seconds and try again.', 'error');
       }
     }
 
@@ -4397,65 +4457,104 @@
     });
 
     // Save stock item
-    saveStockBtn.addEventListener('click', async function() {
-      const floor = floorSelect.value;
-      const itemName = stockItemSelect.value;
-      const quantity = currentStockValue;
-
-      if (!floor || !itemName) {
-        showToast('Please select floor and item', 'error');
-        return;
+    async function sdkCallWithTimeout(taskFactory, timeoutMs = 20000) {
+      try {
+        const result = await Promise.race([
+          taskFactory(),
+          new Promise(resolve => setTimeout(() => resolve({ isOk: false, error: 'Request timed out' }), timeoutMs))
+        ]);
+        return result;
+      } catch (error) {
+        return { isOk: false, error: error?.message || 'Request failed' };
       }
+    }
 
-      saveStockBtn.disabled = true;
-      saveStockBtn.innerHTML = '<span class="loading-spinner"></span>Saving...';
-
-      const today = getLocalDateString();
-
-      // Check if we need to auto-archive old stock counts
+    async function autoArchiveOldStockCounts(today) {
       const todayStockCounts = allStockCounts.filter(item => item.date_added === today);
-      if (allStockCounts.length > 0 && todayStockCounts.length === 0) {
-        // Auto-archive all existing stock counts
-        for (const item of allStockCounts) {
-          const archiveResult = await window.dataSdk.update({
-            ...item,
-            is_archived: true
-          });
-          if (!archiveResult.isOk) {
-            console.error("Failed to archive stock count:", archiveResult.error);
-          }
+      if (allStockCounts.length === 0 || todayStockCounts.length > 0) return;
+
+      const itemsToArchive = [...allStockCounts];
+      let failed = 0;
+
+      for (const item of itemsToArchive) {
+        const archiveResult = await sdkCallWithTimeout(
+          () => window.dataSdk.update({ ...item, is_archived: true }),
+          12000
+        );
+        if (!archiveResult || archiveResult.isOk === false) failed++;
+      }
+
+      if (failed > 0) {
+        showToast(`Archived old counts with ${failed} sync issue(s).`, 'error');
+      }
+    }
+
+    if (saveStockBtn && floorSelect && stockItemSelect && displayNumber) {
+      saveStockBtn.addEventListener('click', async function() {
+        const floor = floorSelect.value;
+        const itemName = stockItemSelect.value;
+        const quantity = currentStockValue;
+
+        if (!floor || !itemName) {
+          showToast('Please select floor and item', 'error');
+          return;
         }
-      }
 
-      const newStockCount = {
-        id: Date.now().toString(),
-        stock_type: 'minibar_count',
-        item_name: itemName,
-        floor: floor,
-        quantity: quantity,
-        added_timestamp: new Date().toISOString(),
-        date_added: today,
-        is_archived: false
-      };
+        saveStockBtn.disabled = true;
+        saveStockBtn.innerHTML = '<span class="loading-spinner"></span>Saving...';
 
-      const result = await window.dataSdk.create(newStockCount);
+        const today = getLocalDateString();
 
-      saveStockBtn.disabled = false;
-      saveStockBtn.textContent = '    Save This Item';
+        try {
+          autoArchiveOldStockCounts(today).catch(error => {
+            console.error('Auto-archive failed:', error);
+          });
 
-      if (result.isOk) {
-        // Reset for next entry - but keep item selected
-        currentStockValue = 0;
-        displayNumber.textContent = '0';
-        // stockItemSelect.value stays the same - removed reset
-        showToast(`${itemName} saved for ${floor}`, 'success');
+          const newStockCount = {
+            id: Date.now().toString(),
+            stock_type: 'minibar_count',
+            item_name: itemName,
+            floor: floor,
+            quantity: quantity,
+            added_timestamp: new Date().toISOString(),
+            date_added: today,
+            is_archived: false
+          };
 
-        // Check for low stock and create notification
-        await checkLowStockAndNotify(itemName, today);
-      } else {
-        showToast('Failed to save item. Please try again.', 'error');
-      }
-    });
+          const result = await sdkCallWithTimeout(
+            () => window.dataSdk.create(newStockCount),
+            25000
+          );
+          const failed = result && result.isOk === false;
+
+          if (failed) {
+            showToast('Failed to save item. Please try again.', 'error');
+            return;
+          }
+
+          if (!allStockCounts.find(item => String(item.id) === String(newStockCount.id))) {
+            allStockCounts.push(newStockCount);
+          }
+
+          // Reset for next entry - but keep item selected
+          currentStockValue = 0;
+          displayNumber.textContent = '0';
+          showToast(`${itemName} saved for ${floor}`, 'success');
+          updateStockProgress();
+
+          // Check for low stock and create notification
+          checkLowStockAndNotify(itemName, today).catch(notifyError => {
+            console.error('Low stock notification check failed:', notifyError);
+          });
+        } catch (error) {
+          console.error('Failed to save minibar stock item:', error);
+          showToast('Failed to save item. Please try again.', 'error');
+        } finally {
+          saveStockBtn.disabled = false;
+          saveStockBtn.textContent = '    Save This Item';
+        }
+      });
+    }
 
     async function checkLowStockAndNotify(itemName, date) {
       // Get all counts for this item on this date
@@ -6283,11 +6382,11 @@
 
     window.deleteStockGroup = async function(date) {
       const itemsToDelete = allStockCounts.filter(sc => sc.date_added === date);
-      for (const item of itemsToDelete) {
-        await window.dataSdk.delete(item);
-      }
-      closeModal();
-      showToast(`All stock counts from ${date} deleted`, 'success');
+      await runBulkDeleteWithCountdown(itemsToDelete, {
+        emptyMessage: `No stock counts found for ${date}.`,
+        successMessage: `All stock counts from ${date} deleted`,
+        progressLabel: 'stock counts'
+      });
     };
 
     window.confirmArchiveStockGroup = function(date, count) {
@@ -6343,15 +6442,89 @@
       if (modal) modal.remove();
     };
 
-    window.deleteAllFromDate = async function(date) {
-      const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
-      
-      for (const notif of notificationsToDelete) {
-        await window.dataSdk.delete(notif);
+    async function runBulkDeleteWithCountdown(items, options = {}) {
+      const {
+        emptyMessage = 'Nothing to delete.',
+        successMessage = 'Items deleted.',
+        progressLabel = 'items',
+        timeoutMs = 15000
+      } = options;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        closeModal();
+        showToast(emptyMessage, 'success');
+        return;
+      }
+
+      const modal = document.querySelector('.modal-overlay');
+      const confirmBtn = modal ? modal.querySelector('.btn-modal-confirm') : null;
+      const cancelBtn = modal ? modal.querySelector('.btn-modal-cancel') : null;
+      const modalText = modal ? modal.querySelector('.modal-text') : null;
+      const total = items.length;
+      let remaining = total;
+      let failed = 0;
+      let currentWaitSeconds = 0;
+
+      const renderProgress = () => {
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = `Deleting... ${remaining} left`;
+        }
+        if (cancelBtn) cancelBtn.disabled = true;
+        if (modalText) {
+          const done = total - remaining;
+          modalText.textContent = `Deleting ${progressLabel}... ${done}/${total} done, ${remaining} left (waiting ${currentWaitSeconds}s on current item).`;
+        }
+      };
+
+      const deleteWithTimeout = async(item) => {
+        try {
+          const result = await Promise.race([
+            window.dataSdk.delete(item),
+            new Promise(resolve => setTimeout(() => resolve({ isOk: false, timedOut: true }), timeoutMs))
+          ]);
+          return result && result.isOk !== false;
+        } catch (error) {
+          return false;
+        }
+      };
+
+      renderProgress();
+
+      for (const item of items) {
+        currentWaitSeconds = 0;
+        renderProgress();
+
+        const waitTicker = setInterval(() => {
+          currentWaitSeconds += 1;
+          renderProgress();
+        }, 1000);
+
+        const ok = await deleteWithTimeout(item);
+        clearInterval(waitTicker);
+
+        if (!ok) failed++;
+        remaining -= 1;
+        currentWaitSeconds = 0;
+        renderProgress();
       }
 
       closeModal();
-      showToast(`All notifications from ${date} deleted`, 'success');
+      if (failed > 0) {
+        const deletedCount = total - failed;
+        showToast(`Deleted ${deletedCount}/${total} ${progressLabel}. ${failed} failed.`, 'error');
+        return;
+      }
+      showToast(successMessage, 'success');
+    }
+
+    window.deleteAllFromDate = async function(date) {
+      const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
+      await runBulkDeleteWithCountdown(notificationsToDelete, {
+        emptyMessage: `No notifications found for ${date}.`,
+        successMessage: `All notifications from ${date} deleted`,
+        progressLabel: 'notifications'
+      });
     };
 
     window.confirmArchiveNotificationsGroup = function(date, count) {
@@ -6412,13 +6585,11 @@
 
     window.deleteExpirationGroup = async function(date) {
       const itemsToDelete = allItems.filter(i => i.date_added === date);
-      
-      for (const item of itemsToDelete) {
-        await window.dataSdk.delete(item);
-      }
-
-      closeModal();
-      showToast(`All items from ${date} deleted`, 'success');
+      await runBulkDeleteWithCountdown(itemsToDelete, {
+        emptyMessage: `No expired items found for ${date}.`,
+        successMessage: `All items from ${date} deleted`,
+        progressLabel: 'expired items'
+      });
     };
 
     window.confirmArchiveExpirationGroup = function(date, count) {
@@ -6844,13 +7015,13 @@
       } else {
         itemsToDelete = archivedItems.filter(i => i.date_added === date);
       }
-      
-      for (const item of itemsToDelete) {
-        await window.dataSdk.delete(item);
-      }
 
-      closeModal();
-      showToast(`${itemsToDelete.length} items deleted from archive`, 'success');
+      await runBulkDeleteWithCountdown(itemsToDelete, {
+        emptyMessage: 'No archive items found to delete.',
+        successMessage: `${itemsToDelete.length} items deleted from archive`,
+        progressLabel: 'archive items',
+        timeoutMs: 15000
+      });
     };
 
     // PDF Generation Functions for Stock Counts
@@ -6922,6 +7093,24 @@
         pdfContent += '─'.repeat(60) + '\n';
       });
 
+      const entryLines = counts
+        .slice()
+        .sort((a, b) => {
+          const nameCompare = String(a.item_name || '').localeCompare(String(b.item_name || ''));
+          if (nameCompare !== 0) return nameCompare;
+          return String(a.floor || '').localeCompare(String(b.floor || ''));
+        })
+        .map(entry => {
+          const addedTime = entry.added_timestamp
+            ? new Date(entry.added_timestamp).toLocaleString('en-US')
+            : 'N/A';
+          return `- ${entry.item_name} | ${entry.floor || 'N/A'} | ${entry.quantity} units | ${addedTime}`;
+        });
+
+      pdfContent += '\nEntry Details\n';
+      pdfContent += '-'.repeat(60) + '\n';
+      pdfContent += entryLines.join('\n') + '\n';
+
       const blob = new Blob([pdfContent], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -6977,6 +7166,45 @@
           </div>
         `;
       });
+
+      const entryRows = counts
+        .slice()
+        .sort((a, b) => {
+          const nameCompare = String(a.item_name || '').localeCompare(String(b.item_name || ''));
+          if (nameCompare !== 0) return nameCompare;
+          return String(a.floor || '').localeCompare(String(b.floor || ''));
+        })
+        .map(entry => {
+          const addedTime = entry.added_timestamp
+            ? new Date(entry.added_timestamp).toLocaleString('en-US')
+            : 'N/A';
+          return `
+            <tr>
+              <td>${entry.item_name}</td>
+              <td>${entry.floor || 'N/A'}</td>
+              <td>${entry.quantity}</td>
+              <td>${addedTime}</td>
+            </tr>
+          `;
+        })
+        .join('');
+
+      htmlContent += `
+          <h2 style="margin: 12px 0 6px; font-size: 13px;">Entry Details</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Floor</th>
+                <th>Qty</th>
+                <th>Added</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${entryRows}
+            </tbody>
+          </table>
+      `;
 
       htmlContent += `
         </body>
@@ -7284,6 +7512,19 @@
       const versionEl = document.getElementById('footerVersion');
       const buildBadge = document.getElementById('buildBadge');
       if (!versionEl) return;
+
+      const getLocalRevision = () => {
+        const modified = new Date(document.lastModified);
+        if (Number.isNaN(modified.getTime())) return 'local';
+        const y = String(modified.getFullYear()).slice(-2);
+        const m = String(modified.getMonth() + 1).padStart(2, '0');
+        const d = String(modified.getDate()).padStart(2, '0');
+        const hh = String(modified.getHours()).padStart(2, '0');
+        const mm = String(modified.getMinutes()).padStart(2, '0');
+        return `${y}${m}${d}${hh}${mm}`;
+      };
+
+      const localRevision = getLocalRevision();
       try {
         const response = await fetch(
           'https://api.github.com/repos/maarja52-stack/housekeeping-stock-/commits?per_page=1',
@@ -7295,12 +7536,13 @@
         const body = await response.json();
         const sha = body && body[0] && body[0].sha ? body[0].sha.slice(0, 7) : '';
         if (!Number.isFinite(count)) count = 1;
-        const versionText = `v${count}${sha ? ` (${sha})` : ''}`;
+        const versionText = `v${count}${sha ? ` (${sha})` : ''}.${localRevision}`;
         versionEl.textContent = versionText;
         if (buildBadge) buildBadge.textContent = `Build ${versionText}`;
       } catch (err) {
-        versionEl.textContent = 'v—';
-        if (buildBadge) buildBadge.textContent = 'Build v—';
+        const fallbackVersion = `v—.${localRevision}`;
+        versionEl.textContent = fallbackVersion;
+        if (buildBadge) buildBadge.textContent = `Build ${fallbackVersion}`;
       }
     }
 
