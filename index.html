@@ -1,0 +1,4307 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Housekeeping Inventory &amp; Stock</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-wrapper {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, #0b1a33 0%, #00112a 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .gold-text {
+      color: #d4af37;
+    }
+
+    .premium-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 2.5rem;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+      position: relative;
+    }
+
+    .premium-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 40px rgba(212, 175, 55, 0.35);
+      border-color: #f4cf5c;
+    }
+
+    .card-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      display: block;
+      text-align: center;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #d4af37;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .main-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 3rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    .footer-text {
+      text-align: center;
+      color: #d4af37;
+      opacity: 0.7;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #dc3545;
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .back-button {
+      background: #0d1b2a;
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2rem;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background: rgba(212, 175, 55, 0.2);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .expiration-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .date-header {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .date-display {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #d4af37;
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #d4af37;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      color: #d4af37;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .add-button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .add-button:hover {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    }
+
+    .add-button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-container {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      color: #d4af37;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-input, .form-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #d4af37;
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-select {
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #0d1b2a;
+      color: white;
+      padding: 0.5rem;
+    }
+
+    .form-select optgroup {
+      background: #1a2942;
+      color: #d4af37;
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .btn-submit {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background: #218838;
+    }
+
+    .btn-submit:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .btn-cancel {
+      background: rgba(212, 175, 55, 0.2);
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+      background: rgba(212, 175, 55, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.5rem;
+      color: #d4af37;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-subtitle {
+      color: #d4af37;
+      opacity: 0.7;
+      font-size: 1rem;
+    }
+
+    .items-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .item-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .item-card:hover {
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .item-main {
+      flex: 1;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .item-icon {
+      font-size: 2.5rem;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 0.75rem;
+    }
+
+    .item-details {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .item-detail {
+      color: #d4af37;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .item-detail strong {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn-archive {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-archive:hover {
+      background: rgba(212, 175, 55, 0.4);
+      transform: scale(1.05);
+    }
+
+    .btn-delete {
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-delete:hover {
+      background: rgba(220, 53, 69, 0.4);
+      transform: scale(1.05);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .date-group {
+      margin-bottom: 2rem;
+    }
+
+    .date-banner {
+      background: rgba(13, 27, 42, 0.9);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .date-banner:hover {
+      background: rgba(13, 27, 42, 1);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .date-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .expand-arrow {
+      color: #d4af37;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .expand-arrow.expanded {
+      transform: rotate(90deg);
+    }
+
+    .date-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    .item-count-badge {
+      background: rgba(212, 175, 55, 0.3);
+      color: #d4af37;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .btn-delete-all {
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-delete-all:hover {
+      background: rgba(220, 53, 69, 0.4);
+      transform: scale(1.05);
+    }
+
+    .notifications-list {
+      display: grid;
+      gap: 1rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .notifications-list.expanded {
+      max-height: 5000px;
+    }
+
+    .notification-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .notification-card:hover {
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .notification-icon {
+      font-size: 2rem;
+    }
+
+    .notification-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    .notification-body {
+      margin-bottom: 1rem;
+      color: #d4af37;
+    }
+
+    .notification-detail {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .notification-detail strong {
+      font-weight: 600;
+      opacity: 1;
+    }
+
+    .notification-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-delete-single {
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-delete-single:hover {
+      background: rgba(220, 53, 69, 0.4);
+      transform: scale(1.02);
+    }
+
+    .notification-footer {
+      padding-top: 1rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
+      font-size: 0.9rem;
+      color: #d4af37;
+      opacity: 0.8;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #0d1b2a;
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 1rem;
+    }
+
+    .modal-text {
+      color: #d4af37;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .btn-modal-cancel {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-modal-cancel:hover {
+      background: rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-modal-confirm {
+      background: #dc3545;
+      border: 2px solid #dc3545;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-modal-confirm:hover {
+      background: #c82333;
+    }
+
+    @media (max-width: 768px) {
+      .date-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats-container {
+        width: 100%;
+        justify-content: space-around;
+      }
+
+      .item-card {
+        flex-direction: column;
+      }
+
+      .item-actions {
+        flex-direction: row;
+        width: 100%;
+      }
+
+      .btn-archive, .btn-delete {
+        flex: 1;
+      }
+    }
+
+    .archive-section {
+      margin-bottom: 3rem;
+    }
+
+    .archive-section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .archive-divider {
+      height: 2px;
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
+      margin: 3rem 0;
+    }
+
+    .archive-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .archive-card.expired-item {
+      border-left: 5px solid #dc3545;
+    }
+
+    .archive-card:hover {
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .archive-item-main {
+      flex: 1;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .archive-item-icon {
+      font-size: 2.5rem;
+    }
+
+    .archive-item-content {
+      flex: 1;
+    }
+
+    .archive-item-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 0.75rem;
+    }
+
+    .archive-item-details {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .archive-item-detail {
+      color: #d4af37;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .archive-item-detail strong {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .date-banner-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-save-pdf, .btn-print-pdf {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+
+    .btn-save-pdf:hover, .btn-print-pdf:hover {
+      background: rgba(212, 175, 55, 0.4);
+      transform: scale(1.05);
+    }
+
+    .inspirational-quote {
+      text-align: center;
+      font-style: italic;
+      color: #d4af37;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    /* Stock Counter Styles */
+    .stock-counter-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .progress-indicator {
+      text-align: center;
+      color: #d4af37;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .counter-panel {
+      background: rgba(13, 27, 42, 0.9);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+    }
+
+    .display-area {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 0.75rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .display-area:hover {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: #f4cf5c;
+    }
+
+    .display-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    .display-hint {
+      font-size: 0.8rem;
+      color: #d4af37;
+      opacity: 0.7;
+    }
+
+    .number-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .num-button {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      font-size: 2rem;
+      font-weight: 700;
+      padding: 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .num-button:hover {
+      background: rgba(212, 175, 55, 0.4);
+      transform: scale(1.05);
+    }
+
+    .num-button:active {
+      transform: scale(0.95);
+    }
+
+    .num-button.wide {
+      grid-column: span 2;
+    }
+
+    .quick-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .quick-btn {
+      flex: 1;
+      background: rgba(40, 167, 69, 0.2);
+      border: 2px solid #28a745;
+      color: #28a745;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-btn:hover {
+      background: rgba(40, 167, 69, 0.4);
+      transform: scale(1.05);
+    }
+
+    .save-item-btn {
+      background: #28a745;
+      border: 2px solid #28a745;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 1.25rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .save-item-btn:hover {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
+    }
+
+    .save-item-btn:disabled {
+      background: #6c757d;
+      border-color: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .dropdown-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .equipment-tab {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .equipment-tab:hover {
+      background: rgba(212, 175, 55, 0.3);
+    }
+
+    .equipment-tab.active {
+      background: #d4af37;
+      color: #0d1b2a;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    }
+
+    .equipment-category-section {
+      margin-bottom: 2rem;
+    }
+
+    .category-banner {
+      background: rgba(13, 27, 42, 0.9);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .category-banner:hover {
+      background: rgba(13, 27, 42, 1);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .category-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .category-icon {
+      font-size: 1.5rem;
+    }
+
+    .category-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    .equipment-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .equipment-card:hover {
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .equipment-card.status-broken {
+      border-left: 5px solid #dc3545;
+    }
+
+    .equipment-card.status-maintenance {
+      border-left: 5px solid #ffc107;
+    }
+
+    .equipment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .equipment-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+    }
+
+    .equipment-status-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .equipment-status-badge.working {
+      background: rgba(40, 167, 69, 0.3);
+      color: #28a745;
+      border: 1px solid #28a745;
+    }
+
+    .equipment-status-badge.broken {
+      background: rgba(220, 53, 69, 0.3);
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+
+    .equipment-status-badge.maintenance {
+      background: rgba(255, 193, 7, 0.3);
+      color: #ffc107;
+      border: 1px solid #ffc107;
+    }
+
+    .equipment-details {
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .equipment-detail {
+      color: #d4af37;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .equipment-detail strong {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .equipment-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-report-issue {
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-report-issue:hover {
+      background: rgba(220, 53, 69, 0.4);
+      transform: scale(1.05);
+    }
+
+    .btn-mark-working {
+      background: rgba(40, 167, 69, 0.2);
+      border: 2px solid #28a745;
+      color: #28a745;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-mark-working:hover {
+      background: rgba(40, 167, 69, 0.4);
+      transform: scale(1.05);
+    }
+
+    .issue-card {
+      background: rgba(13, 27, 42, 0.7);
+      border: 2px solid #dc3545;
+      border-left: 5px solid #dc3545;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .issue-card:hover {
+      box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .issue-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .issue-icon {
+      font-size: 2rem;
+    }
+
+    .issue-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #dc3545;
+    }
+
+    .issue-details {
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .issue-detail {
+      color: #d4af37;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .issue-detail strong {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .issue-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-resolve-issue {
+      background: rgba(40, 167, 69, 0.2);
+      border: 2px solid #28a745;
+      color: #28a745;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-resolve-issue:hover {
+      background: rgba(40, 167, 69, 0.4);
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 1.8rem;
+      }
+      
+      .grid-container {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+      }
+
+      .back-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .date-banner-actions {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      .btn-save-pdf, .btn-print-pdf, .btn-delete-all {
+        flex: 1;
+        min-width: 100px;
+      }
+
+      .archive-card {
+        flex-direction: column;
+      }
+
+      /* Minibar Counter Mobile Optimizations */
+      .stock-counter-container {
+        padding: 0;
+      }
+
+      .progress-indicator {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+      }
+
+      .counter-panel {
+        padding: 1.5rem 1rem;
+      }
+
+      .dropdown-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .form-select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+
+      .display-area {
+        padding: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .display-number {
+        font-size: 2rem;
+      }
+
+      .display-hint {
+        font-size: 0.8rem;
+      }
+
+      .num-button {
+        font-size: 1.5rem;
+        padding: 1rem;
+      }
+
+      .number-pad {
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .quick-buttons {
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .quick-btn {
+        font-size: 1rem;
+        padding: 0.6rem;
+      }
+
+      .save-item-btn {
+        font-size: 1.1rem;
+        padding: 1rem;
+      }
+
+      /* Reduce top/bottom padding on counter page */
+      #stockCountPage {
+        padding-top: 0.5rem !important;
+      }
+
+      #stockCountPage h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full">
+  <div class="main-wrapper">
+   <div style="padding: 2rem 2rem 3rem 2rem;"><button class="back-button hidden" id="backButton">← Back</button>
+    <h1 class="main-title" id="mainTitle">Housekeeping Inventory &amp; Stock</h1><!-- Main Menu -->
+    <div id="mainMenu" class="grid-container">
+     <div class="premium-card" data-page="minibar"><span class="card-emoji">🍾</span>
+      <div class="card-title">
+       Minibar Operations
+      </div>
+     </div>
+     <div class="premium-card" data-page="orders">
+      <div class="notification-badge" id="notificationBadge">
+       0
+      </div><span class="card-emoji">📦</span>
+      <div class="card-title">
+       Order Management
+      </div>
+     </div>
+     <div class="premium-card" data-page="housekeeping"><span class="card-emoji">🧹</span>
+      <div class="card-title">
+       Housekeeping Stock
+      </div>
+     </div>
+     <div class="premium-card" data-page="archive"><span class="card-emoji">📚</span>
+      <div class="card-title">
+       Archive
+      </div>
+     </div>
+    </div><!-- Minibar Operations Submenu -->
+    <div id="minibarMenu" class="grid-container hidden">
+     <div class="premium-card" data-subpage="expiration"><span class="card-emoji">⏰</span>
+      <div class="card-title">
+       Expiration Control
+      </div>
+     </div>
+     <div class="premium-card" data-subpage="stockcount"><span class="card-emoji">📦</span>
+      <div class="card-title">
+       Minibar Counter
+      </div>
+     </div>
+    </div><!-- Stock Counter Page -->
+    <div id="stockCountPage" class="expiration-page hidden">
+     <div class="stock-counter-container">
+      <div class="progress-indicator" id="stockProgress">
+       Progress: 0/0 items entered ✓
+      </div>
+      <div class="counter-panel">
+       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="dropdown-group" style="margin-bottom: 0;"><label class="form-label">Floor *</label> <select class="form-select" id="floorSelect"> <option value="">Select floor...</option> <option value="F1">F1 - Floor 1</option> <option value="F2">F2 - Floor 2</option> <option value="F3">F3 - Floor 3</option> <option value="Office">Office</option> </select>
+        </div>
+        <div class="dropdown-group" style="margin-bottom: 0;"><label class="form-label">Item *</label> <select class="form-select" id="stockItemSelect"> <option value="">Select an item...</option> <optgroup label="🥨 Snacks"> <option value="Fudge">Fudge</option> <option value="Cheese Nibbles">Cheese Nibbles</option> <option value="Chips">Chips</option> <option value="Almonds">Almonds</option> <option value="Chocolate Peanuts">Chocolate Peanuts</option> </optgroup> <optgroup label="🥤 Soft Drinks"> <option value="Sparkling Water">Sparkling Water</option> <option value="Coca-Cola">Coca-Cola</option> <option value="Coca-Cola Zero">Coca-Cola Zero</option> <option value="Tonic">Tonic</option> <option value="Apple Juice">Apple Juice</option> <option value="Ginger Ale">Ginger Ale</option> <option value="Lemonade">Lemonade</option> </optgroup> <optgroup label="🍺 Alcohol"> <option value="Heineken">Heineken</option> <option value="Red Wine">Red Wine</option> <option value="White Wine">White Wine</option> <option value="Vodka">Vodka</option> <option value="Gin">Gin</option> <option value="Rum">Rum</option> <option value="Jack Daniels">Jack Daniels</option> <option value="Johnnie Walker">Johnnie Walker</option> </optgroup> </select>
+        </div>
+       </div>
+       <div class="display-area" id="displayArea">
+        <div class="display-number" id="displayNumber">
+         0
+        </div>
+       </div><button class="save-item-btn" id="saveStockBtn">✅ Save This Item</button>
+       <div class="number-pad" style="margin-top: 1.5rem;"><button class="num-button" data-num="7">7</button> <button class="num-button" data-num="8">8</button> <button class="num-button" data-num="9">9</button> <button class="num-button" data-num="4">4</button> <button class="num-button" data-num="5">5</button> <button class="num-button" data-num="6">6</button> <button class="num-button" data-num="1">1</button> <button class="num-button" data-num="2">2</button> <button class="num-button" data-num="3">3</button> <button class="num-button wide" data-num="0">0</button> <button class="num-button" data-action="backspace">⌫</button>
+       </div>
+       <div class="quick-buttons"><button class="quick-btn" data-quick="5">5</button> <button class="quick-btn" data-quick="10">10</button> <button class="quick-btn" data-quick="15">15</button> <button class="quick-btn" data-quick="20">20</button>
+       </div>
+      </div><!-- Today's Stock Count Banner -->
+      <div id="todayStockCountBanner" style="margin-top: 2rem;"></div>
+     </div>
+    </div><!-- Order Management / Notification Center Page -->
+    <div id="ordersPage" class="expiration-page hidden">
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">Notification Center</h2><button class="add-button" id="addNotificationBtn">➕ Add Test Notification</button>
+     <div id="notificationFormContainer" class="form-container hidden">
+      <form id="notificationForm">
+       <div class="form-row">
+        <div class="form-group"><label class="form-label" for="notificationType">Notification Type *</label> <select class="form-select" id="notificationType" required> <option value="">Select type...</option> <option value="low_stock">📉 Low Stock</option> <option value="damaged">⚠️ Damaged Item</option> <option value="broken">🔧 Broken Equipment</option> <option value="stolen">    Stolen/Missing</option> <option value="missing">❓ Item Missing</option> <option value="other">📝 Other Issue</option> </select>
+        </div>
+       </div>
+       <div id="dynamicFormFields"></div>
+       <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelNotificationBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitNotificationBtn">Add Notification</button>
+       </div>
+      </form>
+     </div>
+     <div id="notificationsContainer"></div>
+    </div><!-- Housekeeping Stock Submenu -->
+    <div id="housekeepingMenu" class="grid-container hidden">
+     <div class="premium-card" data-subpage="housekeeping-equipment"><span class="card-emoji">🧹</span>
+      <div class="card-title">
+       Housekeeping Equipment
+      </div>
+     </div>
+     <div class="premium-card" data-subpage="public-area-equipment"><span class="card-emoji">  </span>
+      <div class="card-title">
+       Public Area Equipment
+      </div>
+     </div>
+     <div class="premium-card"><span class="card-emoji">🚪</span>
+      <div class="card-title">
+       Room Registry
+      </div>
+     </div>
+    </div><!-- Housekeeping Equipment Page -->
+    <div id="housekeepingEquipmentPage" class="expiration-page hidden">
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🧹 Equipment Inventory</h2><!-- Tab Navigation -->
+     <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;"><button class="equipment-tab active" id="inventoryTab" data-tab="inventory"> 📦 Inventory </button> <button class="equipment-tab" id="issuesTab" data-tab="issues"> ⚠️ Active Issues </button>
+     </div><!-- Inventory Tab Content -->
+     <div id="inventoryTabContent"><button class="add-button" id="addEquipmentBtn">➕ Add New Equipment</button>
+      <div id="equipmentFormContainer" class="form-container hidden">
+       <form id="equipmentForm">
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="equipmentItem">Equipment Item *</label> <select class="form-select" id="equipmentItem" required> <option value="">Select equipment...</option> <optgroup label="     Uniform &amp; PPE"> <option value="Aprons">Aprons</option> <option value="T-shirts">T-shirts</option> <option value="Gloves">Gloves</option> </optgroup> <optgroup label="🧹 Cleaning Tools"> <option value="Toilet brush">Toilet brush</option> <option value="Plumo (feather duster)">Plumo (feather duster)</option> <option value="Cleaning caddy">Cleaning caddy</option> <option value="Mop stick">Mop stick</option> <option value="Mop head (Velcro)">Mop head (Velcro)</option> <option value="Brush">Brush</option> <option value="Microfiber cloths">Microfiber cloths</option> <option value="Sponges">Sponges</option> <option value="Squeegee">Squeegee</option> </optgroup> <optgroup label="🚚 Equipment &amp; Trolleys"> <option value="Housekeeping cart">Housekeeping cart</option> <option value="Laundry trolley">Laundry trolley</option> <option value="Laundry trolley with mobile holder">Laundry trolley with mobile holder</option> </optgroup> <optgroup label="🧺 Laundry &amp; Waste"> <option value="Laundry net">Laundry net</option> <option value="Trash bag clips">Trash bag clips</option> </optgroup> <optgroup label="🌀 Machines &amp; Accessories"> <option value="Vacuum cleaner">Vacuum cleaner</option> <option value="Vacuum cleaner head">Vacuum cleaner head</option> </optgroup> </select>
+         </div>
+        </div><!-- T-shirt Size Fields (hidden by default) -->
+        <div id="tshirtSizeFields" class="hidden">
+         <div class="form-row">
+          <div class="form-group"><label class="form-label" for="sizeXS">XS Quantity</label> <input type="number" class="form-input" id="sizeXS" min="0" value="0">
+          </div>
+          <div class="form-group"><label class="form-label" for="sizeS">S Quantity</label> <input type="number" class="form-input" id="sizeS" min="0" value="0">
+          </div>
+          <div class="form-group"><label class="form-label" for="sizeM">M Quantity</label> <input type="number" class="form-input" id="sizeM" min="0" value="0">
+          </div>
+         </div>
+         <div class="form-row">
+          <div class="form-group"><label class="form-label" for="sizeL">L Quantity</label> <input type="number" class="form-input" id="sizeL" min="0" value="0">
+          </div>
+          <div class="form-group"><label class="form-label" for="sizeXL">XL Quantity</label> <input type="number" class="form-input" id="sizeXL" min="0" value="0">
+          </div>
+          <div class="form-group"><label class="form-label" for="sizeXXL">XXL Quantity</label> <input type="number" class="form-input" id="sizeXXL" min="0" value="0">
+          </div>
+         </div>
+        </div><!-- Regular Quantity Field (for non-tshirt items) -->
+        <div id="regularQuantityField">
+         <div class="form-row">
+          <div class="form-group"><label class="form-label" for="equipmentQuantity">Quantity *</label> <input type="number" class="form-input" id="equipmentQuantity" min="1" required>
+          </div>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="equipmentPurchaseDate">Purchase Date *</label> <input type="date" class="form-input" id="equipmentPurchaseDate" required>
+         </div>
+         <div class="form-group"><label class="form-label" for="equipmentStatus">Initial Status *</label> <select class="form-select" id="equipmentStatus" required> <option value="working">🟢 Working</option> <option value="broken">🔴 Broken</option> <option value="maintenance">🟡 Maintenance</option> </select>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="equipmentLocation">Location (Optional)</label> <input type="text" class="form-input" id="equipmentLocation" placeholder="e.g., Storage Room A, Floor 2 Closet">
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="equipmentNotes">Notes (Optional)</label> <textarea class="form-input" id="equipmentNotes" placeholder="Additional notes..." rows="3" style="resize: vertical;"></textarea>
+         </div>
+        </div>
+        <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelEquipmentBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitEquipmentBtn">Add Equipment</button>
+        </div>
+       </form>
+      </div>
+      <div id="equipmentInventoryContainer"></div>
+     </div><!-- Active Issues Tab Content -->
+     <div id="issuesTabContent" class="hidden">
+      <div id="equipmentIssuesContainer"></div>
+     </div>
+    </div><!-- Public Area Equipment Page -->
+    <div id="publicAreaEquipmentPage" class="expiration-page hidden">
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🚧 Public Area Equipment</h2><!-- Tab Navigation -->
+     <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;"><button class="equipment-tab active" id="publicInventoryTab" data-tab="inventory"> 📦 Inventory </button> <button class="equipment-tab" id="publicIssuesTab" data-tab="issues"> ⚠️ Active Issues </button>
+     </div><!-- Inventory Tab Content -->
+     <div id="publicInventoryTabContent"><button class="add-button" id="addPublicEquipmentBtn">➕ Add New Equipment</button>
+      <div id="publicEquipmentFormContainer" class="form-container hidden">
+       <form id="publicEquipmentForm">
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="publicEquipmentItem">Equipment Item *</label> <select class="form-select" id="publicEquipmentItem" required> <option value="">Select equipment...</option> <optgroup label="⚠️ Safety"> <option value="Wet floor signs">Wet floor signs</option> </optgroup> <optgroup label="🚬 Outside / Entrance"> <option value="Ashtrays (outside)">Ashtrays (outside)</option> <option value="Waste bins (outside) - Paper">Waste bins (outside) - Paper</option> <option value="Waste bins (outside) - General waste">Waste bins (outside) - General waste</option> <option value="Waste bins (outside) - Glass">Waste bins (outside) - Glass</option> </optgroup> <optgroup label="🚻 Public Toilets"> <option value="Toilet seats">Toilet seats</option> <option value="Toilet brushes">Toilet brushes</option> <option value="Decorative mirrors (toilets)">Decorative mirrors (toilets)</option> <option value="Waste bins">Waste bins</option> <option value="Big bin">Big bin</option> <option value="Paper towel holder">Paper towel holder</option> <option value="Mop buckets with wringer">Mop buckets with wringer</option> </optgroup> <optgroup label="♿ Accessible Toilet"> <option value="Accessible (disabled) toilet">Accessible (disabled) toilet</option> <option value="Baby changing table">Baby changing table</option> <option value="Accessible (disabled) shower chair">Accessible (disabled) shower chair</option> </optgroup> <optgroup label="🧹 Cleaning Equipment"> <option value="Vacuum cleaner (Lobby)">Vacuum cleaner (Lobby)</option> <option value="Handheld vacuum (Office)">Handheld vacuum (Office)</option> <option value="Floor scrubber / single-disc machine">Floor scrubber / single-disc machine</option> <option value="Mop bucket with wringer">Mop bucket with wringer</option> <option value="Broom &amp; dustpan">Broom &amp; dustpan</option> <option value="Dusters">Dusters</option> </optgroup> </select>
+         </div>
+        </div><!-- Regular Quantity Field -->
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="publicEquipmentQuantity">Quantity *</label> <input type="number" class="form-input" id="publicEquipmentQuantity" min="1" required>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="publicEquipmentPurchaseDate">Purchase Date *</label> <input type="date" class="form-input" id="publicEquipmentPurchaseDate" required>
+         </div>
+         <div class="form-group"><label class="form-label" for="publicEquipmentStatus">Initial Status *</label> <select class="form-select" id="publicEquipmentStatus" required> <option value="working">🟢 Working</option> <option value="broken">🔴 Broken</option> <option value="maintenance">🟡 Maintenance</option> </select>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="publicEquipmentLocation">Location (Optional)</label> <input type="text" class="form-input" id="publicEquipmentLocation" placeholder="e.g., Lobby, Main Entrance, Floor 2 Toilets">
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="form-group"><label class="form-label" for="publicEquipmentNotes">Notes (Optional)</label> <textarea class="form-input" id="publicEquipmentNotes" placeholder="Additional notes..." rows="3" style="resize: vertical;"></textarea>
+         </div>
+        </div>
+        <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelPublicEquipmentBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitPublicEquipmentBtn">Add Equipment</button>
+        </div>
+       </form>
+      </div>
+      <div id="publicEquipmentInventoryContainer"></div>
+     </div><!-- Active Issues Tab Content -->
+     <div id="publicIssuesTabContent" class="hidden">
+      <div id="publicEquipmentIssuesContainer"></div>
+     </div>
+    </div><!-- Archive Page -->
+    <div id="archivePage" class="expiration-page hidden">
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 3rem;">Archive Center</h2><!-- Section 1: Archived Stock Counts -->
+     <div class="archive-section">
+      <h3 class="archive-section-title">📊 Archived Stock Counts</h3>
+      <div id="stockCountArchiveContainer"></div>
+     </div>
+     <div class="archive-divider"></div><!-- Section 2: Housekeeping Stock Archive -->
+     <div class="archive-section">
+      <h3 class="archive-section-title">🧹 Housekeeping Stock Archive</h3>
+      <div id="equipmentArchiveContainer"></div>
+     </div>
+     <div class="archive-divider"></div><!-- Section 3: Expired Items Archive -->
+     <div class="archive-section">
+      <h3 class="archive-section-title">⏰ Expired Items Archive</h3>
+      <div id="expiredArchiveContainer"></div>
+     </div>
+    </div><!-- Expiration Control Page -->
+    <div id="expirationPage" class="expiration-page hidden">
+     <div class="date-header">
+      <div class="date-display" id="currentDate">
+       Loading...
+      </div>
+      <div class="stats-container">
+       <div class="stat-item">
+        <div class="stat-label">
+         Expired Items Today
+        </div>
+        <div class="stat-value" id="itemCount">
+         0
+        </div>
+       </div>
+       <div class="stat-item">
+        <div class="stat-label">
+         Total Quantity
+        </div>
+        <div class="stat-value" id="totalQuantity">
+         0
+        </div>
+       </div>
+      </div>
+     </div><button class="add-button" id="addItemBtn">➕ Add Expired Item</button>
+     <div id="formContainer" class="form-container hidden">
+      <form id="expirationForm">
+       <div class="form-row">
+        <div class="form-group"><label class="form-label" for="itemName">Item Name *</label> <select class="form-select" id="itemName" required> <option value="">Select an item...</option> <optgroup label="🥨 Snacks"> <option value="Fudge">Fudge</option> <option value="Cheese Nibbles">Cheese Nibbles</option> <option value="Chips">Chips</option> <option value="Almonds">Almonds</option> <option value="Chocolate Peanuts">Chocolate Peanuts</option> </optgroup> <optgroup label="🥤 Soft Drinks"> <option value="Sparkling Water">Sparkling Water</option> <option value="Coca-Cola">Coca-Cola</option> <option value="Coca-Cola Zero">Coca-Cola Zero</option> <option value="Tonic">Tonic</option> <option value="Apple Juice">Apple Juice</option> <option value="Ginger Ale">Ginger Ale</option> <option value="Lemonade">Lemonade</option> </optgroup> <optgroup label="   Alcohol"> <option value="Heineken">Heineken</option> <option value="Red Wine">Red Wine</option> <option value="White Wine">White Wine</option> <option value="Vodka">Vodka</option> <option value="Gin">Gin</option> <option value="Rum">Rum</option> <option value="Jack Daniels">Jack Daniels</option> <option value="Johnnie Walker">Johnnie Walker</option> </optgroup> </select>
+        </div>
+        <div class="form-group"><label class="form-label" for="expirationDate">Expiration Date *</label> <input type="date" class="form-input" id="expirationDate" required>
+        </div>
+        <div class="form-group"><label class="form-label" for="location">Location *</label> <input type="text" class="form-input" id="location" placeholder="e.g., Room 305" required>
+        </div>
+        <div class="form-group"><label class="form-label" for="quantity">Quantity</label> <input type="number" class="form-input" id="quantity" placeholder="Optional" min="1">
+        </div>
+       </div>
+       <div class="form-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button> <button type="submit" class="btn-submit" id="submitBtn">Add Item</button>
+       </div>
+      </form>
+     </div>
+     <div id="itemsContainer"></div>
+    </div>
+   </div>
+   <footer class="footer-text" id="footerText">
+    © M.A.2026
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: "Housekeeping Inventory & Stock",
+      footer_text: "© M.A.2026",
+      background_color: "#0b1a33",
+      accent_color: "#d4af37",
+      font_family: "Segoe UI"
+    };
+
+    const mainMenu = document.getElementById('mainMenu');
+    const minibarMenu = document.getElementById('minibarMenu');
+    const housekeepingMenu = document.getElementById('housekeepingMenu');
+    const archivePage = document.getElementById('archivePage');
+    const expirationPage = document.getElementById('expirationPage');
+    const ordersPage = document.getElementById('ordersPage');
+    const stockCountPage = document.getElementById('stockCountPage');
+    const housekeepingEquipmentPage = document.getElementById('housekeepingEquipmentPage');
+    const publicAreaEquipmentPage = document.getElementById('publicAreaEquipmentPage');
+    const backButton = document.getElementById('backButton');
+
+    let currentPage = 'main';
+    let allItems = [];
+    let allNotifications = [];
+    let allStockCounts = [];
+    let allEquipment = [];
+    let allPublicEquipment = [];
+    let archivedItems = [];
+    let archivedNotifications = [];
+    let archivedStockCounts = [];
+    let currentStockValue = 0;
+    let currentEquipmentTab = 'inventory';
+    let currentPublicEquipmentTab = 'inventory';
+
+    // Category mapping for icons
+    const categoryIcons = {
+      'Fudge': '🥨',
+      'Cheese Nibbles': '🥨',
+      'Chips': '🥨',
+      'Almonds': '🥨',
+      'Chocolate Peanuts': '🥨',
+      'Sparkling Water': '🥤',
+      'Coca-Cola': '🥤',
+      'Coca-Cola Zero': '🥤',
+      'Tonic': '🥤',
+      'Apple Juice': '🥤',
+      'Ginger Ale': '🥤',
+      'Lemonade': '🥤',
+      'Heineken': '🍺',
+      'Red Wine': '🍺',
+      'White Wine': '🍺',
+      'Vodka': '🍺',
+      'Gin': '🍺',
+      'Rum': '🍺',
+      'Jack Daniels': '🍺',
+      'Johnnie Walker': '🍺'
+    };
+
+    // Initialize Data SDK
+    const dataHandler = {
+      onDataChanged(data) {
+        // Separate different types of data
+        allItems = data.filter(item => !item.type && !item.stock_type && !item.equipment_type && !item.is_archived);
+        allNotifications = data.filter(item => item.type && !item.is_archived);
+        allStockCounts = data.filter(item => item.stock_type && !item.is_archived);
+        allEquipment = data.filter(item => item.equipment_type === 'housekeeping' && !item.is_archived);
+        allPublicEquipment = data.filter(item => item.equipment_type === 'public_area' && !item.is_archived);
+        archivedItems = data.filter(item => !item.type && !item.stock_type && !item.equipment_type && item.is_archived);
+        archivedNotifications = data.filter(item => item.type && item.is_archived);
+        archivedStockCounts = data.filter(item => item.stock_type && item.is_archived);
+        
+        updateExpirationDisplay();
+        updateNotificationsDisplay();
+        updateNotificationBadge();
+        updateArchiveDisplay();
+        updateStockProgress();
+        updateEquipmentDisplay();
+        updatePublicEquipmentDisplay();
+      }
+    };
+
+    async function initializeDataSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error("Failed to initialize Data SDK:", result.error);
+        }
+      }
+    }
+
+    // Navigation handler
+    document.querySelectorAll('.premium-card[data-page]').forEach(card => {
+      card.addEventListener('click', function() {
+        const page = this.getAttribute('data-page');
+        navigateTo(page);
+      });
+    });
+
+    // Add click handler for subpages
+    document.querySelectorAll('.premium-card[data-subpage]').forEach(card => {
+      card.addEventListener('click', function() {
+        const subpage = this.getAttribute('data-subpage');
+        navigateTo(subpage);
+      });
+    });
+
+    backButton.addEventListener('click', function() {
+      if (currentPage === 'expiration' || currentPage === 'stockcount') {
+        navigateTo('minibar');
+      } else if (currentPage === 'orders') {
+        navigateTo('main');
+      } else if (currentPage === 'housekeeping-equipment' || currentPage === 'public-area-equipment') {
+        navigateTo('housekeeping');
+      } else {
+        navigateTo('main');
+      }
+    });
+
+    function navigateTo(page) {
+      const mainTitle = document.getElementById('mainTitle');
+      
+      // Hide all menus and pages
+      mainMenu.classList.add('hidden');
+      minibarMenu.classList.add('hidden');
+      housekeepingMenu.classList.add('hidden');
+      archivePage.classList.add('hidden');
+      expirationPage.classList.add('hidden');
+      ordersPage.classList.add('hidden');
+      stockCountPage.classList.add('hidden');
+      housekeepingEquipmentPage.classList.add('hidden');
+      publicAreaEquipmentPage.classList.add('hidden');
+
+      // Show appropriate menu/page
+      if (page === 'main') {
+        mainMenu.classList.remove('hidden');
+        backButton.classList.add('hidden');
+        mainTitle.style.display = 'block';
+        currentPage = 'main';
+      } else if (page === 'minibar') {
+        minibarMenu.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back';
+        mainTitle.style.display = 'none';
+        currentPage = 'minibar';
+      } else if (page === 'orders') {
+        ordersPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Dashboard';
+        mainTitle.style.display = 'none';
+        currentPage = 'orders';
+        updateNotificationsDisplay();
+      } else if (page === 'housekeeping') {
+        housekeepingMenu.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back';
+        mainTitle.style.display = 'none';
+        currentPage = 'housekeeping';
+      } else if (page === 'housekeeping-equipment') {
+        housekeepingEquipmentPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Housekeeping Stock';
+        mainTitle.style.display = 'none';
+        currentPage = 'housekeeping-equipment';
+        updateEquipmentDisplay();
+      } else if (page === 'public-area-equipment') {
+        publicAreaEquipmentPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Housekeeping Stock';
+        mainTitle.style.display = 'none';
+        currentPage = 'public-area-equipment';
+        updatePublicEquipmentDisplay();
+      } else if (page === 'archive') {
+        archivePage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Main';
+        mainTitle.style.display = 'none';
+        currentPage = 'archive';
+        updateArchiveDisplay();
+      } else if (page === 'expiration') {
+        expirationPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Minibar Operations';
+        mainTitle.style.display = 'none';
+        currentPage = 'expiration';
+        updateCurrentDate();
+        updateExpirationDisplay();
+      } else if (page === 'stockcount') {
+        stockCountPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Minibar Operations';
+        mainTitle.style.display = 'none';
+        currentPage = 'stockcount';
+        updateStockProgress();
+      }
+    }
+
+    // ============== HOUSEKEEPING EQUIPMENT FUNCTIONALITY ==============
+
+    const addEquipmentBtn = document.getElementById('addEquipmentBtn');
+    const equipmentFormContainer = document.getElementById('equipmentFormContainer');
+    const equipmentForm = document.getElementById('equipmentForm');
+    const cancelEquipmentBtn = document.getElementById('cancelEquipmentBtn');
+    const submitEquipmentBtn = document.getElementById('submitEquipmentBtn');
+    const equipmentItemSelect = document.getElementById('equipmentItem');
+    const tshirtSizeFields = document.getElementById('tshirtSizeFields');
+    const regularQuantityField = document.getElementById('regularQuantityField');
+    const inventoryTab = document.getElementById('inventoryTab');
+    const issuesTab = document.getElementById('issuesTab');
+    const inventoryTabContent = document.getElementById('inventoryTabContent');
+    const issuesTabContent = document.getElementById('issuesTabContent');
+
+    const equipmentCategoryMap = {
+      'Aprons': '👕 Uniform & PPE',
+      'T-shirts': '👕 Uniform & PPE',
+      'Gloves': '👕 Uniform & PPE',
+      'Toilet brush': '🧹 Cleaning Tools',
+      'Plumo (feather duster)': '🧹 Cleaning Tools',
+      'Cleaning caddy': '🧹 Cleaning Tools',
+      'Mop stick': '🧹 Cleaning Tools',
+      'Mop head (Velcro)': '🧹 Cleaning Tools',
+      'Brush': '🧹 Cleaning Tools',
+      'Microfiber cloths': '🧹 Cleaning Tools',
+      'Sponges': '🧹 Cleaning Tools',
+      'Squeegee': '🧹 Cleaning Tools',
+      'Housekeeping cart': '🚚 Equipment & Trolleys',
+      'Laundry trolley': '🚚 Equipment & Trolleys',
+      'Laundry trolley with mobile holder': '🚚 Equipment & Trolleys',
+      'Laundry net': '🧺 Laundry & Waste',
+      'Trash bag clips': '🧺 Laundry & Waste',
+      'Vacuum cleaner': '🌀 Machines & Accessories',
+      'Vacuum cleaner head': '🌀 Machines & Accessories'
+    };
+
+    const equipmentCategoryIcons = {
+      '👕 Uniform & PPE': '👕',
+      '🧹 Cleaning Tools': '🧹',
+      '🚚 Equipment & Trolleys': '🚚',
+      '🧺 Laundry & Waste': '🧺',
+      '🌀 Machines & Accessories': '🌀'
+    };
+
+    // ============== PUBLIC AREA EQUIPMENT FUNCTIONALITY ==============
+
+    const addPublicEquipmentBtn = document.getElementById('addPublicEquipmentBtn');
+    const publicEquipmentFormContainer = document.getElementById('publicEquipmentFormContainer');
+    const publicEquipmentForm = document.getElementById('publicEquipmentForm');
+    const cancelPublicEquipmentBtn = document.getElementById('cancelPublicEquipmentBtn');
+    const submitPublicEquipmentBtn = document.getElementById('submitPublicEquipmentBtn');
+    const publicEquipmentItemSelect = document.getElementById('publicEquipmentItem');
+    const publicInventoryTab = document.getElementById('publicInventoryTab');
+    const publicIssuesTab = document.getElementById('publicIssuesTab');
+    const publicInventoryTabContent = document.getElementById('publicInventoryTabContent');
+    const publicIssuesTabContent = document.getElementById('publicIssuesTabContent');
+
+    const publicEquipmentCategoryMap = {
+      'Wet floor signs': '⚠️ Safety',
+      'Ashtrays (outside)': '🚬 Outside / Entrance',
+      'Waste bins (outside) - Paper': '🚬 Outside / Entrance',
+      'Waste bins (outside) - General waste': '🚬 Outside / Entrance',
+      'Waste bins (outside) - Glass': '🚬 Outside / Entrance',
+      'Toilet seats': '🚻 Public Toilets',
+      'Toilet brushes': '🚻 Public Toilets',
+      'Decorative mirrors (toilets)': '🚻 Public Toilets',
+      'Waste bins': '🚻 Public Toilets',
+      'Big bin': '🚻 Public Toilets',
+      'Paper towel holder': '🚻 Public Toilets',
+      'Mop buckets with wringer': '🚻 Public Toilets',
+      'Accessible (disabled) toilet': '♿ Accessible Toilet',
+      'Baby changing table': '♿ Accessible Toilet',
+      'Accessible (disabled) shower chair': '♿ Accessible Toilet',
+      'Vacuum cleaner (Lobby)': '🧹 Cleaning Equipment',
+      'Handheld vacuum (Office)': '🧹 Cleaning Equipment',
+      'Floor scrubber / single-disc machine': '🧹 Cleaning Equipment',
+      'Mop bucket with wringer': '🧹 Cleaning Equipment',
+      'Broom & dustpan': '🧹 Cleaning Equipment',
+      'Dusters': '🧹 Cleaning Equipment'
+    };
+
+    const publicEquipmentCategoryIcons = {
+      '⚠️ Safety': '⚠️',
+      '🚬 Outside / Entrance': '🚬',
+      '🚻 Public Toilets': '🚻',
+      '♿ Accessible Toilet': '♿',
+      '🧹 Cleaning Equipment': '🧹'
+    };
+
+    // Tab switching for Housekeeping Equipment
+    inventoryTab.addEventListener('click', function() {
+      currentEquipmentTab = 'inventory';
+      inventoryTab.classList.add('active');
+      issuesTab.classList.remove('active');
+      inventoryTabContent.classList.remove('hidden');
+      issuesTabContent.classList.add('hidden');
+    });
+
+    issuesTab.addEventListener('click', function() {
+      currentEquipmentTab = 'issues';
+      issuesTab.classList.add('active');
+      inventoryTab.classList.remove('active');
+      issuesTabContent.classList.remove('hidden');
+      inventoryTabContent.classList.add('hidden');
+      updateEquipmentIssuesDisplay();
+    });
+
+    // Tab switching for Public Area Equipment
+    publicInventoryTab.addEventListener('click', function() {
+      currentPublicEquipmentTab = 'inventory';
+      publicInventoryTab.classList.add('active');
+      publicIssuesTab.classList.remove('active');
+      publicInventoryTabContent.classList.remove('hidden');
+      publicIssuesTabContent.classList.add('hidden');
+    });
+
+    publicIssuesTab.addEventListener('click', function() {
+      currentPublicEquipmentTab = 'issues';
+      publicIssuesTab.classList.add('active');
+      publicInventoryTab.classList.remove('active');
+      publicIssuesTabContent.classList.remove('hidden');
+      publicInventoryTabContent.classList.add('hidden');
+      updatePublicEquipmentIssuesDisplay();
+    });
+
+    // T-shirt size field visibility
+    equipmentItemSelect.addEventListener('change', function() {
+      if (this.value === 'T-shirts') {
+        tshirtSizeFields.classList.remove('hidden');
+        regularQuantityField.classList.add('hidden');
+        document.getElementById('equipmentQuantity').removeAttribute('required');
+      } else {
+        tshirtSizeFields.classList.add('hidden');
+        regularQuantityField.classList.remove('hidden');
+        document.getElementById('equipmentQuantity').setAttribute('required', 'required');
+      }
+    });
+
+    addEquipmentBtn.addEventListener('click', function() {
+      equipmentFormContainer.classList.toggle('hidden');
+    });
+
+    cancelEquipmentBtn.addEventListener('click', function() {
+      equipmentFormContainer.classList.add('hidden');
+      equipmentForm.reset();
+      tshirtSizeFields.classList.add('hidden');
+      regularQuantityField.classList.remove('hidden');
+    });
+
+    // Public Area Equipment button handlers
+    addPublicEquipmentBtn.addEventListener('click', function() {
+      publicEquipmentFormContainer.classList.toggle('hidden');
+    });
+
+    cancelPublicEquipmentBtn.addEventListener('click', function() {
+      publicEquipmentFormContainer.classList.add('hidden');
+      publicEquipmentForm.reset();
+    });
+
+    equipmentForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const itemName = equipmentItemSelect.value;
+      const purchaseDate = document.getElementById('equipmentPurchaseDate').value;
+      const status = document.getElementById('equipmentStatus').value;
+      const location = document.getElementById('equipmentLocation').value;
+      const notes = document.getElementById('equipmentNotes').value;
+
+      if (!itemName || !purchaseDate || !status) return;
+
+      submitEquipmentBtn.disabled = true;
+      submitEquipmentBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+
+      if (itemName === 'T-shirts') {
+        // Handle T-shirt sizes separately
+        const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        for (const size of sizes) {
+          const qty = parseInt(document.getElementById(`size${size}`).value) || 0;
+          if (qty > 0) {
+            const newEquipment = {
+              id: Date.now().toString() + '-' + size,
+              equipment_type: 'housekeeping',
+              item_name: `T-shirts (${size})`,
+              base_item: 'T-shirts',
+              size: size,
+              category: equipmentCategoryMap[itemName],
+              quantity: qty,
+              purchase_date: purchaseDate,
+              status: status,
+              location: location || null,
+              notes: notes || null,
+              added_timestamp: new Date().toISOString(),
+              issue_description: status === 'broken' || status === 'maintenance' ? 'Initial status' : null,
+              issue_reported_date: status === 'broken' || status === 'maintenance' ? new Date().toISOString() : null,
+              is_archived: false
+            };
+
+            const result = await window.dataSdk.create(newEquipment);
+            if (!result.isOk) {
+              console.error('Failed to add equipment:', result.error);
+            }
+          }
+        }
+      } else {
+        // Regular item
+        const quantity = parseInt(document.getElementById('equipmentQuantity').value);
+
+        const newEquipment = {
+          id: Date.now().toString(),
+          equipment_type: 'housekeeping',
+          item_name: itemName,
+          category: equipmentCategoryMap[itemName],
+          quantity: quantity,
+          purchase_date: purchaseDate,
+          status: status,
+          location: location || null,
+          notes: notes || null,
+          added_timestamp: new Date().toISOString(),
+          issue_description: status === 'broken' || status === 'maintenance' ? 'Initial status' : null,
+          issue_reported_date: status === 'broken' || status === 'maintenance' ? new Date().toISOString() : null,
+          is_archived: false
+        };
+
+        const result = await window.dataSdk.create(newEquipment);
+
+        if (!result.isOk) {
+          submitEquipmentBtn.disabled = false;
+          submitEquipmentBtn.textContent = 'Add Equipment';
+          showToast('Failed to add equipment', 'error');
+          return;
+        }
+      }
+
+      submitEquipmentBtn.disabled = false;
+      submitEquipmentBtn.textContent = 'Add Equipment';
+      equipmentForm.reset();
+      equipmentFormContainer.classList.add('hidden');
+      tshirtSizeFields.classList.add('hidden');
+      regularQuantityField.classList.remove('hidden');
+      showToast('Equipment added successfully', 'success');
+    });
+
+    // Public Area Equipment form submission
+    publicEquipmentForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const itemName = publicEquipmentItemSelect.value;
+      const quantity = parseInt(document.getElementById('publicEquipmentQuantity').value);
+      const purchaseDate = document.getElementById('publicEquipmentPurchaseDate').value;
+      const status = document.getElementById('publicEquipmentStatus').value;
+      const location = document.getElementById('publicEquipmentLocation').value;
+      const notes = document.getElementById('publicEquipmentNotes').value;
+
+      if (!itemName || !quantity || !purchaseDate || !status) return;
+
+      submitPublicEquipmentBtn.disabled = true;
+      submitPublicEquipmentBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+
+      const newEquipment = {
+        id: Date.now().toString(),
+        equipment_type: 'public_area',
+        item_name: itemName,
+        category: publicEquipmentCategoryMap[itemName],
+        quantity: quantity,
+        purchase_date: purchaseDate,
+        status: status,
+        location: location || null,
+        notes: notes || null,
+        added_timestamp: new Date().toISOString(),
+        issue_description: status === 'broken' || status === 'maintenance' ? 'Initial status' : null,
+        issue_reported_date: status === 'broken' || status === 'maintenance' ? new Date().toISOString() : null,
+        is_archived: false
+      };
+
+      const result = await window.dataSdk.create(newEquipment);
+
+      submitPublicEquipmentBtn.disabled = false;
+      submitPublicEquipmentBtn.textContent = 'Add Equipment';
+
+      if (!result.isOk) {
+        showToast('Failed to add equipment', 'error');
+        return;
+      }
+
+      publicEquipmentForm.reset();
+      publicEquipmentFormContainer.classList.add('hidden');
+      showToast('Equipment added successfully', 'success');
+    });
+
+    function calculateEquipmentAge(purchaseDate) {
+      const now = new Date();
+      const purchase = new Date(purchaseDate);
+      const diffTime = Math.abs(now - purchase);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 30) {
+        return `${diffDays} days`;
+      } else if (diffDays < 365) {
+        const months = Math.floor(diffDays / 30);
+        return months === 1 ? '1 month' : `${months} months`;
+      } else {
+        const years = Math.floor(diffDays / 365);
+        const months = Math.floor((diffDays % 365) / 30);
+        if (months === 0) {
+          return years === 1 ? '1 year' : `${years} years`;
+        }
+        const yearText = years === 1 ? '1 year' : `${years} years`;
+        const monthText = months === 1 ? '1 month' : `${months} months`;
+        return `${yearText}, ${monthText}`;
+      }
+    }
+
+    function updateEquipmentDisplay() {
+      const container = document.getElementById('equipmentInventoryContainer');
+
+      if (allEquipment.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🏭</div>
+            <div class="empty-title">No equipment in inventory yet</div>
+            <div class="empty-subtitle">Add your first equipment item to get started</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by category
+      const groupedByCategory = {};
+      allEquipment.forEach(equip => {
+        const category = equip.category;
+        if (!groupedByCategory[category]) {
+          groupedByCategory[category] = [];
+        }
+        groupedByCategory[category].push(equip);
+      });
+
+      const categoryOrder = [
+        '👕 Uniform & PPE',
+        '🧹 Cleaning Tools',
+        '🚚 Equipment & Trolleys',
+        '🧺 Laundry & Waste',
+        '🌀 Machines & Accessories'
+      ];
+
+      container.innerHTML = categoryOrder
+        .filter(cat => groupedByCategory[cat])
+        .map(category => {
+          const items = groupedByCategory[category];
+          const icon = equipmentCategoryIcons[category];
+
+          return `
+            <div class="equipment-category-section">
+              <div class="category-banner" onclick="toggleEquipmentCategory('${category.replace(/[^a-z0-9]/gi, '')}')">
+                <div class="category-banner-left">
+                  <span class="expand-arrow" id="arrow-${category.replace(/[^a-z0-9]/gi, '')}">▶</span>
+                  <span class="category-icon">${icon}</span>
+                  <span class="category-title">${category}</span>
+                  <span class="item-count-badge">${items.length} items</span>
+                </div>
+              </div>
+              <div class="notifications-list" id="list-${category.replace(/[^a-z0-9]/gi, '')}">
+                ${items.map(equip => createEquipmentCard(equip)).join('')}
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      // Attach event listeners
+      allEquipment.forEach(equip => {
+        const reportBtn = document.getElementById(`report-issue-${equip.id}`);
+        const markWorkingBtn = document.getElementById(`mark-working-${equip.id}`);
+        const deleteBtn = document.getElementById(`delete-equip-${equip.id}`);
+
+        if (reportBtn) {
+          reportBtn.addEventListener('click', () => reportEquipmentIssue(equip));
+        }
+        if (markWorkingBtn) {
+          markWorkingBtn.addEventListener('click', () => markEquipmentWorking(equip));
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteEquipment(equip));
+        }
+      });
+
+      // Preserve tab state after display update
+      if (currentEquipmentTab === 'issues') {
+        inventoryTabContent.classList.add('hidden');
+        issuesTabContent.classList.remove('hidden');
+        updateEquipmentIssuesDisplay();
+      } else {
+        inventoryTabContent.classList.remove('hidden');
+        issuesTabContent.classList.add('hidden');
+      }
+    }
+
+    function updatePublicEquipmentDisplay() {
+      const container = document.getElementById('publicEquipmentInventoryContainer');
+
+      if (allPublicEquipment.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🏭</div>
+            <div class="empty-title">No equipment in inventory yet</div>
+            <div class="empty-subtitle">Add your first equipment item to get started</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by category
+      const groupedByCategory = {};
+      allPublicEquipment.forEach(equip => {
+        const category = equip.category;
+        if (!groupedByCategory[category]) {
+          groupedByCategory[category] = [];
+        }
+        groupedByCategory[category].push(equip);
+      });
+
+      const categoryOrder = [
+        '⚠️ Safety',
+        '🚬 Outside / Entrance',
+        '🚻 Public Toilets',
+        '♿ Accessible Toilet',
+        '🧹 Cleaning Equipment'
+      ];
+
+      container.innerHTML = categoryOrder
+        .filter(cat => groupedByCategory[cat])
+        .map(category => {
+          const items = groupedByCategory[category];
+          const icon = publicEquipmentCategoryIcons[category];
+
+          return `
+            <div class="equipment-category-section">
+              <div class="category-banner" onclick="togglePublicEquipmentCategory('${category.replace(/[^a-z0-9]/gi, '')}')">
+                <div class="category-banner-left">
+                  <span class="expand-arrow" id="arrow-public-${category.replace(/[^a-z0-9]/gi, '')}">▶</span>
+                  <span class="category-icon">${icon}</span>
+                  <span class="category-title">${category}</span>
+                  <span class="item-count-badge">${items.length} items</span>
+                </div>
+              </div>
+              <div class="notifications-list" id="list-public-${category.replace(/[^a-z0-9]/gi, '')}">
+                ${items.map(equip => createPublicEquipmentCard(equip)).join('')}
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      // Attach event listeners
+      allPublicEquipment.forEach(equip => {
+        const reportBtn = document.getElementById(`report-issue-public-${equip.id}`);
+        const markWorkingBtn = document.getElementById(`mark-working-public-${equip.id}`);
+        const deleteBtn = document.getElementById(`delete-equip-public-${equip.id}`);
+
+        if (reportBtn) {
+          reportBtn.addEventListener('click', () => reportPublicEquipmentIssue(equip));
+        }
+        if (markWorkingBtn) {
+          markWorkingBtn.addEventListener('click', () => markPublicEquipmentWorking(equip));
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deletePublicEquipment(equip));
+        }
+      });
+
+      // Preserve tab state after display update
+      if (currentPublicEquipmentTab === 'issues') {
+        publicInventoryTabContent.classList.add('hidden');
+        publicIssuesTabContent.classList.remove('hidden');
+        updatePublicEquipmentIssuesDisplay();
+      } else {
+        publicInventoryTabContent.classList.remove('hidden');
+        publicIssuesTabContent.classList.add('hidden');
+      }
+    }
+
+    function createEquipmentCard(equip) {
+      const statusBadgeClass = equip.status === 'working' ? 'working' : equip.status === 'broken' ? 'broken' : 'maintenance';
+      const statusText = equip.status === 'working' ? '🟢 Working' : equip.status === 'broken' ? '🔴 Broken' : '🟡 Maintenance';
+      const cardClass = equip.status === 'broken' ? 'equipment-card status-broken' : equip.status === 'maintenance' ? 'equipment-card status-maintenance' : 'equipment-card';
+      
+      const purchaseFormatted = new Date(equip.purchase_date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+
+      const age = calculateEquipmentAge(equip.purchase_date);
+
+      let actionButtons = '';
+      if (equip.status === 'working') {
+        actionButtons = `
+          <button class="btn-report-issue" id="report-issue-${equip.id}">⚠️ Report Issue</button>
+          <button class="btn-delete" id="delete-equip-${equip.id}">🗑️ Delete</button>
+        `;
+      } else {
+        actionButtons = `
+          <button class="btn-mark-working" id="mark-working-${equip.id}">✅ Mark as Working</button>
+          <button class="btn-delete" id="delete-equip-${equip.id}">🗑️ Delete</button>
+        `;
+      }
+
+      return `
+        <div class="${cardClass}">
+          <div class="equipment-header">
+            <div>
+              <div class="equipment-name">${equip.item_name}</div>
+            </div>
+            <span class="equipment-status-badge ${statusBadgeClass}">${statusText}</span>
+          </div>
+          <div class="equipment-details">
+            <div class="equipment-detail"><strong>📅 Purchase Date:</strong> ${purchaseFormatted}</div>
+            <div class="equipment-detail"><strong>⏳ Age:</strong> ${age}</div>
+            <div class="equipment-detail"><strong>📦 Amount:</strong> ${equip.quantity}</div>
+            ${equip.location ? `<div class="equipment-detail"><strong>📍 Location:</strong> ${equip.location}</div>` : ''}
+            ${equip.notes ? `<div class="equipment-detail"><strong>📝 Notes:</strong> ${equip.notes}</div>` : ''}
+            ${equip.issue_description && equip.status !== 'working' ? `<div class="equipment-detail"><strong>🔧 Issue:</strong> ${equip.issue_description}</div>` : ''}
+          </div>
+          <div class="equipment-actions">
+            ${actionButtons}
+          </div>
+        </div>
+      `;
+    }
+
+    function createPublicEquipmentCard(equip) {
+      const statusBadgeClass = equip.status === 'working' ? 'working' : equip.status === 'broken' ? 'broken' : 'maintenance';
+      const statusText = equip.status === 'working' ? '🟢 Working' : equip.status === 'broken' ? '🔴 Broken' : '🟡 Maintenance';
+      const cardClass = equip.status === 'broken' ? 'equipment-card status-broken' : equip.status === 'maintenance' ? 'equipment-card status-maintenance' : 'equipment-card';
+      
+      const purchaseFormatted = new Date(equip.purchase_date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+
+      const age = calculateEquipmentAge(equip.purchase_date);
+
+      let actionButtons = '';
+      if (equip.status === 'working') {
+        actionButtons = `
+          <button class="btn-report-issue" id="report-issue-public-${equip.id}">⚠️ Report Issue</button>
+          <button class="btn-delete" id="delete-equip-public-${equip.id}">🗑️ Delete</button>
+        `;
+      } else {
+        actionButtons = `
+          <button class="btn-mark-working" id="mark-working-public-${equip.id}">✅ Mark as Working</button>
+          <button class="btn-delete" id="delete-equip-public-${equip.id}">🗑️ Delete</button>
+        `;
+      }
+
+      return `
+        <div class="${cardClass}">
+          <div class="equipment-header">
+            <div>
+              <div class="equipment-name">${equip.item_name}</div>
+            </div>
+            <span class="equipment-status-badge ${statusBadgeClass}">${statusText}</span>
+          </div>
+          <div class="equipment-details">
+            <div class="equipment-detail"><strong>📅 Purchase Date:</strong> ${purchaseFormatted}</div>
+            <div class="equipment-detail"><strong>⏳ Age:</strong> ${age}</div>
+            <div class="equipment-detail"><strong>📦 Amount:</strong> ${equip.quantity}</div>
+            ${equip.location ? `<div class="equipment-detail"><strong>📍 Location:</strong> ${equip.location}</div>` : ''}
+            ${equip.notes ? `<div class="equipment-detail"><strong>📝 Notes:</strong> ${equip.notes}</div>` : ''}
+            ${equip.issue_description && equip.status !== 'working' ? `<div class="equipment-detail"><strong>🔧 Issue:</strong> ${equip.issue_description}</div>` : ''}
+          </div>
+          <div class="equipment-actions">
+            ${actionButtons}
+          </div>
+        </div>
+      `;
+    }
+
+    async function reportEquipmentIssue(equip) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Report Issue - ${equip.item_name}</div>
+          <form id="reportIssueForm">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" for="issueDescription">Issue Description *</label>
+              <textarea class="form-input" id="issueDescription" placeholder="Describe the issue..." rows="3" required style="resize: vertical;"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label class="form-label" for="issueLocation">Location (Optional)</label>
+              <input type="text" class="form-input" id="issueLocation" placeholder="Where is the equipment?" value="${equip.location || ''}">
+            </div>
+            <div class="modal-buttons">
+              <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+              <button type="submit" class="btn-modal-confirm" style="background: #dc3545; border-color: #dc3545;">Report Issue</button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('reportIssueForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const description = document.getElementById('issueDescription').value;
+        const location = document.getElementById('issueLocation').value;
+
+        const result = await window.dataSdk.update({
+          ...equip,
+          status: 'broken',
+          issue_description: description,
+          issue_reported_date: new Date().toISOString(),
+          location: location || equip.location
+        });
+
+        closeModal();
+        
+        if (result.isOk) {
+          showToast('Issue reported successfully', 'success');
+        } else {
+          showToast('Failed to report issue', 'error');
+        }
+      });
+    }
+
+    async function reportPublicEquipmentIssue(equip) {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Report Issue - ${equip.item_name}</div>
+          <form id="reportPublicIssueForm">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" for="publicIssueDescription">Issue Description *</label>
+              <textarea class="form-input" id="publicIssueDescription" placeholder="Describe the issue..." rows="3" required style="resize: vertical;"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label class="form-label" for="publicIssueLocation">Location (Optional)</label>
+              <input type="text" class="form-input" id="publicIssueLocation" placeholder="Where is the equipment?" value="${equip.location || ''}">
+            </div>
+            <div class="modal-buttons">
+              <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+              <button type="submit" class="btn-modal-confirm" style="background: #dc3545; border-color: #dc3545;">Report Issue</button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('reportPublicIssueForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const description = document.getElementById('publicIssueDescription').value;
+        const location = document.getElementById('publicIssueLocation').value;
+
+        const result = await window.dataSdk.update({
+          ...equip,
+          status: 'broken',
+          issue_description: description,
+          issue_reported_date: new Date().toISOString(),
+          location: location || equip.location
+        });
+
+        closeModal();
+        
+        if (result.isOk) {
+          showToast('Issue reported successfully', 'success');
+        } else {
+          showToast('Failed to report issue', 'error');
+        }
+      });
+    }
+
+    async function markEquipmentWorking(equip) {
+      const btn = document.getElementById(`mark-working-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Updating...';
+
+      const result = await window.dataSdk.update({
+        ...equip,
+        status: 'working',
+        issue_description: null,
+        issue_reported_date: null
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Mark as Working';
+        showToast('Failed to update status', 'error');
+      } else {
+        showToast('Status updated successfully', 'success');
+      }
+    }
+
+    async function markPublicEquipmentWorking(equip) {
+      const btn = document.getElementById(`mark-working-public-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Updating...';
+
+      const result = await window.dataSdk.update({
+        ...equip,
+        status: 'working',
+        issue_description: null,
+        issue_reported_date: null
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Mark as Working';
+        showToast('Failed to update status', 'error');
+      } else {
+        showToast('Status updated successfully', 'success');
+      }
+    }
+
+    async function deleteEquipment(equip) {
+      const btn = document.getElementById(`delete-equip-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(equip);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete equipment', 'error');
+      }
+    }
+
+    async function deletePublicEquipment(equip) {
+      const btn = document.getElementById(`delete-equip-public-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(equip);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete equipment', 'error');
+      }
+    }
+
+    window.toggleEquipmentCategory = function(categoryId) {
+      const arrow = document.getElementById(`arrow-${categoryId}`);
+      const list = document.getElementById(`list-${categoryId}`);
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    };
+
+    window.togglePublicEquipmentCategory = function(categoryId) {
+      const arrow = document.getElementById(`arrow-public-${categoryId}`);
+      const list = document.getElementById(`list-public-${categoryId}`);
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    };
+
+    function updateEquipmentIssuesDisplay() {
+      const container = document.getElementById('equipmentIssuesContainer');
+      const issues = allEquipment.filter(e => e.status === 'broken' || e.status === 'maintenance');
+
+      if (issues.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <div class="empty-title">No active issues</div>
+            <div class="empty-subtitle">All equipment is working properly</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = issues.map(equip => createIssueCard(equip)).join('');
+
+      // Attach event listeners
+      issues.forEach(equip => {
+        const resolveBtn = document.getElementById(`resolve-issue-${equip.id}`);
+        const deleteBtn = document.getElementById(`delete-issue-${equip.id}`);
+
+        if (resolveBtn) {
+          resolveBtn.addEventListener('click', () => resolveIssue(equip));
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteEquipment(equip));
+        }
+      });
+    }
+
+    function updatePublicEquipmentIssuesDisplay() {
+      const container = document.getElementById('publicEquipmentIssuesContainer');
+      const issues = allPublicEquipment.filter(e => e.status === 'broken' || e.status === 'maintenance');
+
+      if (issues.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">   </div>
+            <div class="empty-title">No active issues</div>
+            <div class="empty-subtitle">All equipment is working properly</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = issues.map(equip => createPublicIssueCard(equip)).join('');
+
+      // Attach event listeners
+      issues.forEach(equip => {
+        const resolveBtn = document.getElementById(`resolve-issue-public-${equip.id}`);
+        const deleteBtn = document.getElementById(`delete-issue-public-${equip.id}`);
+
+        if (resolveBtn) {
+          resolveBtn.addEventListener('click', () => resolvePublicIssue(equip));
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deletePublicEquipment(equip));
+        }
+      });
+    }
+
+    function createIssueCard(equip) {
+      const reportedDate = equip.issue_reported_date ? new Date(equip.issue_reported_date) : null;
+      const reportedFormatted = reportedDate ? reportedDate.toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : 'N/A';
+
+      const daysSince = reportedDate ? Math.floor((new Date() - reportedDate) / (1000 * 60 * 60 * 24)) : 0;
+      const daysText = daysSince === 0 ? 'Today' : daysSince === 1 ? '1 day ago' : `${daysSince} days ago`;
+
+      const age = calculateEquipmentAge(equip.purchase_date);
+
+      return `
+        <div class="issue-card">
+          <div class="issue-header">
+            <span class="issue-icon">⚠️</span>
+            <span class="issue-title">${equip.item_name}</span>
+          </div>
+          <div class="issue-details">
+            <div class="issue-detail"><strong>🏷️ Category:</strong> ${equip.category}</div>
+            <div class="issue-detail"><strong>📝 Issue:</strong> ${equip.issue_description || 'No description'}</div>
+            <div class="issue-detail"><strong>📍 Location:</strong> ${equip.location || 'Not specified'}</div>
+            <div class="issue-detail"><strong>📅 Reported:</strong> ${reportedFormatted} (${daysText})</div>
+            <div class="issue-detail"><strong>⏳ Equipment Age:</strong> ${age}</div>
+          </div>
+          <div class="issue-actions">
+            <button class="btn-resolve-issue" id="resolve-issue-${equip.id}">✅ Resolve Issue</button>
+            <button class="btn-delete" id="delete-issue-${equip.id}">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function createPublicIssueCard(equip) {
+      const reportedDate = equip.issue_reported_date ? new Date(equip.issue_reported_date) : null;
+      const reportedFormatted = reportedDate ? reportedDate.toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : 'N/A';
+
+      const daysSince = reportedDate ? Math.floor((new Date() - reportedDate) / (1000 * 60 * 60 * 24)) : 0;
+      const daysText = daysSince === 0 ? 'Today' : daysSince === 1 ? '1 day ago' : `${daysSince} days ago`;
+
+      const age = calculateEquipmentAge(equip.purchase_date);
+
+      return `
+        <div class="issue-card">
+          <div class="issue-header">
+            <span class="issue-icon">⚠️</span>
+            <span class="issue-title">${equip.item_name}</span>
+          </div>
+          <div class="issue-details">
+            <div class="issue-detail"><strong>🏷️ Category:</strong> ${equip.category}</div>
+            <div class="issue-detail"><strong>📝 Issue:</strong> ${equip.issue_description || 'No description'}</div>
+            <div class="issue-detail"><strong>📍 Location:</strong> ${equip.location || 'Not specified'}</div>
+            <div class="issue-detail"><strong>📅 Reported:</strong> ${reportedFormatted} (${daysText})</div>
+            <div class="issue-detail"><strong>⏳ Equipment Age:</strong> ${age}</div>
+          </div>
+          <div class="issue-actions">
+            <button class="btn-resolve-issue" id="resolve-issue-public-${equip.id}">✅ Resolve Issue</button>
+            <button class="btn-delete" id="delete-issue-public-${equip.id}">  ️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function resolveIssue(equip) {
+      const btn = document.getElementById(`resolve-issue-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Resolving...';
+
+      const result = await window.dataSdk.update({
+        ...equip,
+        status: 'working',
+        issue_description: null,
+        issue_reported_date: null
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Resolve Issue';
+        showToast('Failed to resolve issue', 'error');
+      } else {
+        showToast('Issue resolved successfully', 'success');
+      }
+    }
+
+    async function resolvePublicIssue(equip) {
+      const btn = document.getElementById(`resolve-issue-public-${equip.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Resolving...';
+
+      const result = await window.dataSdk.update({
+        ...equip,
+        status: 'working',
+        issue_description: null,
+        issue_reported_date: null
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Resolve Issue';
+        showToast('Failed to resolve issue', 'error');
+      } else {
+        showToast('Issue resolved successfully', 'success');
+      }
+    }
+
+    // ============== STOCK COUNTER FUNCTIONALITY ==============
+
+    const displayNumber = document.getElementById('displayNumber');
+    const displayArea = document.getElementById('displayArea');
+    const floorSelect = document.getElementById('floorSelect');
+    const stockItemSelect = document.getElementById('stockItemSelect');
+    const saveStockBtn = document.getElementById('saveStockBtn');
+
+    // Number pad buttons
+    document.querySelectorAll('.num-button[data-num]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const num = this.getAttribute('data-num');
+        currentStockValue = parseInt(currentStockValue.toString() + num);
+        displayNumber.textContent = currentStockValue;
+      });
+    });
+
+    // Backspace button
+    document.querySelector('.num-button[data-action="backspace"]').addEventListener('click', function() {
+      const str = currentStockValue.toString();
+      currentStockValue = str.length > 1 ? parseInt(str.slice(0, -1)) : 0;
+      displayNumber.textContent = currentStockValue;
+    });
+
+    // Display area click to clear
+    displayArea.addEventListener('click', function() {
+      currentStockValue = 0;
+      displayNumber.textContent = '0';
+    });
+
+    // Quick buttons
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const value = parseInt(this.getAttribute('data-quick'));
+        currentStockValue = value;
+        displayNumber.textContent = currentStockValue;
+      });
+    });
+
+    // Save stock item
+    saveStockBtn.addEventListener('click', async function() {
+      const floor = floorSelect.value;
+      const itemName = stockItemSelect.value;
+      const quantity = currentStockValue;
+
+      if (!floor || !itemName) {
+        showToast('Please select floor and item', 'error');
+        return;
+      }
+
+      saveStockBtn.disabled = true;
+      saveStockBtn.innerHTML = '<span class="loading-spinner"></span>Saving...';
+
+      const today = new Date().toISOString().split('T')[0];
+
+      // Check if we need to auto-archive old stock counts
+      const todayStockCounts = allStockCounts.filter(item => item.date_added === today);
+      if (allStockCounts.length > 0 && todayStockCounts.length === 0) {
+        // Auto-archive all existing stock counts
+        for (const item of allStockCounts) {
+          const archiveResult = await window.dataSdk.update({
+            ...item,
+            is_archived: true
+          });
+          if (!archiveResult.isOk) {
+            console.error("Failed to archive stock count:", archiveResult.error);
+          }
+        }
+      }
+
+      const newStockCount = {
+        id: Date.now().toString(),
+        stock_type: 'minibar_count',
+        item_name: itemName,
+        floor: floor,
+        quantity: quantity,
+        added_timestamp: new Date().toISOString(),
+        date_added: today,
+        is_archived: false
+      };
+
+      const result = await window.dataSdk.create(newStockCount);
+
+      saveStockBtn.disabled = false;
+      saveStockBtn.textContent = '    Save This Item';
+
+      if (result.isOk) {
+        // Reset for next entry - but keep item selected
+        currentStockValue = 0;
+        displayNumber.textContent = '0';
+        // stockItemSelect.value stays the same - removed reset
+        showToast(`${itemName} saved for ${floor}`, 'success');
+
+        // Check for low stock and create notification
+        await checkLowStockAndNotify(itemName, today);
+      } else {
+        showToast('Failed to save item. Please try again.', 'error');
+      }
+    });
+
+    async function checkLowStockAndNotify(itemName, date) {
+      // Get all counts for this item on this date
+      const itemCounts = allStockCounts.filter(sc => 
+        sc.item_name === itemName && sc.date_added === date
+      );
+
+      // Calculate totals per floor
+      const totals = {
+        F1: 0,
+        F2: 0,
+        F3: 0,
+        Office: 0
+      };
+
+      itemCounts.forEach(count => {
+        if (totals[count.floor] !== undefined) {
+          totals[count.floor] += count.quantity;
+        }
+      });
+
+      const totalStock = totals.F1 + totals.F2 + totals.F3 + totals.Office;
+
+      // If total stock is under 40, create low stock notification
+      if (totalStock < 40) {
+        const orderQty = Math.max(0, 40 - totalStock);
+
+        // Check if notification already exists for this item today
+        const existingNotif = allNotifications.find(n => 
+          n.type === 'low_stock' && 
+          n.item_name === itemName && 
+          n.date_added === date
+        );
+
+        if (existingNotif) {
+          // Update existing notification
+          await window.dataSdk.update({
+            ...existingNotif,
+            stock_f1: totals.F1,
+            stock_f2: totals.F2,
+            stock_f3: totals.F3,
+            stock_office: totals.Office,
+            total_stock: totalStock,
+            order_quantity: orderQty
+          });
+        } else {
+          // Create new notification
+          const newNotification = {
+            id: Date.now().toString() + '-lowstock',
+            type: 'low_stock',
+            item_name: itemName,
+            source: 'Minibar Stock',
+            stock_f1: totals.F1,
+            stock_f2: totals.F2,
+            stock_f3: totals.F3,
+            stock_office: totals.Office,
+            total_stock: totalStock,
+            order_quantity: orderQty,
+            added_timestamp: new Date().toISOString(),
+            date_added: date,
+            is_archived: false
+          };
+
+          await window.dataSdk.create(newNotification);
+          showToast(`Low stock alert created for ${itemName}`, 'success');
+        }
+      }
+    }
+
+    function updateStockProgress() {
+      const today = new Date().toISOString().split('T')[0];
+      const todayCount = allStockCounts.filter(sc => sc.date_added === today).length;
+      
+      // Calculate total unique items that need counting (20 items across 4 floors = 80 max)
+      const uniqueItems = new Set(allStockCounts.filter(sc => sc.date_added === today).map(sc => `${sc.floor}-${sc.item_name}`));
+      
+      document.getElementById('stockProgress').textContent = 
+        `Progress: ${uniqueItems.size}/80 items entered ✓`;
+      
+      updateTodayStockBanner();
+    }
+
+    function updateTodayStockBanner() {
+      const bannerContainer = document.getElementById('todayStockCountBanner');
+      const today = new Date().toISOString().split('T')[0];
+      const todayCounts = allStockCounts.filter(sc => sc.date_added === today);
+
+      if (todayCounts.length === 0) {
+        bannerContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <div class="empty-title">No items counted yet</div>
+            <div class="empty-subtitle">Start counting items above and they'll appear here</div>
+          </div>
+        `;
+        return;
+      }
+
+      const formattedDate = new Date(today).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      bannerContainer.innerHTML = `
+        <div class="date-group">
+          <div class="date-banner" onclick="toggleStockBanner()">
+            <div class="date-banner-left">
+              <span class="expand-arrow" id="arrow-stock-today">▶</span>
+              <span class="date-title">${formattedDate}</span>
+              <span class="item-count-badge">${todayCounts.length} entries</span>
+            </div>
+          </div>
+          <div class="notifications-list" id="list-stock-today">
+            ${todayCounts.map(count => createStockCountCard(count)).join('')}
+          </div>
+        </div>
+      `;
+
+      // Attach delete listeners
+      todayCounts.forEach(count => {
+        const deleteBtn = document.getElementById(`delete-stock-${count.id}`);
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteStockCount(count));
+        }
+      });
+    }
+
+    async function deleteStockCount(count) {
+      const btn = document.getElementById(`delete-stock-${count.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(count);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '  ️ Delete';
+        showToast('Failed to delete item', 'error');
+      }
+    }
+
+    window.toggleStockBanner = function() {
+      const arrow = document.getElementById('arrow-stock-today');
+      const list = document.getElementById('list-stock-today');
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    };
+
+    // ============== REST OF THE CODE (EXPIRATION, NOTIFICATIONS, ARCHIVE) ==============
+
+    // Expiration Control functionality
+    const addItemBtn = document.getElementById('addItemBtn');
+    const formContainer = document.getElementById('formContainer');
+    const expirationForm = document.getElementById('expirationForm');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    addItemBtn.addEventListener('click', function() {
+      formContainer.classList.toggle('hidden');
+    });
+
+    cancelBtn.addEventListener('click', function() {
+      formContainer.classList.add('hidden');
+      expirationForm.reset();
+    });
+
+    expirationForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const itemName = document.getElementById('itemName').value;
+      const expirationDate = document.getElementById('expirationDate').value;
+      const location = document.getElementById('location').value;
+      const quantity = document.getElementById('quantity').value;
+
+      if (!itemName || !expirationDate || !location) {
+        return;
+      }
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Check if we need to auto-archive - compare dates of existing items
+      const hasOldItems = allItems.some(item => item.date_added !== today);
+      if (hasOldItems) {
+        // Auto-archive all items from previous days
+        for (const item of allItems) {
+          if (item.date_added !== today) {
+            const archiveResult = await window.dataSdk.update({
+              ...item,
+              is_archived: true
+            });
+            if (!archiveResult.isOk) {
+              console.error("Failed to archive item:", archiveResult.error);
+            }
+          }
+        }
+      }
+
+      const newItem = {
+        id: Date.now().toString(),
+        item_name: itemName,
+        category: getCategoryFromItem(itemName),
+        expiration_date: expirationDate,
+        location: location,
+        quantity: quantity ? parseInt(quantity) : null,
+        added_timestamp: new Date().toISOString(),
+        date_added: today,
+        is_archived: false
+      };
+
+      const result = await window.dataSdk.create(newItem);
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Add Item';
+
+      if (result.isOk) {
+        expirationForm.reset();
+        formContainer.classList.add('hidden');
+        showToast('Item added successfully', 'success');
+      } else {
+        showToast('Failed to add item. Please try again.', 'error');
+      }
+    });
+
+    function getCategoryFromItem(itemName) {
+      const snacks = ['Fudge', 'Cheese Nibbles', 'Chips', 'Almonds', 'Chocolate Peanuts'];
+      const softDrinks = ['Sparkling Water', 'Coca-Cola', 'Coca-Cola Zero', 'Tonic', 'Apple Juice', 'Ginger Ale', 'Lemonade'];
+      
+      if (snacks.includes(itemName)) return 'snacks';
+      if (softDrinks.includes(itemName)) return 'soft_drinks';
+      return 'alcohol';
+    }
+
+    function updateCurrentDate() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+    }
+
+    function updateExpirationDisplay() {
+      const itemCount = document.getElementById('itemCount');
+      const totalQuantity = document.getElementById('totalQuantity');
+      const itemsContainer = document.getElementById('itemsContainer');
+
+      itemCount.textContent = allItems.length;
+      
+      const total = allItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      totalQuantity.textContent = total || '0';
+
+      if (allItems.length === 0) {
+        itemsContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <div class="empty-title">No expired items today</div>
+            <div class="empty-subtitle">Add items as you find them during your checks</div>
+          </div>
+        `;
+      } else {
+        // Group items by date
+        const groupedByDate = {};
+        allItems.forEach(item => {
+          const date = item.date_added;
+          if (!groupedByDate[date]) {
+            groupedByDate[date] = [];
+          }
+          groupedByDate[date].push(item);
+        });
+
+        // Sort dates (most recent first)
+        const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+
+        itemsContainer.innerHTML = sortedDates.map(date => {
+          const items = groupedByDate[date];
+          const formattedDate = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          });
+          const totalQty = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+          return `
+            <div class="date-group" data-date="${date}">
+              <div class="date-banner" onclick="toggleExpirationDateGroup('${date}')">
+                <div class="date-banner-left">
+                  <span class="expand-arrow" id="arrow-expiration-${date}">▶</span>
+                  <span class="date-title">${formattedDate}</span>
+                  <span class="item-count-badge">${items.length} items</span>
+                  <span class="item-count-badge">Total Qty: ${totalQty}</span>
+                </div>
+                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteExpirationGroup('${date}', ${items.length})">🗑️ Delete All</button>
+              </div>
+              <div class="notifications-list" id="list-expiration-${date}">
+                ${items.map(item => createItemCard(item)).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Add event listeners for action buttons
+        allItems.forEach(item => {
+          const archiveBtn = document.getElementById(`archive-${item.id}`);
+          const deleteBtn = document.getElementById(`delete-${item.id}`);
+
+          if (archiveBtn) {
+            archiveBtn.addEventListener('click', () => archiveItem(item));
+          }
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => deleteItem(item));
+          }
+        });
+      }
+    }
+
+    function createItemCard(item) {
+      const icon = categoryIcons[item.item_name] || '📦';
+      const expDate = new Date(item.expiration_date).toLocaleDateString('en-US', { 
+        year: 'numeric', month: 'short', day: 'numeric' 
+      });
+      const addedDate = new Date(item.added_timestamp).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      const quantityText = item.quantity ? `${item.quantity} units` : 'N/A';
+
+      return `
+        <div class="item-card">
+          <div class="item-main">
+            <div class="item-icon">${icon}</div>
+            <div class="item-content">
+              <div class="item-name">${item.item_name}</div>
+              <div class="item-details">
+                <div class="item-detail"><strong>Expired On:</strong> ${expDate}</div>
+                <div class="item-detail"><strong>Location:</strong> ${item.location}</div>
+                <div class="item-detail"><strong>Quantity:</strong> ${quantityText}</div>
+                <div class="item-detail"><strong>Added to System:</strong> ${addedDate}</div>
+              </div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-archive" id="archive-${item.id}">📁 Archive Now</button>
+            <button class="btn-delete" id="delete-${item.id}">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function archiveItem(item) {
+      const btn = document.getElementById(`archive-${item.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Archiving...';
+
+      const result = await window.dataSdk.update({
+        ...item,
+        is_archived: true
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '📁 Archive Now';
+        console.error("Failed to archive item:", result.error);
+      }
+    }
+
+    async function deleteItem(item) {
+      const btn = document.getElementById(`delete-${item.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(item);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '    ️ Delete';
+        console.error("Failed to delete item:", result.error);
+      }
+    }
+
+    // ============== NOTIFICATION CENTER FUNCTIONALITY ==============
+
+    const addNotificationBtn = document.getElementById('addNotificationBtn');
+    const notificationFormContainer = document.getElementById('notificationFormContainer');
+    const notificationForm = document.getElementById('notificationForm');
+    const cancelNotificationBtn = document.getElementById('cancelNotificationBtn');
+    const submitNotificationBtn = document.getElementById('submitNotificationBtn');
+    const notificationTypeSelect = document.getElementById('notificationType');
+    const dynamicFormFields = document.getElementById('dynamicFormFields');
+
+    const notificationIcons = {
+      'low_stock': '📉',
+      'damaged': '⚠️',
+      'broken': '🔧',
+      'stolen': '   ',
+      'missing': '❓',
+      'other': '📝'
+    };
+
+    const notificationLabels = {
+      'low_stock': 'Low Stock',
+      'damaged': 'Damaged Item',
+      'broken': 'Broken Equipment',
+      'stolen': 'Stolen/Missing',
+      'missing': 'Item Missing',
+      'other': 'Other Issue'
+    };
+
+    addNotificationBtn.addEventListener('click', function() {
+      notificationFormContainer.classList.toggle('hidden');
+    });
+
+    cancelNotificationBtn.addEventListener('click', function() {
+      notificationFormContainer.classList.add('hidden');
+      notificationForm.reset();
+      dynamicFormFields.innerHTML = '';
+    });
+
+    notificationTypeSelect.addEventListener('change', function() {
+      const type = this.value;
+      dynamicFormFields.innerHTML = '';
+
+      if (type === 'low_stock') {
+        dynamicFormFields.innerHTML = `
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="notifItemName">Item Name *</label>
+              <input type="text" class="form-input" id="notifItemName" placeholder="e.g., Red Wine" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="stockF1">F1 Stock *</label>
+              <input type="number" class="form-input stock-input" id="stockF1" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="stockF2">F2 Stock *</label>
+              <input type="number" class="form-input stock-input" id="stockF2" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="stockF3">F3 Stock *</label>
+              <input type="number" class="form-input stock-input" id="stockF3" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="stockOffice">Office Stock *</label>
+              <input type="number" class="form-input stock-input" id="stockOffice" placeholder="0" min="0" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Total Current Stock</label>
+              <input type="text" class="form-input" id="totalStock" readonly style="background: rgba(212, 175, 55, 0.1); cursor: not-allowed;" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Recommended Order Quantity</label>
+              <input type="text" class="form-input" id="orderQuantity" readonly style="background: rgba(212, 175, 55, 0.1); cursor: not-allowed;" value="0">
+            </div>
+          </div>
+        `;
+
+        // Add auto-calculation
+        const stockInputs = document.querySelectorAll('.stock-input');
+        stockInputs.forEach(input => {
+          input.addEventListener('input', calculateStockTotals);
+        });
+      } else {
+        dynamicFormFields.innerHTML = `
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="notifItemName">Item Name *</label>
+              <input type="text" class="form-input" id="notifItemName" placeholder="e.g., Vacuum Cleaner" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="notifSource">Source *</label>
+              <select class="form-select" id="notifSource" required>
+                <option value="">Select source...</option>
+                <option value="Minibar Stock">Minibar Stock</option>
+                <option value="Housekeeping Equipment" selected>Housekeeping Equipment</option>
+                <option value="Public Area">Public Area</option>
+                <option value="Room Registry">Room Registry</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="notifLocation">Location *</label>
+              <input type="text" class="form-input" id="notifLocation" placeholder="e.g., Floor 2, Room 305, Lobby" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="notifDescription">Description *</label>
+              <textarea class="form-input" id="notifDescription" placeholder="Describe the issue..." rows="3" required style="resize: vertical;"></textarea>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    function calculateStockTotals() {
+      const f1 = parseInt(document.getElementById('stockF1')?.value) || 0;
+      const f2 = parseInt(document.getElementById('stockF2')?.value) || 0;
+      const f3 = parseInt(document.getElementById('stockF3')?.value) || 0;
+      const office = parseInt(document.getElementById('stockOffice')?.value) || 0;
+      
+      const total = f1 + f2 + f3 + office;
+      const orderQty = Math.max(0, 40 - total);
+
+      document.getElementById('totalStock').value = total;
+      document.getElementById('orderQuantity').value = orderQty;
+    }
+
+    notificationForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const type = notificationTypeSelect.value;
+      if (!type) return;
+
+      submitNotificationBtn.disabled = true;
+      submitNotificationBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+
+      const today = new Date().toISOString().split('T')[0];
+      const itemName = document.getElementById('notifItemName').value;
+
+      let newNotification = {
+        id: Date.now().toString(),
+        type: type,
+        item_name: itemName,
+        added_timestamp: new Date().toISOString(),
+        date_added: today,
+        is_archived: false
+      };
+
+      if (type === 'low_stock') {
+        const f1 = parseInt(document.getElementById('stockF1').value) || 0;
+        const f2 = parseInt(document.getElementById('stockF2').value) || 0;
+        const f3 = parseInt(document.getElementById('stockF3').value) || 0;
+        const office = parseInt(document.getElementById('stockOffice').value) || 0;
+        const total = f1 + f2 + f3 + office;
+        const orderQty = Math.max(0, 40 - total);
+
+        newNotification.source = 'Minibar Stock';
+        newNotification.stock_f1 = f1;
+        newNotification.stock_f2 = f2;
+        newNotification.stock_f3 = f3;
+        newNotification.stock_office = office;
+        newNotification.total_stock = total;
+        newNotification.order_quantity = orderQty;
+      } else {
+        newNotification.source = document.getElementById('notifSource').value;
+        newNotification.location = document.getElementById('notifLocation').value;
+        newNotification.description = document.getElementById('notifDescription').value;
+      }
+
+      const result = await window.dataSdk.create(newNotification);
+
+      submitNotificationBtn.disabled = false;
+      submitNotificationBtn.textContent = 'Add Notification';
+
+      if (result.isOk) {
+        notificationForm.reset();
+        dynamicFormFields.innerHTML = '';
+        notificationFormContainer.classList.add('hidden');
+      } else {
+        showToast('Failed to add notification. Please try again.', 'error');
+      }
+    });
+
+    function updateNotificationBadge() {
+      const badge = document.getElementById('notificationBadge');
+      const count = allNotifications.length;
+      
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function updateNotificationsDisplay() {
+      const container = document.getElementById('notificationsContainer');
+
+      if (allNotifications.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <div class="empty-title">No notifications yet</div>
+            <div class="empty-subtitle">Add a test notification to get started</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group notifications by date
+      const groupedByDate = {};
+      allNotifications.forEach(notif => {
+        const date = notif.date_added;
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = [];
+        }
+        groupedByDate[date].push(notif);
+      });
+
+      // Sort dates (most recent first)
+      const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+
+      container.innerHTML = sortedDates.map(date => {
+        const notifications = groupedByDate[date];
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        return `
+          <div class="date-group" data-date="${date}">
+            <div class="date-banner" onclick="toggleDateGroup('${date}')">
+              <div class="date-banner-left">
+                <span class="expand-arrow" id="arrow-${date}">▶</span>
+                <span class="date-title">${formattedDate}</span>
+                <span class="item-count-badge">${notifications.length} items</span>
+              </div>
+              <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteAll('${date}', ${notifications.length})">🗑️ Delete All</button>
+            </div>
+            <div class="notifications-list" id="list-${date}">
+              ${notifications.map(notif => createNotificationCard(notif)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Attach event listeners
+      allNotifications.forEach(notif => {
+        const deleteBtn = document.getElementById(`delete-notif-${notif.id}`);
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteNotification(notif));
+        }
+
+        if (notif.type !== 'low_stock') {
+          const archiveBtn = document.getElementById(`archive-notif-${notif.id}`);
+          if (archiveBtn) {
+            archiveBtn.addEventListener('click', () => archiveNotification(notif));
+          }
+        }
+      });
+    }
+
+    function createNotificationCard(notif) {
+      const icon = notificationIcons[notif.type] || '📝';
+      const label = notificationLabels[notif.type] || 'Notification';
+      const addedDate = new Date(notif.added_timestamp).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      let bodyContent = '';
+      let actionButtons = '';
+
+      if (notif.type === 'low_stock') {
+        bodyContent = `
+          <div class="notification-detail"><strong>Current Stock:</strong> ${notif.total_stock} units</div>
+          <div class="notification-detail"><strong>Order Quantity:</strong> ${notif.order_quantity} units (to reach 40)</div>
+          <div class="notification-detail"><strong>Breakdown:</strong> F1: ${notif.stock_f1} | F2: ${notif.stock_f2} | F3: ${notif.stock_f3} | Office: ${notif.stock_office}</div>
+        `;
+        actionButtons = `
+          <div class="notification-actions">
+            <button class="btn-delete-single" id="delete-notif-${notif.id}">🗑️ Delete</button>
+          </div>
+        `;
+      } else {
+        bodyContent = `
+          <div class="notification-detail"><strong>Location:</strong> ${notif.location}</div>
+          <div class="notification-detail"><strong>Description:</strong> ${notif.description}</div>
+        `;
+        actionButtons = `
+          <div class="notification-actions">
+            <button class="btn-archive" id="archive-notif-${notif.id}">📁 Archive Now</button>
+            <button class="btn-delete-single" id="delete-notif-${notif.id}">🗑️ Delete</button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="notification-card">
+          <div class="notification-header">
+            <span class="notification-icon">${icon}</span>
+            <span class="notification-title">${label} - ${notif.item_name}</span>
+          </div>
+          <div class="notification-body">
+            ${bodyContent}
+          </div>
+          ${actionButtons}
+          <div class="notification-footer">
+            <div><strong>Source:</strong> ${notif.source}</div>
+            <div><strong>Added:</strong> ${addedDate}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function archiveNotification(notif) {
+      const btn = document.getElementById(`archive-notif-${notif.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Archiving...';
+
+      const result = await window.dataSdk.update({
+        ...notif,
+        is_archived: true
+      });
+
+      if (result.isOk) {
+        showToast(`${notif.item_name} archived successfully`, 'success');
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '📁 Archive Now';
+        showToast('Failed to archive notification', 'error');
+      }
+    }
+
+    async function deleteNotification(notif) {
+      const btn = document.getElementById(`delete-notif-${notif.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(notif);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete notification', 'error');
+      }
+    }
+
+    function toggleDateGroup(date) {
+      const arrow = document.getElementById(`arrow-${date}`);
+      const list = document.getElementById(`list-${date}`);
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    }
+
+    function confirmDeleteAll(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Confirm Delete All</div>
+          <div class="modal-text">Are you sure you want to delete all ${count} notifications from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="deleteAllFromDate('${date}')">Delete All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    window.closeModal = function() {
+      const modal = document.querySelector('.modal-overlay');
+      if (modal) modal.remove();
+    };
+
+    window.deleteAllFromDate = async function(date) {
+      const notificationsToDelete = allNotifications.filter(n => n.date_added === date);
+      
+      for (const notif of notificationsToDelete) {
+        await window.dataSdk.delete(notif);
+      }
+
+      closeModal();
+      showToast(`All notifications from ${date} deleted`, 'success');
+    };
+
+    window.toggleExpirationDateGroup = function(date) {
+      const arrow = document.getElementById(`arrow-expiration-${date}`);
+      const list = document.getElementById(`list-expiration-${date}`);
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    };
+
+    window.confirmDeleteExpirationGroup = function(date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Confirm Delete All</div>
+          <div class="modal-text">Are you sure you want to delete all ${count} expired items from ${formattedDate}?</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="deleteExpirationGroup('${date}')">Delete All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.deleteExpirationGroup = async function(date) {
+      const itemsToDelete = allItems.filter(i => i.date_added === date);
+      
+      for (const item of itemsToDelete) {
+        await window.dataSdk.delete(item);
+      }
+
+      closeModal();
+      showToast(`All items from ${date} deleted`, 'success');
+    };
+
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: ${type === 'success' ? '#28a745' : '#dc3545'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 2000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ============== ARCHIVE FUNCTIONALITY ==============
+
+    function updateArchiveDisplay() {
+      updateStockCountArchive();
+      updateEquipmentArchive();
+      updateExpiredArchive();
+    }
+
+    function updateStockCountArchive() {
+      const container = document.getElementById('stockCountArchiveContainer');
+
+      if (archivedStockCounts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <div class="empty-title">No archived stock counts yet</div>
+            <div class="empty-subtitle">Stock counts will automatically appear here when you start counting on a new day</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by date
+      const groupedByDate = {};
+      archivedStockCounts.forEach(count => {
+        const date = count.date_added;
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = [];
+        }
+        groupedByDate[date].push(count);
+      });
+
+      const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+
+      container.innerHTML = sortedDates.map(date => {
+        const counts = groupedByDate[date];
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        return `
+          <div class="date-group" data-date="${date}">
+            <div class="date-banner" onclick="toggleArchiveDateGroup('stock-${date}')">
+              <div class="date-banner-left">
+                <span class="expand-arrow" id="arrow-stock-${date}">▶</span>
+                <span class="date-title">${formattedDate}</span>
+                <span class="item-count-badge">${counts.length} entries</span>
+              </div>
+              <div class="date-banner-actions">
+                <button class="btn-save-pdf" onclick="event.stopPropagation(); saveStockCountPDF('${date}')">📥 Save PDF</button>
+                <button class="btn-print-pdf" onclick="event.stopPropagation(); printStockCountPDF('${date}')">🖨️ Print PDF</button>
+                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteArchiveGroup('stock', '${date}', ${counts.length})">🗑️ Delete All</button>
+              </div>
+            </div>
+            <div class="notifications-list" id="list-stock-${date}">
+              ${counts.map(count => createStockCountCard(count)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Attach delete listeners
+      archivedStockCounts.forEach(count => {
+        const deleteBtn = document.getElementById(`delete-stock-${count.id}`);
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteArchivedStockCount(count));
+        }
+      });
+    }
+
+    function createStockCountCard(count) {
+      const icon = categoryIcons[count.item_name] || '📦';
+      const addedDate = new Date(count.added_timestamp).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      return `
+        <div class="archive-card">
+          <div class="archive-item-main">
+            <div class="archive-item-icon">${icon}</div>
+            <div class="archive-item-content">
+              <div class="archive-item-name">${count.item_name}</div>
+              <div class="archive-item-details">
+                <div class="archive-item-detail"><strong>Floor:</strong> ${count.floor}</div>
+                <div class="archive-item-detail"><strong>Quantity:</strong> ${count.quantity} units</div>
+                <div class="archive-item-detail"><strong>Counted:</strong> ${addedDate}</div>
+              </div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-delete" id="delete-stock-${count.id}">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function deleteArchivedStockCount(count) {
+      const btn = document.getElementById(`delete-stock-${count.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(count);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete item', 'error');
+      }
+    }
+
+    function updateEquipmentArchive() {
+      const container = document.getElementById('equipmentArchiveContainer');
+
+      if (archivedNotifications.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🛠️</div>
+            <div class="empty-title">No archived equipment yet</div>
+            <div class="empty-subtitle">Archive items from the Notification Center to track equipment history</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by date
+      const groupedByDate = {};
+      archivedNotifications.forEach(notif => {
+        const date = notif.date_added;
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = [];
+        }
+        groupedByDate[date].push(notif);
+      });
+
+      const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+
+      container.innerHTML = sortedDates.map(date => {
+        const notifications = groupedByDate[date];
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        return `
+          <div class="date-group" data-date="${date}">
+            <div class="date-banner" onclick="toggleArchiveDateGroup('equipment-${date}')">
+              <div class="date-banner-left">
+                <span class="expand-arrow" id="arrow-equipment-${date}">▶</span>
+                <span class="date-title">${formattedDate}</span>
+                <span class="item-count-badge">${notifications.length} items</span>
+              </div>
+              <div class="date-banner-actions">
+                <button class="btn-save-pdf" onclick="event.stopPropagation(); saveEquipmentPDF('${date}')">📥 Download Report</button>
+                <button class="btn-print-pdf" onclick="event.stopPropagation(); printEquipmentPDF('${date}')">🖨️ Print Report</button>
+                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteArchiveGroup('equipment', '${date}', ${notifications.length})">🗑      Archive & Delete</button>
+              </div>
+            </div>
+            <div class="notifications-list" id="list-equipment-${date}">
+              ${notifications.map(notif => createArchiveEquipmentCard(notif)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Attach delete listeners
+      archivedNotifications.forEach(notif => {
+        const deleteBtn = document.getElementById(`delete-archive-notif-${notif.id}`);
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteArchivedNotification(notif));
+        }
+      });
+    }
+
+    function createArchiveEquipmentCard(notif) {
+      const icon = notificationIcons[notif.type] || '📝';
+      const label = notificationLabels[notif.type] || 'Notification';
+      const addedDate = new Date(notif.added_timestamp).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      const now = new Date();
+      const added = new Date(notif.added_timestamp);
+      const daysDiff = Math.floor((now - added) / (1000 * 60 * 60 * 24));
+      const ageText = daysDiff === 0 ? 'Today' : daysDiff === 1 ? '1 day' : `${daysDiff} days`;
+
+      return `
+        <div class="archive-card">
+          <div class="archive-item-main">
+            <div class="archive-item-icon">${icon}</div>
+            <div class="archive-item-content">
+              <div class="archive-item-name">${notif.item_name}</div>
+              <div class="archive-item-details">
+                <div class="archive-item-detail"><strong>Type:</strong> ${label}</div>
+                <div class="archive-item-detail"><strong>Location:</strong> ${notif.location || 'N/A'}</div>
+                <div class="archive-item-detail"><strong>Description:</strong> ${notif.description || 'N/A'}</div>
+                <div class="archive-item-detail"><strong>Date Reported:</strong> ${addedDate}</div>
+                <div class="archive-item-detail"><strong>Age:</strong> ${ageText}</div>
+                <div class="archive-item-detail"><strong>Source:</strong> ${notif.source}</div>
+              </div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-delete" id="delete-archive-notif-${notif.id}">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateExpiredArchive() {
+      const container = document.getElementById('expiredArchiveContainer');
+
+      if (archivedItems.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🌟</div>
+            <div class="inspirational-quote">"Quality maintained, standards upheld, excellence delivered."</div>
+            <div class="empty-title">No archived items yet</div>
+            <div class="empty-subtitle">Items will appear here automatically when you start logging on a new day</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by date
+      const groupedByDate = {};
+      archivedItems.forEach(item => {
+        const date = item.date_added;
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = [];
+        }
+        groupedByDate[date].push(item);
+      });
+
+      const sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+
+      container.innerHTML = sortedDates.map(date => {
+        const items = groupedByDate[date];
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const totalQty = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+        return `
+          <div class="date-group" data-date="${date}">
+            <div class="date-banner" onclick="toggleArchiveDateGroup('expired-${date}')">
+              <div class="date-banner-left">
+                <span class="expand-arrow" id="arrow-expired-${date}">  </span>
+                <span class="date-title">${formattedDate}</span>
+                <span class="item-count-badge">${items.length} items</span>
+                <span class="item-count-badge">Total Qty: ${totalQty}</span>
+              </div>
+              <div class="date-banner-actions">
+                <button class="btn-save-pdf" onclick="event.stopPropagation(); saveExpiredPDF('${date}')">📥 Download Report</button>
+                <button class="btn-print-pdf" onclick="event.stopPropagation(); printExpiredPDF('${date}')">🖨️ Print Report</button>
+                <button class="btn-delete-all" onclick="event.stopPropagation(); confirmDeleteArchiveGroup('expired', '${date}', ${items.length})">    ️ Archive & Delete</button>
+              </div>
+            </div>
+            <div class="notifications-list" id="list-expired-${date}">
+              ${items.map(item => createArchiveExpiredCard(item)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Attach delete listeners
+      archivedItems.forEach(item => {
+        const deleteBtn = document.getElementById(`delete-archive-item-${item.id}`);
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => deleteArchivedItem(item));
+        }
+      });
+    }
+
+    function createArchiveExpiredCard(item) {
+      const icon = categoryIcons[item.item_name] || '  ';
+      const expDate = new Date(item.expiration_date).toLocaleDateString('en-US', { 
+        year: 'numeric', month: 'short', day: 'numeric' 
+      });
+      const addedDate = new Date(item.added_timestamp).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      const quantityText = item.quantity ? `${item.quantity} units` : 'N/A';
+
+      return `
+        <div class="archive-card expired-item">
+          <div class="archive-item-main">
+            <div class="archive-item-icon">${icon}</div>
+            <div class="archive-item-content">
+              <div class="archive-item-name">${item.item_name}</div>
+              <div class="archive-item-details">
+                <div class="archive-item-detail"><strong>📍 Location:</strong> ${item.location}</div>
+                <div class="archive-item-detail"><strong>📦 Quantity:</strong> ${quantityText}</div>
+                <div class="archive-item-detail"><strong>⏰ Expiration Date:</strong> ${expDate}</div>
+                <div class="archive-item-detail"><strong>📝 Notes:</strong> ${item.notes || 'N/A'}</div>
+                <div class="archive-item-detail"><strong>Added:</strong> ${addedDate}</div>
+              </div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-delete" id="delete-archive-item-${item.id}">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    window.toggleArchiveDateGroup = function(id) {
+      const arrow = document.getElementById(`arrow-${id}`);
+      const list = document.getElementById(`list-${id}`);
+      
+      arrow.classList.toggle('expanded');
+      list.classList.toggle('expanded');
+    };
+
+    async function deleteArchivedNotification(notif) {
+      const btn = document.getElementById(`delete-archive-notif-${notif.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(notif);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete item', 'error');
+      }
+    }
+
+    async function deleteArchivedItem(item) {
+      const btn = document.getElementById(`delete-archive-item-${item.id}`);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+
+      const result = await window.dataSdk.delete(item);
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btn.innerHTML = '🗑️ Delete';
+        showToast('Failed to delete item', 'error');
+      }
+    }
+
+    window.confirmDeleteArchiveGroup = function(type, date, count) {
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let typeLabel = '';
+      if (type === 'stock') typeLabel = 'stock count entries';
+      else if (type === 'equipment') typeLabel = 'equipment items';
+      else typeLabel = 'expired items';
+
+      const warning = `This will permanently delete all ${count} ${typeLabel} from ${formattedDate}. Make sure you've saved the PDF first! This cannot be undone.`;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">Delete All ${type === 'stock' ? 'Stock Counts' : type === 'equipment' ? 'Equipment' : 'Expired Items'}?</div>
+          <div class="modal-text">${warning}</div>
+          <div class="modal-buttons">
+            <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-modal-confirm" onclick="deleteArchiveGroup('${type}', '${date}')">Yes, Delete All</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.deleteArchiveGroup = async function(type, date) {
+      let itemsToDelete = [];
+      if (type === 'stock') {
+        itemsToDelete = archivedStockCounts.filter(c => c.date_added === date);
+      } else if (type === 'equipment') {
+        itemsToDelete = archivedNotifications.filter(n => n.date_added === date);
+      } else {
+        itemsToDelete = archivedItems.filter(i => i.date_added === date);
+      }
+      
+      for (const item of itemsToDelete) {
+        await window.dataSdk.delete(item);
+      }
+
+      closeModal();
+      showToast(`${itemsToDelete.length} items deleted from archive`, 'success');
+    };
+
+    // PDF Generation Functions for Stock Counts
+    window.saveStockCountPDF = function(date) {
+      const counts = archivedStockCounts.filter(c => c.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Minibar Stock Count Report - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      // Group by item
+      const groupedByItem = {};
+      counts.forEach(count => {
+        if (!groupedByItem[count.item_name]) {
+          groupedByItem[count.item_name] = { F1: 0, F2: 0, F3: 0, Office: 0 };
+        }
+        groupedByItem[count.item_name][count.floor] += count.quantity;
+      });
+
+      Object.keys(groupedByItem).sort().forEach(itemName => {
+        const totals = groupedByItem[itemName];
+        const total = totals.F1 + totals.F2 + totals.F3 + totals.Office;
+        
+        pdfContent += `${itemName}\n`;
+        pdfContent += `  F1: ${totals.F1} | F2: ${totals.F2} | F3: ${totals.F3} | Office: ${totals.Office}\n`;
+        pdfContent += `  Total: ${total} units\n`;
+        pdfContent += '─'.repeat(60) + '\n';
+      });
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Stock_Count_${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Stock count report downloaded', 'success');
+    };
+
+    window.printStockCountPDF = function(date) {
+      const counts = archivedStockCounts.filter(c => c.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let htmlContent = `
+        <html>
+        <head>
+          <title>Stock Count - ${formattedDate}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            h1 { color: #0d1b2a; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
+            .item { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+            .item-name { font-size: 1.2em; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
+            .detail { margin: 5px 0; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Minibar Stock Count Report - ${formattedDate}</h1>
+      `;
+
+      // Group by item
+      const groupedByItem = {};
+      counts.forEach(count => {
+        if (!groupedByItem[count.item_name]) {
+          groupedByItem[count.item_name] = { F1: 0, F2: 0, F3: 0, Office: 0 };
+        }
+        groupedByItem[count.item_name][count.floor] += count.quantity;
+      });
+
+      Object.keys(groupedByItem).sort().forEach(itemName => {
+        const totals = groupedByItem[itemName];
+        const total = totals.F1 + totals.F2 + totals.F3 + totals.Office;
+        
+        htmlContent += `
+          <div class="item">
+            <div class="item-name">${itemName}</div>
+            <div class="detail"><span class="label">F1:</span> ${totals.F1} | <span class="label">F2:</span> ${totals.F2} | <span class="label">F3:</span> ${totals.F3} | <span class="label">Office:</span> ${totals.Office}</div>
+            <div class="detail"><span class="label">Total:</span> ${total} units</div>
+          </div>
+        `;
+      });
+
+      htmlContent += `
+        </body>
+        </html>
+      `;
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.print();
+    };
+
+    // PDF Generation Functions for Equipment
+    window.saveEquipmentPDF = function(date) {
+      const items = archivedNotifications.filter(n => n.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Housekeeping Equipment Report - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      items.forEach(item => {
+        const addedDate = new Date(item.added_timestamp).toLocaleString('en-US');
+        const now = new Date();
+        const added = new Date(item.added_timestamp);
+        const daysDiff = Math.floor((now - added) / (1000 * 60 * 60 * 24));
+        const ageText = daysDiff === 0 ? 'Today' : daysDiff === 1 ? '1 day' : `${daysDiff} days`;
+
+        pdfContent += `Item Name: ${item.item_name}\n`;
+        pdfContent += `Type: ${notificationLabels[item.type]}\n`;
+        pdfContent += `Location: ${item.location || 'N/A'}\n`;
+        pdfContent += `Description: ${item.description || 'N/A'}\n`;
+        pdfContent += `Date Reported: ${addedDate}\n`;
+        pdfContent += `Age: ${ageText}\n`;
+        pdfContent += `Source: ${item.source}\n`;
+        pdfContent += '─'.repeat(60) + '\n\n';
+      });
+
+      pdfContent += `\nTotal Equipment Items: ${items.length}\n`;
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Equipment_Report_${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('PDF report downloaded', 'success');
+    };
+
+    window.printEquipmentPDF = function(date) {
+      const items = archivedNotifications.filter(n => n.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let htmlContent = `
+        <html>
+        <head>
+          <title>Equipment Report - ${formattedDate}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            h1 { color: #0d1b2a; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
+            .item { margin-bottom: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+            .item-title { font-size: 1.2em; font-weight: bold; color: #d4af37; margin-bottom: 10px; }
+            .detail { margin: 5px 0; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Housekeeping Equipment Report - ${formattedDate}</h1>
+      `;
+
+      items.forEach(item => {
+        const addedDate = new Date(item.added_timestamp).toLocaleString('en-US');
+        const now = new Date();
+        const added = new Date(item.added_timestamp);
+        const daysDiff = Math.floor((now - added) / (1000 * 60 * 60 * 24));
+        const ageText = daysDiff === 0 ? 'Today' : daysDiff === 1 ? '1 day' : `${daysDiff} days`;
+
+        htmlContent += `
+          <div class="item">
+            <div class="item-title">${item.item_name}</div>
+            <div class="detail"><span class="label">Type:</span> ${notificationLabels[item.type]}</div>
+            <div class="detail"><span class="label">Location:</span> ${item.location || 'N/A'}</div>
+            <div class="detail"><span class="label">Description:</span> ${item.description || 'N/A'}</div>
+            <div class="detail"><span class="label">Date Reported:</span> ${addedDate}</div>
+            <div class="detail"><span class="label">Age:</span> ${ageText}</div>
+            <div class="detail"><span class="label">Source:</span> ${item.source}</div>
+          </div>
+        `;
+      });
+
+      htmlContent += `
+          <p style="margin-top: 30px; font-weight: bold;">Total Equipment Items: ${items.length}</p>
+        </body>
+        </html>
+      `;
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.print();
+    };
+
+    window.saveExpiredPDF = function(date) {
+      const items = archivedItems.filter(i => i.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let pdfContent = `Expired Items Report - ${formattedDate}\n`;
+      pdfContent += '='.repeat(60) + '\n\n';
+
+      items.forEach(item => {
+        const expDate = new Date(item.expiration_date).toLocaleDateString('en-US', { 
+          year: 'numeric', month: 'short', day: 'numeric' 
+        });
+        const quantityText = item.quantity ? `${item.quantity} units` : 'N/A';
+
+        pdfContent += `Item Name: ${item.item_name}\n`;
+        pdfContent += `Expiration Date: ${expDate}\n`;
+        pdfContent += `Location: ${item.location}\n`;
+        pdfContent += `Quantity: ${quantityText}\n`;
+        pdfContent += `Notes: ${item.notes || 'Found during routine check'}\n`;
+        pdfContent += '─'.repeat(60) + '\n\n';
+      });
+
+      const totalQty = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      pdfContent += `\nTotal Items: ${items.length}\n`;
+      pdfContent += `Total Quantity: ${totalQty} units\n`;
+
+      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Expired_Items_${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('PDF report downloaded', 'success');
+    };
+
+    window.printExpiredPDF = function(date) {
+      const items = archivedItems.filter(i => i.date_added === date);
+      const formattedDate = new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      let htmlContent = `
+        <html>
+        <head>
+          <title>Expired Items Report - ${formattedDate}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            h1 { color: #0d1b2a; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
+            .item { margin-bottom: 30px; border-left: 5px solid #dc3545; padding: 20px; background: #f9f9f9; }
+            .item-title { font-size: 1.2em; font-weight: bold; color: #dc3545; margin-bottom: 10px; }
+            .detail { margin: 5px 0; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Expired Items Report - ${formattedDate}</h1>
+      `;
+
+      items.forEach(item => {
+        const expDate = new Date(item.expiration_date).toLocaleDateString('en-US', { 
+          year: 'numeric', month: 'short', day: 'numeric' 
+        });
+        const quantityText = item.quantity ? `${item.quantity} units` : 'N/A';
+
+        htmlContent += `
+          <div class="item">
+            <div class="item-title">${item.item_name}</div>
+            <div class="detail"><span class="label">Expiration Date:</span> ${expDate}</div>
+            <div class="detail"><span class="label">Location:</span> ${item.location}</div>
+            <div class="detail"><span class="label">Quantity:</span> ${quantityText}</div>
+            <div class="detail"><span class="label">Notes:</span> ${item.notes || 'Found during routine check'}</div>
+          </div>
+        `;
+      });
+
+      const totalQty = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      htmlContent += `
+          <p style="margin-top: 30px; font-weight: bold;">Total Items: ${items.length}</p>
+          <p style="font-weight: bold;">Total Quantity: ${totalQty} units</p>
+        </body>
+        </html>
+      `;
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.print();
+    };
+
+    async function onConfigChange(config) {
+      const mainTitle = document.getElementById('mainTitle');
+      const footerText = document.getElementById('footerText');
+
+      mainTitle.textContent = config.main_title || defaultConfig.main_title;
+      footerText.textContent = config.footer_text || defaultConfig.footer_text;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["main_title", config.main_title || defaultConfig.main_title],
+        ["footer_text", config.footer_text || defaultConfig.footer_text]
+      ]);
+    }
+
+    // Initialize everything
+    initializeDataSDK();
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c37e467c0648071',t:'MTc2OTM0NTM4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
