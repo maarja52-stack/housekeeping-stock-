@@ -11,7 +11,7 @@
   <style>
     body {
       box-sizing: border-box;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     html, body {
@@ -31,24 +31,24 @@
     }
 
     .gold-text {
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .premium-card {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
       padding: 2.5rem;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.15);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
       position: relative;
     }
 
     .premium-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 12px 40px rgba(77, 109, 149, 0.35);
-      border-color: #6f95bd;
+      box-shadow: 0 12px 40px rgba(212, 175, 55, 0.35);
+      border-color: #f4cf5c;
     }
 
     .card-emoji {
@@ -61,7 +61,7 @@
     .card-title {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #4d6d95;
+      color: #d4af37;
       text-align: center;
       letter-spacing: 0.5px;
     }
@@ -69,11 +69,11 @@
     .main-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       text-align: center;
       margin-bottom: 3rem;
       letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(77, 109, 149, 0.5);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
     }
 
     .footer-text {
@@ -89,7 +89,7 @@
 
     .footer-version {
       font-size: 0.85rem;
-      color: #dfe9f7;
+      color: #f4e4a8;
       opacity: 0.8;
     }
 
@@ -98,8 +98,8 @@
       bottom: 16px;
       right: 16px;
       background: rgba(8, 15, 34, 0.9);
-      border: 1px solid rgba(77, 109, 149, 0.4);
-      color: #dfe9f7;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #f4e4a8;
       padding: 0.4rem 0.7rem;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -130,7 +130,7 @@
       font-weight: 600;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      color: #4d6d95;
+      color: #d4af37;
       opacity: 0.9;
     }
 
@@ -143,10 +143,19 @@
       padding: 0 2rem;
     }
 
+    .stacked-card-group {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .stacked-card-group .premium-card {
+      width: 100%;
+    }
+
     .back-button {
       background: #0d1b2a;
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
       cursor: pointer;
@@ -158,8 +167,8 @@
     }
 
     .back-button:hover {
-      background: rgba(77, 109, 149, 0.2);
-      box-shadow: 0 4px 12px rgba(77, 109, 149, 0.4);
+      background: rgba(212, 175, 55, 0.2);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
     }
 
     .hidden {
@@ -177,11 +186,23 @@
       padding: 2rem;
     }
 
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: rgba(3, 8, 20, 0.95);
+      z-index: 99999;
+      backdrop-filter: blur(4px);
+    }
+
     .pin-panel {
       width: 100%;
       max-width: 380px;
       background: rgba(13, 27, 42, 0.95);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 18px;
       padding: 2rem;
       text-align: center;
@@ -191,7 +212,7 @@
     .pin-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 0.5rem;
     }
 
@@ -204,7 +225,7 @@
     .pin-input {
       width: 100%;
       background: rgba(255, 255, 255, 0.08);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 10px;
       padding: 0.85rem;
       text-align: center;
@@ -238,6 +259,226 @@
       background: #218838;
     }
 
+    .supplyhub-shell {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 1rem 0 2rem;
+    }
+
+    .supplyhub-card {
+      background: rgba(13, 27, 42, 0.94);
+      border: 2px solid #d4af37;
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .dropdown-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      margin-bottom: 0.75rem;
+      background: transparent;
+      color: #f4e4a8;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      box-shadow: none;
+    }
+
+    .dropdown-icon {
+      transition: transform 0.2s ease;
+    }
+
+    .dropdown-toggle[aria-expanded="true"] .dropdown-icon {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-panel[hidden] {
+      display: none;
+    }
+
+    .qr-controls {
+      display: grid;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .field-row {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .supplyhub-card input,
+    .supplyhub-card button,
+    .supplyhub-card select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.85rem 0.95rem;
+      font: inherit;
+    }
+
+    .supplyhub-card input,
+    .supplyhub-card select {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    .supplyhub-card button {
+      cursor: pointer;
+      background: linear-gradient(135deg, #d4af37, #f0c96b);
+      color: #07121f;
+      font-weight: 700;
+      border: none;
+    }
+
+    .stock-health-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .stock-health-item {
+      padding: 0.85rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(212,175,55,0.16);
+    }
+
+    .stock-health-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+      color: #f4e4a8;
+    }
+
+    .stock-health-status {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stock-health-bar {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.14);
+      margin-bottom: 0.4rem;
+    }
+
+    .stock-health-bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      transition: width 0.2s ease;
+    }
+
+    .stock-health-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .stock-health-full {
+      color: #5ee7a8;
+    }
+
+    .stock-health-low {
+      color: #f7cf5e;
+    }
+
+    .stock-health-below {
+      color: #ff6b6b;
+    }
+
+    .message {
+      min-height: 1.2rem;
+      color: #5ee7a8;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .qr-preview-card {
+      display: grid;
+      gap: 0.85rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 0.85rem;
+    }
+
+    .qr-label-title {
+      font-weight: 700;
+      color: #f4e4a8;
+      margin-bottom: 0.3rem;
+    }
+
+    .qr-payload-summary {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95rem;
+      word-break: break-all;
+    }
+
+    .qr-canvas-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .secondary-btn {
+      width: auto;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(212,175,55,0.4);
+    }
+
+    .saved-qr-list {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .saved-qr-item {
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 0.9rem;
+      word-break: break-all;
+    }
+
+    .saved-qr-meta {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    .saved-qr-preview {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.4rem;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .saved-qr-preview canvas {
+      width: 120px;
+      height: 120px;
+    }
+
     .expiration-page {
       max-width: 1200px;
       margin: 0 auto;
@@ -246,7 +487,7 @@
 
     .date-header {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
       padding: 2rem;
       margin-bottom: 2rem;
@@ -260,7 +501,7 @@
     .date-display {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .stats-container {
@@ -281,7 +522,7 @@
     }
 
     .stat-label {
-      color: #4d6d95;
+      color: #d4af37;
       font-size: 2.4rem;
       opacity: 0.8;
       margin-bottom: 0.5rem;
@@ -290,7 +531,7 @@
     }
 
     .stat-value {
-      color: #4d6d95;
+      color: #d4af37;
       font-size: 2rem;
       font-weight: 700;
     }
@@ -323,7 +564,7 @@
 
     .form-container {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
       padding: 2rem;
       margin-bottom: 2rem;
@@ -342,7 +583,7 @@
     }
 
     .form-label {
-      color: #4d6d95;
+      color: #d4af37;
       font-weight: 600;
       margin-bottom: 0.5rem;
       font-size: 0.95rem;
@@ -350,7 +591,7 @@
 
     .form-input, .form-select {
       background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #4d6d95;
+      border: 1px solid #d4af37;
       border-radius: 6px;
       padding: 0.75rem;
       color: white;
@@ -373,7 +614,7 @@
 
     .form-select optgroup {
       background: #1a2942;
-      color: #4d6d95;
+      color: #d4af37;
       font-weight: 700;
       font-style: normal;
     }
@@ -405,9 +646,9 @@
     }
 
     .btn-cancel {
-      background: rgba(77, 109, 149, 0.2);
-      color: #4d6d95;
-      border: 2px solid #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      color: #d4af37;
+      border: 2px solid #d4af37;
       padding: 0.75rem 2rem;
       border-radius: 6px;
       font-weight: 600;
@@ -416,14 +657,14 @@
     }
 
     .btn-cancel:hover {
-      background: rgba(77, 109, 149, 0.3);
+      background: rgba(212, 175, 55, 0.3);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
     }
 
@@ -434,7 +675,7 @@
 
     .empty-title {
       font-size: 1.5rem;
-      color: #4d6d95;
+      color: #d4af37;
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
@@ -451,7 +692,7 @@
 
     .item-card {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.5rem;
       display: flex;
@@ -462,7 +703,7 @@
     }
 
     .item-card:hover {
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.3);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
     .storage-grid {
@@ -491,7 +732,7 @@
 
     .storage-card {
       background: linear-gradient(160deg, rgba(16, 27, 54, 0.95), rgba(7, 14, 32, 0.98));
-      border: 1.5px solid rgba(77, 109, 149, 0.35);
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
       border-radius: 16px;
       padding: 0.9rem 0.85rem;
       cursor: pointer;
@@ -506,18 +747,18 @@
     }
 
     .storage-card.has-items {
-      border-color: rgba(77, 109, 149, 0.75);
+      border-color: rgba(212, 175, 55, 0.75);
     }
 
     .storage-card:hover {
-      border-color: #4d6d95;
+      border-color: #d4af37;
       transform: translateY(-6px);
-      box-shadow: 0 16px 32px rgba(77, 109, 149, 0.18);
+      box-shadow: 0 16px 32px rgba(212, 175, 55, 0.18);
     }
 
     .storage-card-v2 {
       background: linear-gradient(165deg, rgba(18, 30, 58, 0.98), rgba(6, 12, 28, 0.98)) !important;
-      border: 2px solid rgba(77, 109, 149, 0.55) !important;
+      border: 2px solid rgba(212, 175, 55, 0.55) !important;
       border-radius: 14px !important;
       min-height: 118px !important;
       box-shadow: 0 18px 36px rgba(2, 6, 15, 0.5) !important;
@@ -531,20 +772,20 @@
     .storage-id {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 0.2rem;
       letter-spacing: 0.4px;
     }
 
     .storage-status {
       font-size: 0.8rem;
-      color: #dfe9f7;
+      color: #f4e4a8;
       margin-top: 0.2rem;
     }
 
     .storage-preview {
       font-size: 0.85rem;
-      color: #dfe9f7;
+      color: #f4e4a8;
       font-style: normal;
       font-weight: 600;
       opacity: 0.85;
@@ -575,7 +816,7 @@
     .item-name {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 0.75rem;
     }
 
@@ -601,9 +842,9 @@
     }
 
     .btn-archive {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.6rem 1.2rem;
       border-radius: 6px;
       font-weight: 600;
@@ -613,7 +854,7 @@
     }
 
     .btn-archive:hover {
-      background: rgba(77, 109, 149, 0.4);
+      background: rgba(212, 175, 55, 0.4);
       transform: scale(1.05);
     }
 
@@ -655,7 +896,7 @@
 
     .date-banner {
       background: rgba(13, 27, 42, 0.9);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.25rem 1.5rem;
       display: flex;
@@ -670,7 +911,7 @@
 
     .date-banner:hover {
       background: rgba(13, 27, 42, 1);
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.2);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
     }
 
     .date-banner-left {
@@ -680,7 +921,7 @@
     }
 
     .expand-arrow {
-      color: #4d6d95;
+      color: #d4af37;
       font-size: 1.2rem;
       display: inline-flex;
       align-items: center;
@@ -699,12 +940,12 @@
     .date-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .item-count-badge {
-      background: rgba(77, 109, 149, 0.3);
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.3);
+      color: #d4af37;
       padding: 0.3rem 0.8rem;
       border-radius: 20px;
       font-size: 0.9rem;
@@ -747,14 +988,14 @@
 
     .notification-card {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.5rem;
       transition: all 0.3s ease;
     }
 
     .notification-card:hover {
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.3);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
     .notification-header {
@@ -771,7 +1012,7 @@
     .notification-title {
       font-size: 1.2rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .notification-body {
@@ -792,7 +1033,7 @@
 
     .order-summary {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
@@ -809,7 +1050,7 @@
     .order-summary-title {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       letter-spacing: 0.4px;
     }
 
@@ -820,9 +1061,9 @@
     }
 
     .order-summary-btn {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.5rem 1rem;
       border-radius: 6px;
       font-weight: 600;
@@ -831,7 +1072,7 @@
     }
 
     .order-summary-btn:hover {
-      background: rgba(77, 109, 149, 0.3);
+      background: rgba(212, 175, 55, 0.3);
     }
 
     .order-summary-btn.primary {
@@ -907,7 +1148,7 @@
 
     .notification-footer {
       padding-top: 1rem;
-      border-top: 1px solid rgba(77, 109, 149, 0.3);
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
       font-size: 0.9rem;
       color: rgba(255, 255, 255, 0.7);
     }
@@ -927,7 +1168,7 @@
 
     .modal-content {
       background: #0d1b2a;
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
       padding: 2rem;
       max-width: 500px;
@@ -937,7 +1178,7 @@
     .modal-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 1rem;
     }
 
@@ -953,9 +1194,9 @@
     }
 
     .btn-modal-cancel {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
       font-weight: 600;
@@ -964,7 +1205,7 @@
     }
 
     .btn-modal-cancel:hover {
-      background: rgba(77, 109, 149, 0.3);
+      background: rgba(212, 175, 55, 0.3);
     }
 
     .btn-modal-confirm {
@@ -1014,20 +1255,20 @@
     .archive-section-title {
       font-size: 1.8rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 2rem;
       text-align: center;
     }
 
     .archive-divider {
       height: 2px;
-      background: linear-gradient(to right, transparent, #4d6d95, transparent);
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
       margin: 3rem 0;
     }
 
     .archive-card {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.5rem;
       display: flex;
@@ -1043,7 +1284,7 @@
     }
 
     .archive-card:hover {
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.3);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
     .archive-item-main {
@@ -1063,7 +1304,7 @@
     .archive-item-name {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 0.75rem;
     }
 
@@ -1090,9 +1331,9 @@
     }
 
     .btn-save-pdf, .btn-print-pdf {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.6rem 1rem;
       border-radius: 6px;
       font-weight: 600;
@@ -1103,7 +1344,7 @@
     }
 
     .btn-save-pdf:hover, .btn-print-pdf:hover {
-      background: rgba(77, 109, 149, 0.4);
+      background: rgba(212, 175, 55, 0.4);
       transform: scale(1.05);
     }
 
@@ -1125,7 +1366,7 @@
 
     .progress-indicator {
       text-align: center;
-      color: #4d6d95;
+      color: #d4af37;
       font-size: 1.2rem;
       font-weight: 600;
       margin-bottom: 2rem;
@@ -1133,17 +1374,17 @@
 
     .counter-panel {
       background: rgba(13, 27, 42, 0.9);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 16px;
       padding: 2.5rem;
-      box-shadow: 0 8px 32px rgba(77, 109, 149, 0.2);
+      box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
       width: 100%;
       max-width: none;
     }
 
     .display-area {
       background: rgba(0, 0, 0, 0.3);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 0.75rem;
       text-align: center;
@@ -1154,13 +1395,13 @@
 
     .display-area:hover {
       background: rgba(0, 0, 0, 0.4);
-      border-color: #6f95bd;
+      border-color: #f4cf5c;
     }
 
     .display-number {
       font-size: 2rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .display-hint {
@@ -1176,9 +1417,9 @@
     }
 
     .num-button {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       font-size: 2rem;
       font-weight: 700;
       padding: 1.5rem;
@@ -1188,7 +1429,7 @@
     }
 
     .num-button:hover {
-      background: rgba(77, 109, 149, 0.4);
+      background: rgba(212, 175, 55, 0.4);
       transform: scale(1.05);
     }
 
@@ -1255,9 +1496,9 @@
     }
 
     .equipment-tab {
-      background: rgba(77, 109, 149, 0.2);
-      border: 2px solid #4d6d95;
-      color: #4d6d95;
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
       padding: 0.75rem 2rem;
       border-radius: 8px;
       font-weight: 600;
@@ -1267,13 +1508,13 @@
     }
 
     .equipment-tab:hover {
-      background: rgba(77, 109, 149, 0.3);
+      background: rgba(212, 175, 55, 0.3);
     }
 
     .equipment-tab.active {
-      background: #4d6d95;
+      background: #d4af37;
       color: #0d1b2a;
-      box-shadow: 0 0 20px rgba(77, 109, 149, 0.6);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
     }
 
     .equipment-category-section {
@@ -1282,7 +1523,7 @@
 
     .category-banner {
       background: rgba(13, 27, 42, 0.9);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.25rem 1.5rem;
       display: flex;
@@ -1295,7 +1536,7 @@
 
     .category-banner:hover {
       background: rgba(13, 27, 42, 1);
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.2);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
     }
 
     .category-banner-left {
@@ -1311,25 +1552,25 @@
     .category-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
     }
 
     .equipment-card {
       background: rgba(13, 27, 42, 0.7);
-      border: 2px solid #4d6d95;
+      border: 2px solid #d4af37;
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1rem;
       transition: all 0.3s ease;
-      color: #dfe9f7;
+      color: #f4e4a8;
     }
 
     #stockDetailContainer .equipment-card * {
-      color: #dfe9f7;
+      color: #f4e4a8;
     }
 
     .equipment-card:hover {
-      box-shadow: 0 4px 20px rgba(77, 109, 149, 0.3);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
     .equipment-card.status-broken {
@@ -1351,7 +1592,7 @@
     .equipment-name {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #4d6d95;
+      color: #d4af37;
       margin-bottom: 0.5rem;
     }
 
@@ -1388,7 +1629,7 @@
     }
 
     .equipment-detail {
-      color: #4d6d95;
+      color: #d4af37;
       opacity: 0.9;
       font-size: 0.95rem;
     }
@@ -1474,7 +1715,7 @@
     }
 
     .issue-detail {
-      color: #4d6d95;
+      color: #d4af37;
       opacity: 0.9;
       font-size: 0.95rem;
     }
@@ -1618,7 +1859,7 @@
       .room-floor-title {
         font-size: 1.3rem;
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 1rem;
       }
 
@@ -1632,7 +1873,7 @@
 
       .room-card {
         background: rgba(13, 27, 42, 0.7);
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         border-radius: 14px;
         padding: 1rem;
         cursor: pointer;
@@ -1644,13 +1885,13 @@
 
       .room-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(77, 109, 149, 0.2);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
       }
 
       .room-number {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
       }
 
       .room-status {
@@ -1683,7 +1924,7 @@
 
       .room-section {
         background: rgba(13, 27, 42, 0.7);
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         border-radius: 16px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
@@ -1732,7 +1973,7 @@
       .room-section-title {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 1rem;
       }
 
@@ -1742,7 +1983,7 @@
         align-items: center;
         gap: 1rem;
         padding: 0.85rem 1.1rem;
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         border-radius: 999px;
         background: rgba(9, 18, 38, 0.95);
         box-shadow: 0 6px 16px rgba(2, 6, 15, 0.3);
@@ -1753,7 +1994,7 @@
       .room-item:hover {
         transform: translateY(-2px);
         border-color: #f4d889;
-        box-shadow: 0 10px 22px rgba(77, 109, 149, 0.2);
+        box-shadow: 0 10px 22px rgba(212, 175, 55, 0.2);
       }
 
       .room-item > div:first-child {
@@ -1801,14 +2042,14 @@
         border-radius: 999px;
         padding: 0.5rem 0.9rem;
         font-weight: 600;
-        border: 1px solid rgba(77, 109, 149, 0.4);
+        border: 1px solid rgba(212, 175, 55, 0.4);
         background: rgba(11, 26, 51, 0.75);
-        color: #dfe9f7;
+        color: #f4e4a8;
         transition: all 0.2s ease;
       }
 
       .room-action-btn:hover {
-        border-color: #4d6d95;
+        border-color: #d4af37;
         transform: translateY(-1px);
       }
 
@@ -1831,20 +2072,20 @@
         margin: 0 auto;
         padding: 1.5rem 1rem;
         background: radial-gradient(circle at top, rgba(18, 33, 62, 0.95), rgba(8, 16, 32, 0.95));
-        border: 1px solid rgba(77, 109, 149, 0.45);
+        border: 1px solid rgba(212, 175, 55, 0.45);
         border-radius: 24px;
         box-shadow: 0 28px 60px rgba(2, 6, 15, 0.6);
-        color: #dfe9f7;
+        color: #f4e4a8;
       }
 
       .setup-container,
       .setup-container * {
-        color: #dfe9f7 !important;
+        color: #f4e4a8 !important;
       }
 
       .setup-title,
       .setup-category-title {
-        color: #4d6d95 !important;
+        color: #d4af37 !important;
       }
 
       .setup-container * {
@@ -1854,7 +2095,7 @@
       .setup-container input,
       .setup-container select,
       .setup-container textarea {
-        color: #dfe9f7 !important;
+        color: #f4e4a8 !important;
         background: rgba(10, 17, 40, 0.6) !important;
         border-color: #b8941f !important;
       }
@@ -1884,10 +2125,10 @@
       .setup-title {
         font-size: 2rem;
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
         text-align: center;
         margin-bottom: 2rem;
-        text-shadow: 0 10px 30px rgba(77, 109, 149, 0.25);
+        text-shadow: 0 10px 30px rgba(212, 175, 55, 0.25);
       }
 
       @media (min-width: 768px) {
@@ -1901,21 +2142,21 @@
           max-width: 560px !important;
           padding: 1.5rem 1rem !important;
           background: radial-gradient(circle at top, rgba(18, 33, 62, 0.95), rgba(8, 16, 32, 0.95)) !important;
-          border: 1px solid rgba(77, 109, 149, 0.45) !important;
+          border: 1px solid rgba(212, 175, 55, 0.45) !important;
           border-radius: 24px !important;
           box-shadow: 0 28px 60px rgba(2, 6, 15, 0.6) !important;
         }
 
         .setup-category {
           background: rgba(9, 18, 38, 0.85) !important;
-          border: 1px solid rgba(77, 109, 149, 0.28) !important;
+          border: 1px solid rgba(212, 175, 55, 0.28) !important;
           border-radius: 16px !important;
           padding: 1.25rem !important;
         }
 
         .checklist-item {
           background: rgba(9, 18, 38, 0.95) !important;
-          border: 2px solid #4d6d95 !important;
+          border: 2px solid #d4af37 !important;
           border-radius: 999px !important;
           box-shadow: 0 6px 16px rgba(2, 6, 15, 0.3) !important;
           padding: 0.85rem 1.1rem !important;
@@ -1924,7 +2165,7 @@
 
       .setup-subtitle {
         font-size: 1.125rem;
-        color: #dfe9f7;
+        color: #f4e4a8;
         text-align: center;
         margin-bottom: 2rem;
         opacity: 0.9;
@@ -1934,16 +2175,16 @@
         margin-bottom: 2rem;
         padding: 1.25rem;
         border-radius: 16px;
-        border: 1px solid rgba(77, 109, 149, 0.28);
+        border: 1px solid rgba(212, 175, 55, 0.28);
         background: rgba(9, 18, 38, 0.85);
       }
 
       .setup-category-title {
         font-size: 1.65rem;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 1.25rem;
         letter-spacing: 0.4px;
-        border-bottom: 1px solid rgba(77, 109, 149, 0.3);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
         padding-bottom: 0.6rem;
       }
 
@@ -1962,7 +2203,7 @@
         padding: 0.85rem 1.1rem;
         border-radius: 999px;
         background: rgba(9, 18, 38, 0.95);
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         width: 100%;
         box-sizing: border-box;
         flex-wrap: wrap;
@@ -1975,20 +2216,20 @@
       .checklist-item:hover {
         transform: translateY(-2px);
         border-color: #f4d889;
-        box-shadow: 0 16px 30px rgba(77, 109, 149, 0.22);
+        box-shadow: 0 16px 30px rgba(212, 175, 55, 0.22);
       }
 
       .checklist-checkbox {
         width: 1.35rem;
         height: 1.35rem;
         cursor: pointer;
-        accent-color: #4d6d95;
+        accent-color: #d4af37;
         margin-top: 2px;
       }
 
       .checklist-label {
         flex: 1 1 220px;
-        color: #dfe9f7;
+        color: #f4e4a8;
         font-size: 1.05rem;
         font-weight: 600;
         cursor: pointer;
@@ -2007,7 +2248,7 @@
         padding: 0.05rem 0.25rem;
         border-radius: 999px;
         background: rgba(9, 18, 38, 0.95);
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         width: auto;
         justify-content: center;
       }
@@ -2020,8 +2261,8 @@
         width: 2.5rem;
         padding: 0.1rem;
         border-radius: 999px;
-        color: #4d6d95;
-        border: 2px solid #4d6d95;
+        color: #d4af37;
+        border: 2px solid #d4af37;
         background: rgba(9, 18, 38, 0.95);
         text-align: center;
         outline: none;
@@ -2029,7 +2270,7 @@
       }
 
       .checklist-qty input:focus {
-        border-color: #4d6d95;
+        border-color: #d4af37;
       }
 
       .setup-add-btn {
@@ -2039,7 +2280,7 @@
 
       .setup-add-btn .btn-submit,
       .setup-save .btn-submit {
-        box-shadow: 0 14px 24px rgba(77, 109, 149, 0.2);
+        box-shadow: 0 14px 24px rgba(212, 175, 55, 0.2);
       }
 
       .setup-form {
@@ -2047,7 +2288,7 @@
         padding: 1.5rem;
         border-radius: 12px;
         background: linear-gradient(135deg, rgba(10, 17, 40, 0.9), rgba(5, 10, 26, 0.95));
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
       }
 
       .setup-form.hidden {
@@ -2056,12 +2297,12 @@
 
       .setup-form-title {
         font-size: 1.5rem;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 1rem;
       }
 
       .setup-form label {
-        color: #4d6d95;
+        color: #d4af37;
         font-weight: 500;
         display: block;
         margin-bottom: 0.5rem;
@@ -2072,7 +2313,7 @@
         width: 100%;
         padding: 0.75rem;
         border-radius: 8px;
-        color: #4d6d95;
+        color: #d4af37;
         border: 2px solid #b8941f;
         background: rgba(10, 17, 40, 0.6);
         outline: none;
@@ -2080,7 +2321,7 @@
 
       .setup-form input:focus,
       .setup-form select:focus {
-        border-color: #4d6d95;
+        border-color: #d4af37;
       }
 
       .setup-form-actions {
@@ -2095,13 +2336,13 @@
 
       .room-item-name {
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 0.3rem;
       }
 
       .room-item-meta {
         font-size: 0.9rem;
-        color: #dfe9f7;
+        color: #f4e4a8;
         opacity: 0.9;
       }
 
@@ -2113,8 +2354,8 @@
 
       .room-action-btn {
         background: rgba(13, 27, 42, 0.85);
-        border: 1px solid rgba(77, 109, 149, 0.6);
-        color: #dfe9f7;
+        border: 1px solid rgba(212, 175, 55, 0.6);
+        color: #f4e4a8;
         padding: 0.4rem 0.6rem;
         border-radius: 6px;
         font-size: 0.8rem;
@@ -2135,7 +2376,7 @@
 
       .maintenance-card {
         background: rgba(13, 27, 42, 0.7);
-        border: 2px solid #4d6d95;
+        border: 2px solid #d4af37;
         border-radius: 12px;
         padding: 1rem;
         margin-bottom: 1rem;
@@ -2143,7 +2384,7 @@
 
       .maintenance-title {
         font-weight: 700;
-        color: #4d6d95;
+        color: #d4af37;
         margin-bottom: 0.4rem;
       }
 
@@ -2260,13 +2501,13 @@
       #stockCountPage .progress-indicator,
       #stockCountPage .form-label,
       #stockCountPage .display-hint {
-        color: #dfe9f7;
+        color: #f4e4a8;
       }
 
       #stockCountPage .form-select {
-        color: #dfe9f7;
+        color: #f4e4a8;
         background: rgba(10, 17, 40, 0.85);
-        border-color: rgba(77, 109, 149, 0.6);
+        border-color: rgba(212, 175, 55, 0.6);
       }
 
       .date-header {
@@ -2341,8 +2582,7 @@
       }
 
       .date-banner {
-        f
-        lex-direction: column !important;
+        flex-direction: column !important;
         align-items: flex-start !important;
         gap: 0.75rem;
         padding: 1rem;
@@ -2360,8 +2600,7 @@
       .date-banner-left > * {
         display: block;
         width: 100%;
-      
-        margin-bottom: 0.35rem;`
+        margin-bottom: 0.35rem;
       }
 
       .date-banner-left > .expand-arrow {
@@ -2419,13 +2658,374 @@
         width: 100%;
       }
     }
+
+    .frontdesk-inventory-card {
+      --card-bg: rgba(7, 18, 39, 0.96);
+      --card-panel: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(212, 175, 55, 0.28);
+      --card-text: #f5e8b7;
+      --card-muted: #9fb0cb;
+      --card-accent: #d4af37;
+      --card-success: #5ee7a8;
+      --card-warning: #f7cf5e;
+      --card-danger: #ff6b6b;
+      --card-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+      background: var(--card-bg);
+      color: var(--card-text);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      transition: all 0.25s ease;
+    }
+
+    .frontdesk-inventory-card[data-theme="light"] {
+      --card-bg: #f8f4e7;
+      --card-panel: #ffffff;
+      --card-border: rgba(16, 37, 63, 0.16);
+      --card-text: #11253f;
+      --card-muted: #5d708b;
+      --card-accent: #b07d00;
+      --card-shadow: 0 16px 36px rgba(16, 37, 63, 0.12);
+    }
+
+    .frontdesk-header,
+    .frontdesk-toolbar,
+    .frontdesk-summary-grid,
+    .frontdesk-main-grid,
+    .frontdesk-reports {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .frontdesk-header {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .frontdesk-header-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .frontdesk-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--card-accent);
+      margin: 0.35rem 0 0.25rem;
+    }
+
+    .frontdesk-summary-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-bottom: 1rem;
+    }
+
+    .frontdesk-summary-card,
+    .frontdesk-list-card,
+    .frontdesk-form-card,
+    .frontdesk-history-card,
+    .frontdesk-modal-card {
+      background: var(--card-panel);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1rem;
+      backdrop-filter: blur(12px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .frontdesk-summary-card:hover,
+    .frontdesk-list-card:hover,
+    .frontdesk-form-card:hover,
+    .frontdesk-history-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(212, 175, 55, 0.5);
+    }
+
+    .summary-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--card-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .summary-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--card-accent);
+    }
+
+    .summary-value.low { color: var(--card-warning); }
+    .summary-value.out { color: var(--card-danger); }
+
+    .frontdesk-toolbar {
+      grid-template-columns: 2fr repeat(4, minmax(140px, 1fr)) auto;
+      align-items: end;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .frontdesk-field {
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.9rem;
+      color: var(--card-muted);
+    }
+
+    .frontdesk-field input,
+    .frontdesk-field select,
+    .frontdesk-field textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      padding: 0.7rem 0.8rem;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--card-text);
+      font: inherit;
+      box-sizing: border-box;
+    }
+
+    .frontdesk-field textarea {
+      resize: vertical;
+      min-height: 88px;
+    }
+
+    .frontdesk-main-grid {
+      grid-template-columns: 1.5fr 0.9fr;
+      align-items: start;
+    }
+
+    .frontdesk-section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .frontdesk-section-heading h3 {
+      margin: 0;
+      color: var(--card-accent);
+      font-size: 1.05rem;
+    }
+
+    .frontdesk-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid var(--card-border);
+      color: var(--card-muted);
+    }
+
+    .frontdesk-inventory-list {
+      display: grid;
+      gap: 0.85rem;
+      max-height: 760px;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .frontdesk-item-card {
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.9rem;
+      background: rgba(255, 255, 255, 0.04);
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .frontdesk-item-header,
+    .frontdesk-item-details,
+    .frontdesk-item-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .frontdesk-item-name {
+      font-weight: 700;
+      color: var(--card-text);
+    }
+
+    .frontdesk-item-meta,
+    .frontdesk-item-footer {
+      color: var(--card-muted);
+      font-size: 0.85rem;
+    }
+
+    .frontdesk-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .frontdesk-status.instock { background: rgba(94, 231, 168, 0.16); color: var(--card-success); border-color: rgba(94, 231, 168, 0.32); }
+    .frontdesk-status.low { background: rgba(247, 207, 94, 0.16); color: var(--card-warning); border-color: rgba(247, 207, 94, 0.32); }
+    .frontdesk-status.out { background: rgba(255, 107, 107, 0.16); color: var(--card-danger); border-color: rgba(255, 107, 107, 0.32); }
+
+    .frontdesk-item-details {
+      justify-content: flex-start;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--card-muted);
+    }
+
+    .frontdesk-item-details > div {
+      display: grid;
+      gap: 0.15rem;
+      min-width: 110px;
+    }
+
+    .frontdesk-item-actions {
+      justify-content: flex-start;
+      margin-top: 0.25rem;
+    }
+
+    .frontdesk-item-actions button,
+    .frontdesk-form-actions button,
+    .frontdesk-reports button,
+    .frontdesk-modal-header button {
+      padding: 0.55rem 0.8rem;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--card-text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .frontdesk-item-actions button:hover,
+    .frontdesk-form-actions button:hover,
+    .frontdesk-reports button:hover,
+    .frontdesk-modal-header button:hover {
+      transform: translateY(-1px);
+      border-color: var(--card-accent);
+    }
+
+    .frontdesk-history-list {
+      display: grid;
+      gap: 0.65rem;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .frontdesk-history-entry {
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.7rem;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .frontdesk-history-entry strong {
+      color: var(--card-accent);
+    }
+
+    .frontdesk-reports {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .frontdesk-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 8, 20, 0.72);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      z-index: 999;
+    }
+
+    .frontdesk-modal-card {
+      width: min(760px, 100%);
+      max-height: 85vh;
+      overflow: auto;
+    }
+
+    .frontdesk-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .frontdesk-report-content {
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      color: var(--card-text);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .frontdesk-empty-state {
+      padding: 1.25rem;
+      text-align: center;
+      color: var(--card-muted);
+      border: 1px dashed var(--card-border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    @media (max-width: 980px) {
+      .frontdesk-main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .frontdesk-toolbar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .frontdesk-header {
+        grid-template-columns: 1fr;
+      }
+
+      .frontdesk-header-actions {
+        justify-content: flex-start;
+      }
+
+      .frontdesk-toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .frontdesk-summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full">
   <div class="main-wrapper">
-   <div style="padding: 2rem 2rem 3rem 2rem;"><button class="back-button hidden" id="backButton">← Back</button>
-    <h1 class="main-title" id="mainTitle">Housekeeping Inventory &amp; Stock</h1><!-- Main Menu -->
+   <button class="back-button hidden" id="backButton" style="margin: 1.5rem 2rem 0;">← Back</button>
+   <div class="login-overlay hidden">
+    <div class="pin-panel" style="max-width: 420px;">
+      <h1 class="main-title" id="mainTitle" style="font-size: 2rem; margin-bottom: 1rem;">Housekeeping Inventory &amp; Stock</h1>
+      <p class="pin-subtitle">Sign in with your username, PIN, and location code.</p>
+      <form id="simpleLoginForm" style="display: grid; gap: 1rem;">
+        <input class="pin-input" id="simpleUsername" name="username" type="text" placeholder="Username" required />
+        <input class="pin-input" id="simplePin" name="pin" type="password" placeholder="PIN" inputmode="numeric" required />
+        <input class="pin-input" id="simpleLocation" name="location" type="text" placeholder="Location code" required />
+        <button class="pin-button" type="submit">Enter</button>
+      </form>
+      <div id="simpleLoginMessage" class="pin-error" style="margin-top: 1rem;"></div>
+    </div>
+   </div>
+   <div id="mainMenuContainer">
     <div id="mainMenu" class="grid-container">
     <div class="premium-card" data-page="minibar" onclick="goTo('minibar')"><span class="card-emoji">🍾</span>
       <div class="card-title">
@@ -2445,9 +3045,14 @@
        Housekeeping Stock
       </div>
      </div>
-    <div class="premium-card" onclick="window.location.href='../main-app.html'"><span class="card-emoji">🏢</span>
+    <div class="premium-card" data-page="supplyhub" onclick="goTo('supplyhub')"><span class="card-emoji">🏢</span>
       <div class="card-title">
        SupplyHub
+      </div>
+     </div>
+    <div class="premium-card" data-page="frontdesk" onclick="goTo('frontdesk')"><span class="card-emoji">🧾</span>
+      <div class="card-title">
+       Frontdesk Stock
       </div>
      </div>
     <div class="premium-card" data-page="archive" onclick="goTo('archive')"><span class="card-emoji">📚</span>
@@ -2464,6 +3069,244 @@
       <div class="card-title">
        Stock Locations
       </div>
+     </div>
+    </div>
+
+    <div id="supplyhubPage" class="expiration-page hidden">
+     <div class="supplyhub-shell">
+      <article class="supplyhub-card" id="qr">
+        <button type="button" class="dropdown-toggle" id="qrToggle" aria-expanded="false">
+          <span>QR Generation</span>
+          <span class="dropdown-icon">▾</span>
+        </button>
+        <div class="dropdown-panel" id="qrPanel" hidden>
+          <p class="pin-subtitle" style="margin-bottom: 1rem; text-align: left;">Generate a scan-ready link for minibartracker.space using the item, location, and category.</p>
+          <form id="qrForm" class="qr-controls">
+            <label class="field-row">
+              <span>Item name</span>
+              <input id="qrItem" name="qrItem" type="text" value="Toilet Paper" required />
+            </label>
+            <label class="field-row">
+              <span>Location</span>
+              <input id="qrLocation" name="qrLocation" type="text" value="F3-07" required />
+            </label>
+            <label class="field-row">
+              <span>Category</span>
+              <input id="qrCategory" name="qrCategory" type="text" value="Housekeeping" required />
+            </label>
+            <button type="submit">Generate QR</button>
+          </form>
+          <div id="qrResult" class="message"></div>
+          <div class="qr-preview-card">
+            <div class="qr-label">
+              <div class="qr-label-title">Generated scan URL</div>
+              <div id="qrPayload" class="qr-payload-summary">No QR generated yet.</div>
+            </div>
+            <div class="qr-canvas-wrap">
+              <canvas id="qrCanvas" width="220" height="220"></canvas>
+            </div>
+            <button type="button" id="printQrBtn" class="secondary-btn">Print QR</button>
+          </div>
+          <div class="qr-preview-card">
+            <button type="button" class="dropdown-toggle" id="savedQrToggle" aria-expanded="false" style="padding: 0; margin-bottom: 0;">
+              <span>Saved QR codes</span>
+              <span class="dropdown-icon">▾</span>
+            </button>
+            <div class="dropdown-panel" id="savedQrPanel" hidden>
+              <div id="savedQrList" class="saved-qr-list"></div>
+            </div>
+          </div>
+
+          <div class="qr-preview-card">
+            <div class="qr-label">
+              <div class="qr-label-title">Stock Locations QR</div>
+              <div class="qr-payload-summary">Generate one QR per stock location.</div>
+            </div>
+            <select id="locationQrSelect" class="field-row">
+              <option value="Floor 1 Storage">Floor 1 Storage</option>
+              <option value="Floor 2 Storage">Floor 2 Storage</option>
+              <option value="Floor 3 Storage">Floor 3 Storage</option>
+              <option value="Garage">Garage</option>
+              <option value="Luggage Room">Luggage Room</option>
+            </select>
+            <button type="button" id="generateLocationQrBtn" class="secondary-btn">Generate Location QR</button>
+            <div id="locationQrResult" class="message"></div>
+            <div class="qr-canvas-wrap">
+              <canvas id="locationQrCanvas" width="220" height="220"></canvas>
+            </div>
+            <div id="locationQrUrl" class="qr-payload-summary"></div>
+          </div>
+        </div>
+      </article>
+     </div>
+    </div>
+
+    <div id="frontdeskPage" class="expiration-page hidden">
+     <div class="supplyhub-shell">
+      <article class="supplyhub-card frontdesk-inventory-card" id="frontdeskInventoryShell" data-theme="dark">
+        <div class="frontdesk-header">
+          <div>
+            <div class="dashboard-badge">Front Desk Inventory</div>
+            <h2 class="frontdesk-title">Frontdesk Stock</h2>
+            <p class="pin-subtitle" style="margin-bottom: 0; text-align: left;">Manage guest amenities, office supplies, and operational stock with live status insights.</p>
+          </div>
+          <div class="frontdesk-header-actions">
+            <button type="button" class="secondary-btn" id="frontdeskThemeToggle">☀ Light</button>
+            <button type="button" class="btn-submit" id="frontdeskAddBtn">➕ Add Item</button>
+          </div>
+        </div>
+
+        <div class="frontdesk-summary-grid">
+          <div class="frontdesk-summary-card">
+            <div class="summary-label">Total Items</div>
+            <div class="summary-value" id="frontdeskTotalItems">0</div>
+          </div>
+          <div class="frontdesk-summary-card">
+            <div class="summary-label">Low Stock</div>
+            <div class="summary-value low" id="frontdeskLowStockItems">0</div>
+          </div>
+          <div class="frontdesk-summary-card">
+            <div class="summary-label">Out of Stock</div>
+            <div class="summary-value out" id="frontdeskOutOfStockItems">0</div>
+          </div>
+          <div class="frontdesk-summary-card">
+            <div class="summary-label">Recently Updated</div>
+            <div class="summary-value" id="frontdeskRecentlyUpdatedItems">0</div>
+          </div>
+        </div>
+
+        <div class="frontdesk-toolbar">
+          <label class="frontdesk-field">
+            <span>Search</span>
+            <input id="frontdeskSearch" type="text" placeholder="Search item, SKU, supplier..." />
+          </label>
+          <label class="frontdesk-field">
+            <span>Category</span>
+            <select id="frontdeskCategoryFilter">
+              <option value="All">All</option>
+            </select>
+          </label>
+          <label class="frontdesk-field">
+            <span>Location</span>
+            <select id="frontdeskLocationFilter">
+              <option value="All">All</option>
+            </select>
+          </label>
+          <label class="frontdesk-field">
+            <span>Supplier</span>
+            <select id="frontdeskSupplierFilter">
+              <option value="All">All</option>
+            </select>
+          </label>
+          <label class="frontdesk-field">
+            <span>Status</span>
+            <select id="frontdeskStatusFilter">
+              <option value="All">All</option>
+              <option value="In Stock">In Stock</option>
+              <option value="Low Stock">Low Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </label>
+          <button type="button" class="secondary-btn" id="frontdeskResetFilters">Reset</button>
+        </div>
+
+        <div class="frontdesk-main-grid">
+          <div class="frontdesk-list-card">
+            <div class="frontdesk-section-heading">
+              <h3>Inventory Items</h3>
+              <span class="frontdesk-chip" id="frontdeskResultsCount">0 items</span>
+            </div>
+            <div class="frontdesk-inventory-list" id="frontdeskInventoryList"></div>
+          </div>
+
+          <div class="frontdesk-side-stack">
+            <div class="frontdesk-form-card">
+              <div class="frontdesk-section-heading">
+                <h3 id="frontdeskFormTitle">Add New Item</h3>
+                <span class="frontdesk-chip">Item details</span>
+              </div>
+              <form id="frontdeskInventoryForm" class="qr-controls" style="margin-top: 0.25rem;">
+                <input type="hidden" id="frontdeskItemId" />
+                <label class="field-row">
+                  <span>SKU</span>
+                  <input id="frontdeskSku" name="sku" type="text" placeholder="SKU-001" required />
+                </label>
+                <label class="field-row">
+                  <span>Item name</span>
+                  <input id="frontdeskItemName" name="itemName" type="text" placeholder="e.g. Water bottles" required />
+                </label>
+                <label class="field-row">
+                  <span>Category</span>
+                  <select id="frontdeskCategory" name="category" required></select>
+                </label>
+                <label class="field-row">
+                  <span>Storage location</span>
+                  <input id="frontdeskLocation" name="storageLocation" type="text" placeholder="Front Desk Cabinet" required />
+                </label>
+                <label class="field-row">
+                  <span>Current stock</span>
+                  <input id="frontdeskCurrentStock" name="currentStock" type="number" min="0" value="0" required />
+                </label>
+                <label class="field-row">
+                  <span>Minimum stock</span>
+                  <input id="frontdeskMinimumStock" name="minimumStock" type="number" min="0" value="10" required />
+                </label>
+                <label class="field-row">
+                  <span>Maximum stock</span>
+                  <input id="frontdeskMaximumStock" name="maximumStock" type="number" min="1" value="50" required />
+                </label>
+                <label class="field-row">
+                  <span>Reorder quantity</span>
+                  <input id="frontdeskReorderQuantity" name="reorderQuantity" type="number" min="1" value="10" required />
+                </label>
+                <label class="field-row">
+                  <span>Supplier</span>
+                  <input id="frontdeskSupplier" name="supplier" type="text" placeholder="Supplier name" required />
+                </label>
+                <label class="field-row">
+                  <span>Unit</span>
+                  <input id="frontdeskUnit" name="unit" type="text" placeholder="pcs / box / bottle" required />
+                </label>
+                <label class="field-row">
+                  <span>Notes</span>
+                  <textarea id="frontdeskNotes" name="notes" rows="3" placeholder="Any extra notes..."></textarea>
+                </label>
+                <div class="frontdesk-form-actions">
+                  <button type="submit" class="btn-submit">Save Item</button>
+                  <button type="button" class="secondary-btn" id="frontdeskCancelEdit">Cancel</button>
+                </div>
+              </form>
+              <div id="frontdeskFormMessage" class="message" style="margin-top: 0.3rem;"></div>
+            </div>
+
+            <div class="frontdesk-history-card">
+              <div class="frontdesk-section-heading">
+                <h3>Item History</h3>
+                <span class="frontdesk-chip" id="frontdeskHistoryTitle">Select item</span>
+              </div>
+              <div class="frontdesk-history-list" id="frontdeskHistoryList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="frontdesk-reports">
+          <button type="button" class="secondary-btn" data-report="current">Current Stock Report</button>
+          <button type="button" class="secondary-btn" data-report="low">Low Stock Report</button>
+          <button type="button" class="secondary-btn" data-report="out">Out of Stock Report</button>
+          <button type="button" class="secondary-btn" data-report="pdf">Export to PDF</button>
+          <button type="button" class="secondary-btn" data-report="excel">Export to Excel</button>
+        </div>
+
+        <div id="frontdeskReportModal" class="frontdesk-modal hidden">
+          <div class="frontdesk-modal-card">
+            <div class="frontdesk-modal-header">
+              <h3 id="frontdeskReportTitle">Report</h3>
+              <button type="button" class="secondary-btn" id="frontdeskReportClose">Close</button>
+            </div>
+            <pre id="frontdeskReportContent" class="frontdesk-report-content"></pre>
+          </div>
+        </div>
+      </article>
      </div>
     </div>
     
@@ -2506,7 +3349,7 @@
      </div>
     </div><!-- Order Management / Notification Center Page -->
     <div id="ordersPage" class="expiration-page hidden">
-     <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; text-align: center; margin-bottom: 2rem;">Notification Center</h2>
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">Notification Center</h2>
      <div class="order-summary" id="orderSummaryContainer">
       <div class="order-summary-header">
        <div class="order-summary-title">Order Summary</div>
@@ -2548,28 +3391,28 @@
     <!-- Room Registry Pages -->
     <div id="roomRegistryPage" class="expiration-page hidden">
      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
-      <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; margin: 0;">🏨 Room Registry</h2>
+      <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; margin: 0;">🏨 Room Registry</h2>
       <button class="btn-submit" id="maintenanceQueueBtn" style="width: auto;">🛠 Maintenance Queue (<span id="maintenanceCount">0</span>)</button>
      </div>
      <div id="roomRegistryContainer"></div>
      <div id="roomDetailContainer" class="hidden"></div>
     </div>
     <div id="roomMaintenancePage" class="expiration-page hidden">
-     <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; text-align: center; margin-bottom: 2rem;">🛠 Maintenance Queue</h2>
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🛠 Maintenance Queue</h2>
      <div id="maintenanceList"></div>
     </div>
     <!-- Stock Locations Pages -->
     <div id="stockLocationsPage" class="expiration-page hidden" style="max-width: 1152px; margin: 0 auto;">
-     <h2 class="playfair" style="font-size: 2.5rem; color: #4d6d95; text-align: center; margin-bottom: 2rem; text-shadow: 0 0 20px rgba(77, 109, 149, 0.4);">Stock Locations</h2>
-     <p style="font-size: 1.125rem; color: #dfe9f7; text-align: center; margin-bottom: 2rem;">Manage 38 storage locations across the hotel</p>
+     <h2 class="playfair" style="font-size: 2.5rem; color: #d4af37; text-align: center; margin-bottom: 2rem; text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);">Stock Locations</h2>
+     <p style="font-size: 1.125rem; color: #f4e4a8; text-align: center; margin-bottom: 2rem;">Manage 38 storage locations across the hotel</p>
      <div id="stockLocationsContainer"></div>
     </div>
     <div id="stockDetailPage" class="expiration-page hidden">
      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
       <button class="btn-cancel" id="backToStockLocationsBtn">← Back to Locations</button>
       <div>
-       <h2 id="stockDetailTitle" style="font-size: 2rem; font-weight: 700; color: #4d6d95; margin: 0;">Stock Location</h2>
-       <div id="stockDetailMeta" style="color: #4d6d95; opacity: 0.8; margin-top: 0.35rem;"></div>
+       <h2 id="stockDetailTitle" style="font-size: 2rem; font-weight: 700; color: #d4af37; margin: 0;">Stock Location</h2>
+       <div id="stockDetailMeta" style="color: #d4af37; opacity: 0.8; margin-top: 0.35rem;"></div>
       </div>
       <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
        <button class="btn-submit" id="stockCheckedBtn">✅ Mark Checked</button>
@@ -2580,7 +3423,7 @@
     </div>
     <!-- Housekeeping Equipment Page -->
     <div id="housekeepingEquipmentPage" class="expiration-page hidden">
-     <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; text-align: center; margin-bottom: 2rem;">🧹 Equipment Inventory</h2><!-- Tab Navigation -->
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🧹 Equipment Inventory</h2><!-- Tab Navigation -->
      <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;"><button class="equipment-tab active" id="inventoryTab" data-tab="inventory"> 📦 Inventory </button> <button class="equipment-tab" id="issuesTab" data-tab="issues"> ⚠️ Active Issues </button>
      </div><!-- Inventory Tab Content -->
      <div id="inventoryTabContent"><button class="add-button" id="addEquipmentBtn">➕ Add New Equipment</button>
@@ -2639,7 +3482,7 @@
      </div>
     </div><!-- Public Area Equipment Page -->
     <div id="publicAreaEquipmentPage" class="expiration-page hidden">
-     <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; text-align: center; margin-bottom: 2rem;">🚧 Public Area Equipment</h2><!-- Tab Navigation -->
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 2rem;">🚧 Public Area Equipment</h2><!-- Tab Navigation -->
      <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;"><button class="equipment-tab active" id="publicInventoryTab" data-tab="inventory"> 📦 Inventory </button> <button class="equipment-tab" id="publicIssuesTab" data-tab="issues"> ⚠️ Active Issues </button>
      </div><!-- Inventory Tab Content -->
      <div id="publicInventoryTabContent"><button class="add-button" id="addPublicEquipmentBtn">➕ Add New Equipment</button>
@@ -2679,7 +3522,7 @@
     </div><!-- Archive Page -->
     <!-- Room Registry Pages (moved near end of layout) -->
     <div id="archivePage" class="expiration-page hidden">
-     <h2 style="font-size: 2rem; font-weight: 700; color: #4d6d95; text-align: center; margin-bottom: 3rem;">Archive Center</h2><!-- Section 1: Archived Stock Counts -->
+     <h2 style="font-size: 2rem; font-weight: 700; color: #d4af37; text-align: center; margin-bottom: 3rem;">Archive Center</h2><!-- Section 1: Archived Stock Counts -->
      <div class="archive-section">
       <h3 class="archive-section-title">📊 Archived Stock Counts</h3>
       <div id="stockCountArchiveContainer"></div>
@@ -2744,17 +3587,22 @@
   </footer>
   <div id="buildBadge" class="build-badge" data-build="2026-02-04" style="display:none;">Build v—</div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <script src="assets/auth.js"></script>
   <script>
     const defaultConfig = {
       main_title: "Housekeeping Inventory & Stock",
       footer_text: "© M.A.2026",
       background_color: "#0b1a33",
-      accent_color: "#4d6d95",
+      accent_color: "#d4af37",
       font_family: "Segoe UI"
     };
 
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsojKnOgsgaKguFQFG7tA9nPijTmCyCWFqU0lu7bJCYfkunqduV4_meJiZOricnjr6/exec';
     const APP_PIN = '1012';
+    const simpleLoginForm = document.getElementById('simpleLoginForm');
+    const simpleLoginMessage = document.getElementById('simpleLoginMessage');
+
     function getLocalDateString(date = new Date()) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -2764,6 +3612,54 @@
 
     const mainMenu = document.getElementById('mainMenu');
     const pinOverlay = document.getElementById('pinOverlay');
+
+    if (simpleLoginForm) {
+      simpleLoginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = document.getElementById('simpleUsername')?.value?.trim() || '';
+        const pin = document.getElementById('simplePin')?.value?.trim() || '';
+        const location = document.getElementById('simpleLocation')?.value?.trim() || '';
+
+        if (!username || !pin || !location) {
+          if (simpleLoginMessage) {
+            simpleLoginMessage.textContent = 'Please enter your username, PIN, and location code.';
+          }
+          return;
+        }
+
+        if (pin.length < 3) {
+          if (simpleLoginMessage) {
+            simpleLoginMessage.textContent = 'Please enter a longer PIN.';
+          }
+          return;
+        }
+
+        try {
+          localStorage.setItem('supplyhubSession', JSON.stringify({ username, pin, location, loggedInAt: new Date().toISOString() }));
+          if (simpleLoginMessage) {
+            simpleLoginMessage.textContent = 'Signing in...';
+          }
+          const loginOverlay = document.querySelector('.login-overlay');
+          const mainMenuContainer = document.getElementById('mainMenuContainer');
+          if (loginOverlay) {
+            loginOverlay.style.display = 'none';
+          }
+          if (mainMenuContainer) {
+            mainMenuContainer.classList.remove('hidden');
+          }
+          if (mainMenu) {
+            mainMenu.classList.remove('hidden');
+          }
+          isUnlocked = true;
+          localStorage.setItem('app_unlocked', 'true');
+          navigateTo('main');
+        } catch (error) {
+          if (simpleLoginMessage) {
+            simpleLoginMessage.textContent = 'Unable to sign in right now. Please try again.';
+          }
+        }
+      });
+    }
     const pinInput = document.getElementById('pinInput');
     const pinSubmit = document.getElementById('pinSubmit');
     const pinError = document.getElementById('pinError');
@@ -2779,9 +3675,11 @@
     const roomMaintenancePage = document.getElementById('roomMaintenancePage');
     const stockLocationsPage = document.getElementById('stockLocationsPage');
     const stockDetailPage = document.getElementById('stockDetailPage');
+    const supplyhubPage = document.getElementById('supplyhubPage');
+    const frontdeskPage = document.getElementById('frontdeskPage');
     const backButton = document.getElementById('backButton');
     let currentPage = 'main';
-    var isUnlocked = true;
+    var isUnlocked = false;
     let roomRegistryContainer;
     let roomDetailContainer;
     let maintenanceQueueBtn;
@@ -3228,6 +4126,459 @@
       }
     }
 
+    const FRONTDESK_STORAGE_KEY = 'frontdeskInventoryDataV1';
+    const frontdeskCategories = [
+      'Guest Amenities',
+      'Office Supplies',
+      'Operations'
+    ];
+
+    const defaultFrontdeskItems = [
+      { id: 1, sku: 'GA-001', itemName: 'Water', category: 'Guest Amenities', storageLocation: 'Front Desk Cabinet', currentStock: 120, minimumStock: 40, maximumStock: 200, reorderQuantity: 40, supplier: 'Hotel Supplies Co.', unit: 'bottle', lastUpdated: '2026-07-29', notes: 'High demand during check-ins.', history: [{ date: '2026-07-29', user: 'Front Office', action: 'Added item', quantity: 120, notes: 'Initial stock' }] },
+      { id: 2, sku: 'GA-002', itemName: 'Coffee Capsules', category: 'Guest Amenities', storageLocation: 'Lobby Pantry', currentStock: 18, minimumStock: 20, maximumStock: 80, reorderQuantity: 20, supplier: 'Brew Supply', unit: 'pack', lastUpdated: '2026-07-30', notes: 'Reorder soon.', history: [{ date: '2026-07-30', user: 'Front Office', action: 'Stock updated', quantity: 2, notes: 'Restocked' }] },
+      { id: 3, sku: 'OS-001', itemName: 'Pens', category: 'Office Supplies', storageLocation: 'Front Desk Drawer', currentStock: 0, minimumStock: 10, maximumStock: 60, reorderQuantity: 20, supplier: 'Office Essentials', unit: 'box', lastUpdated: '2026-07-31', notes: 'Out of stock.', history: [{ date: '2026-07-31', user: 'Front Office', action: 'Stock updated', quantity: -4, notes: 'Used in operations' }] },
+      { id: 4, sku: 'OP-001', itemName: 'Batteries', category: 'Operations', storageLocation: 'Housekeeping Closet', currentStock: 35, minimumStock: 15, maximumStock: 80, reorderQuantity: 20, supplier: 'Tech Supply', unit: 'pack', lastUpdated: '2026-07-28', notes: 'Routine restock.', history: [{ date: '2026-07-28', user: 'Front Office', action: 'Added item', quantity: 35, notes: 'Initial stock' }] }
+    ];
+
+    let frontdeskItems = [];
+    let frontdeskFilters = {
+      search: '',
+      category: 'All',
+      location: 'All',
+      supplier: 'All',
+      status: 'All'
+    };
+    let frontdeskEditId = null;
+
+    function loadFrontdeskItems() {
+      try {
+        const cached = localStorage.getItem(FRONTDESK_STORAGE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length) {
+            frontdeskItems = parsed;
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn('Unable to load frontdesk inventory', error);
+      }
+      frontdeskItems = defaultFrontdeskItems.map(item => ({ ...item }));
+    }
+
+    function saveFrontdeskItems() {
+      localStorage.setItem(FRONTDESK_STORAGE_KEY, JSON.stringify(frontdeskItems));
+    }
+
+    function getFrontdeskStatus(item) {
+      if (item.currentStock <= 0) return 'Out of Stock';
+      if (item.currentStock <= item.minimumStock) return 'Low Stock';
+      return 'In Stock';
+    }
+
+    function getFrontdeskStatusClass(status) {
+      if (status === 'Out of Stock') return 'out';
+      if (status === 'Low Stock') return 'low';
+      return 'instock';
+    }
+
+    function formatFrontdeskDate(value) {
+      if (!value) return '—';
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return value;
+      return parsed.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function getFilteredFrontdeskItems() {
+      const term = frontdeskFilters.search.trim().toLowerCase();
+      return frontdeskItems.filter((item) => {
+        const matchesSearch = !term || [item.itemName, item.sku, item.supplier, item.storageLocation, item.category].some(value => String(value || '').toLowerCase().includes(term));
+        const matchesCategory = frontdeskFilters.category === 'All' || item.category === frontdeskFilters.category;
+        const matchesLocation = frontdeskFilters.location === 'All' || item.storageLocation === frontdeskFilters.location;
+        const matchesSupplier = frontdeskFilters.supplier === 'All' || item.supplier === frontdeskFilters.supplier;
+        const status = getFrontdeskStatus(item);
+        const matchesStatus = frontdeskFilters.status === 'All' || status === frontdeskFilters.status;
+        return matchesSearch && matchesCategory && matchesLocation && matchesSupplier && matchesStatus;
+      });
+    }
+
+    function populateFrontdeskFilters() {
+      const categorySelect = document.getElementById('frontdeskCategoryFilter');
+      const locationSelect = document.getElementById('frontdeskLocationFilter');
+      const supplierSelect = document.getElementById('frontdeskSupplierFilter');
+      const categoryFormSelect = document.getElementById('frontdeskCategory');
+      if (categorySelect) {
+        const categories = ['All', ...new Set(frontdeskItems.map(item => item.category))];
+        categorySelect.innerHTML = categories.map(value => `<option value="${value}">${value}</option>`).join('');
+        if (frontdeskFilters.category && categories.includes(frontdeskFilters.category)) {
+          categorySelect.value = frontdeskFilters.category;
+        } else {
+          categorySelect.value = 'All';
+        }
+      }
+      if (locationSelect) {
+        const locations = ['All', ...new Set(frontdeskItems.map(item => item.storageLocation))];
+        locationSelect.innerHTML = locations.map(value => `<option value="${value}">${value}</option>`).join('');
+        if (frontdeskFilters.location && locations.includes(frontdeskFilters.location)) {
+          locationSelect.value = frontdeskFilters.location;
+        } else {
+          locationSelect.value = 'All';
+        }
+      }
+      if (supplierSelect) {
+        const suppliers = ['All', ...new Set(frontdeskItems.map(item => item.supplier))];
+        supplierSelect.innerHTML = suppliers.map(value => `<option value="${value}">${value}</option>`).join('');
+        if (frontdeskFilters.supplier && suppliers.includes(frontdeskFilters.supplier)) {
+          supplierSelect.value = frontdeskFilters.supplier;
+        } else {
+          supplierSelect.value = 'All';
+        }
+      }
+      if (categoryFormSelect) {
+        categoryFormSelect.innerHTML = frontdeskCategories.map(value => `<option value="${value}">${value}</option>`).join('');
+      }
+    }
+
+    function renderFrontdeskDashboard() {
+      const totalItemsEl = document.getElementById('frontdeskTotalItems');
+      const lowStockEl = document.getElementById('frontdeskLowStockItems');
+      const outOfStockEl = document.getElementById('frontdeskOutOfStockItems');
+      const recentEl = document.getElementById('frontdeskRecentlyUpdatedItems');
+      if (!totalItemsEl || !lowStockEl || !outOfStockEl || !recentEl) return;
+
+      const totalItems = frontdeskItems.length;
+      const lowStockItems = frontdeskItems.filter(item => getFrontdeskStatus(item) === 'Low Stock').length;
+      const outOfStockItems = frontdeskItems.filter(item => getFrontdeskStatus(item) === 'Out of Stock').length;
+      const recentlyUpdatedItems = frontdeskItems.filter((item) => {
+        const parsedDate = new Date(item.lastUpdated);
+        const now = Date.now();
+        return !Number.isNaN(parsedDate.getTime()) && now - parsedDate.getTime() <= 7 * 24 * 60 * 60 * 1000;
+      }).length;
+
+      totalItemsEl.textContent = totalItems;
+      lowStockEl.textContent = lowStockItems;
+      outOfStockEl.textContent = outOfStockItems;
+      recentEl.textContent = recentlyUpdatedItems;
+    }
+
+    function renderFrontdeskInventoryList() {
+      const container = document.getElementById('frontdeskInventoryList');
+      const countEl = document.getElementById('frontdeskResultsCount');
+      if (!container) return;
+
+      const filteredItems = getFilteredFrontdeskItems();
+      if (!filteredItems.length) {
+        container.innerHTML = '<div class="frontdesk-empty-state">No items match the current filters. Try widening your search.</div>';
+        if (countEl) countEl.textContent = '0 items';
+        return;
+      }
+
+      if (countEl) countEl.textContent = `${filteredItems.length} item${filteredItems.length === 1 ? '' : 's'}`;
+
+      container.innerHTML = filteredItems.map((item) => {
+        const status = getFrontdeskStatus(item);
+        const statusClass = getFrontdeskStatusClass(status);
+        return `
+          <div class="frontdesk-item-card">
+            <div class="frontdesk-item-header">
+              <div>
+                <div class="frontdesk-item-name">${item.itemName}</div>
+                <div class="frontdesk-item-meta">${item.sku} • ${item.category}</div>
+              </div>
+              <span class="frontdesk-status ${statusClass}">${status}</span>
+            </div>
+            <div class="frontdesk-item-details">
+              <div><span>Location</span><strong>${item.storageLocation}</strong></div>
+              <div><span>Stock</span><strong>${item.currentStock} ${item.unit}</strong></div>
+              <div><span>Min / Max</span><strong>${item.minimumStock} / ${item.maximumStock}</strong></div>
+              <div><span>Supplier</span><strong>${item.supplier}</strong></div>
+            </div>
+            <div class="frontdesk-item-footer">Last updated: ${formatFrontdeskDate(item.lastUpdated)} • ${item.notes || 'No notes'}</div>
+            <div class="frontdesk-item-actions">
+              <button type="button" data-action="history" data-id="${item.id}">View History</button>
+              <button type="button" data-action="edit" data-id="${item.id}">Edit</button>
+              <button type="button" data-action="increase" data-id="${item.id}">+</button>
+              <button type="button" data-action="decrease" data-id="${item.id}">−</button>
+              <button type="button" data-action="delete" data-id="${item.id}">Delete</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderFrontdeskHistory(itemId) {
+      const historyList = document.getElementById('frontdeskHistoryList');
+      const historyTitle = document.getElementById('frontdeskHistoryTitle');
+      if (!historyList || !historyTitle) return;
+
+      const item = frontdeskItems.find(entry => String(entry.id) === String(itemId));
+      if (!item) {
+        historyList.innerHTML = '<div class="frontdesk-empty-state">Select an item to view its history.</div>';
+        historyTitle.textContent = 'Select item';
+        return;
+      }
+
+      historyTitle.textContent = item.itemName;
+      const history = Array.isArray(item.history) ? item.history : [];
+      if (!history.length) {
+        historyList.innerHTML = '<div class="frontdesk-empty-state">No history recorded yet.</div>';
+        return;
+      }
+      historyList.innerHTML = history.map(entry => `
+        <div class="frontdesk-history-entry">
+          <div><strong>${entry.action}</strong> • ${formatFrontdeskDate(entry.date)}</div>
+          <div>${entry.user || 'Front Office'} • Qty ${entry.quantity}</div>
+          <div class="frontdesk-item-footer">${entry.notes || 'No notes'}</div>
+        </div>`).join('');
+    }
+
+    function resetFrontdeskForm() {
+      frontdeskEditId = null;
+      const form = document.getElementById('frontdeskInventoryForm');
+      const title = document.getElementById('frontdeskFormTitle');
+      const messageEl = document.getElementById('frontdeskFormMessage');
+      if (form) form.reset();
+      const itemIdInput = document.getElementById('frontdeskItemId');
+      if (itemIdInput) itemIdInput.value = '';
+      const defaultValues = ['0', '10', '50', '10'];
+      ['frontdeskCurrentStock', 'frontdeskMinimumStock', 'frontdeskMaximumStock', 'frontdeskReorderQuantity'].forEach((id, index) => {
+        const input = document.getElementById(id);
+        if (input) input.value = defaultValues[index];
+      });
+      if (title) title.textContent = 'Add New Item';
+      if (messageEl) messageEl.textContent = '';
+      const skuInput = document.getElementById('frontdeskSku');
+      if (skuInput) skuInput.value = '';
+      const categoryInput = document.getElementById('frontdeskCategory');
+      if (categoryInput) categoryInput.value = frontdeskCategories[0] || '';
+    }
+
+    function populateFrontdeskForm(item) {
+      const form = document.getElementById('frontdeskInventoryForm');
+      const title = document.getElementById('frontdeskFormTitle');
+      if (!form || !item) return;
+
+      frontdeskEditId = item.id;
+      document.getElementById('frontdeskItemId').value = item.id;
+      document.getElementById('frontdeskSku').value = item.sku || '';
+      document.getElementById('frontdeskItemName').value = item.itemName || '';
+      document.getElementById('frontdeskCategory').value = item.category || frontdeskCategories[0];
+      document.getElementById('frontdeskLocation').value = item.storageLocation || '';
+      document.getElementById('frontdeskCurrentStock').value = item.currentStock ?? 0;
+      document.getElementById('frontdeskMinimumStock').value = item.minimumStock ?? 10;
+      document.getElementById('frontdeskMaximumStock').value = item.maximumStock ?? 50;
+      document.getElementById('frontdeskReorderQuantity').value = item.reorderQuantity ?? 10;
+      document.getElementById('frontdeskSupplier').value = item.supplier || '';
+      document.getElementById('frontdeskUnit').value = item.unit || 'pcs';
+      document.getElementById('frontdeskNotes').value = item.notes || '';
+      if (title) title.textContent = 'Edit Item';
+    }
+
+    function handleFrontdeskInventorySubmit(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const messageEl = document.getElementById('frontdeskFormMessage');
+      const form = document.getElementById('frontdeskInventoryForm');
+      if (!form) return;
+
+      const itemPayload = {
+        sku: document.getElementById('frontdeskSku').value.trim(),
+        itemName: document.getElementById('frontdeskItemName').value.trim(),
+        category: document.getElementById('frontdeskCategory').value,
+        storageLocation: document.getElementById('frontdeskLocation').value.trim(),
+        currentStock: Number(document.getElementById('frontdeskCurrentStock').value),
+        minimumStock: Number(document.getElementById('frontdeskMinimumStock').value),
+        maximumStock: Number(document.getElementById('frontdeskMaximumStock').value),
+        reorderQuantity: Number(document.getElementById('frontdeskReorderQuantity').value),
+        supplier: document.getElementById('frontdeskSupplier').value.trim(),
+        unit: document.getElementById('frontdeskUnit').value.trim(),
+        notes: document.getElementById('frontdeskNotes').value.trim(),
+        lastUpdated: new Date().toISOString().slice(0, 10)
+      };
+
+      if (!itemPayload.sku || !itemPayload.itemName || !itemPayload.category || !itemPayload.storageLocation || !itemPayload.supplier || !itemPayload.unit) {
+        if (messageEl) messageEl.textContent = 'Please fill in the required item details.';
+        return;
+      }
+
+      if (!Number.isFinite(itemPayload.currentStock) || !Number.isFinite(itemPayload.minimumStock) || !Number.isFinite(itemPayload.maximumStock) || !Number.isFinite(itemPayload.reorderQuantity)) {
+        if (messageEl) messageEl.textContent = 'Please enter valid numeric values.';
+        return;
+      }
+
+      if (frontdeskEditId) {
+        const existing = frontdeskItems.find(item => String(item.id) === String(frontdeskEditId));
+        if (existing) {
+          Object.assign(existing, itemPayload, { id: existing.id, history: Array.isArray(existing.history) ? existing.history : [] });
+          existing.history.unshift({ date: new Date().toISOString().slice(0, 10), user: 'Front Office', action: 'Updated item', quantity: 0, notes: 'Details updated' });
+        }
+        if (messageEl) messageEl.textContent = 'Item updated successfully.';
+      } else {
+        const newItem = {
+          id: Date.now(),
+          ...itemPayload,
+          history: [{ date: new Date().toISOString().slice(0, 10), user: 'Front Office', action: 'Added item', quantity: itemPayload.currentStock, notes: 'Initial entry' }]
+        };
+        frontdeskItems = [newItem, ...frontdeskItems];
+        if (messageEl) messageEl.textContent = `${newItem.itemName} added successfully.`;
+      }
+
+      saveFrontdeskItems();
+      renderFrontdeskDashboard();
+      populateFrontdeskFilters();
+      renderFrontdeskInventoryList();
+      resetFrontdeskForm();
+    }
+
+    function applyFrontdeskAction(itemId, action) {
+      const item = frontdeskItems.find(entry => String(entry.id) === String(itemId));
+      if (!item) return;
+
+      if (action === 'delete') {
+        frontdeskItems = frontdeskItems.filter(entry => String(entry.id) !== String(itemId));
+        saveFrontdeskItems();
+        renderFrontdeskDashboard();
+        populateFrontdeskFilters();
+        renderFrontdeskInventoryList();
+        renderFrontdeskHistory(itemId);
+        return;
+      }
+
+      if (action === 'edit') {
+        populateFrontdeskForm(item);
+        document.getElementById('frontdeskInventoryForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      const quantityChange = action === 'increase' ? item.reorderQuantity || 1 : -(item.reorderQuantity || 1);
+      const nextStock = Math.max(0, item.currentStock + quantityChange);
+      item.currentStock = nextStock;
+      item.lastUpdated = new Date().toISOString().slice(0, 10);
+      item.history = Array.isArray(item.history) ? item.history : [];
+      item.history.unshift({ date: new Date().toISOString().slice(0, 10), user: 'Front Office', action: action === 'increase' ? 'Stock increased' : 'Stock decreased', quantity: Math.abs(quantityChange), notes: `${action === 'increase' ? 'Added' : 'Removed'} ${Math.abs(quantityChange)} ${item.unit}` });
+      saveFrontdeskItems();
+      renderFrontdeskDashboard();
+      renderFrontdeskInventoryList();
+      renderFrontdeskHistory(item.id);
+    }
+
+    function showFrontdeskReport(reportType) {
+      const reportModal = document.getElementById('frontdeskReportModal');
+      const reportTitle = document.getElementById('frontdeskReportTitle');
+      const reportContent = document.getElementById('frontdeskReportContent');
+      if (!reportModal || !reportTitle || !reportContent) return;
+
+      let title = 'Inventory Report';
+      let lines = [];
+      const items = reportType === 'low' ? frontdeskItems.filter(item => getFrontdeskStatus(item) === 'Low Stock') : reportType === 'out' ? frontdeskItems.filter(item => getFrontdeskStatus(item) === 'Out of Stock') : frontdeskItems;
+
+      if (reportType === 'current') {
+        title = 'Current Stock Report';
+        lines = items.map(item => `${item.sku} | ${item.itemName} | ${item.currentStock} ${item.unit} | ${item.storageLocation}`);
+      } else if (reportType === 'low') {
+        title = 'Low Stock Report';
+        lines = items.map(item => `${item.itemName} (${item.sku}) is at ${item.currentStock} ${item.unit} against a minimum of ${item.minimumStock}`);
+      } else if (reportType === 'out') {
+        title = 'Out of Stock Report';
+        lines = items.map(item => `${item.itemName} (${item.sku}) is currently out of stock.`);
+      }
+
+      reportTitle.textContent = title;
+      reportContent.textContent = lines.length ? lines.join('\n') : 'No items to report.';
+      reportModal.classList.remove('hidden');
+    }
+
+    function exportFrontdeskExcel() {
+      const rows = frontdeskItems.map(item => [item.sku, item.itemName, item.category, item.storageLocation, item.currentStock, item.minimumStock, item.maximumStock, item.reorderQuantity, item.supplier, item.unit, item.lastUpdated, item.notes || ''].join(','));
+      const csv = ['sku,itemName,category,storageLocation,currentStock,minimumStock,maximumStock,reorderQuantity,supplier,unit,lastUpdated,notes', ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'frontdesk-inventory.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportFrontdeskPdf() {
+      const printWindow = window.open('', '_blank', 'width=800,height=900');
+      if (!printWindow) return;
+      const reportLines = frontdeskItems.map(item => `${item.sku} | ${item.itemName} | Stock: ${item.currentStock} ${item.unit} | Location: ${item.storageLocation}`).join('<br>');
+      printWindow.document.write(`<html><head><title>Frontdesk Inventory PDF</title><style>body{font-family:Segoe UI,sans-serif;padding:24px;color:#11253f} h1{color:#b07d00}</style></head><body><h1>Frontdesk Inventory</h1>${reportLines}</body></html>`);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
+
+    function attachFrontdeskHandlers() {
+      const form = document.getElementById('frontdeskInventoryForm');
+      const addBtn = document.getElementById('frontdeskAddBtn');
+      const cancelBtn = document.getElementById('frontdeskCancelEdit');
+      const searchInput = document.getElementById('frontdeskSearch');
+      const categorySelect = document.getElementById('frontdeskCategoryFilter');
+      const locationSelect = document.getElementById('frontdeskLocationFilter');
+      const supplierSelect = document.getElementById('frontdeskSupplierFilter');
+      const statusSelect = document.getElementById('frontdeskStatusFilter');
+      const resetBtn = document.getElementById('frontdeskResetFilters');
+      const listEl = document.getElementById('frontdeskInventoryList');
+      const reportClose = document.getElementById('frontdeskReportClose');
+      const reportModal = document.getElementById('frontdeskReportModal');
+      const themeToggle = document.getElementById('frontdeskThemeToggle');
+      const reportButtons = document.querySelectorAll('[data-report]');
+
+      if (form) form.addEventListener('submit', handleFrontdeskInventorySubmit);
+      if (addBtn) addBtn.addEventListener('click', () => { resetFrontdeskForm(); document.getElementById('frontdeskInventoryForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      if (cancelBtn) cancelBtn.addEventListener('click', resetFrontdeskForm);
+      if (searchInput) searchInput.addEventListener('input', (event) => { frontdeskFilters.search = event.target.value; renderFrontdeskInventoryList(); });
+      if (categorySelect) categorySelect.addEventListener('change', (event) => { frontdeskFilters.category = event.target.value; renderFrontdeskInventoryList(); });
+      if (locationSelect) locationSelect.addEventListener('change', (event) => { frontdeskFilters.location = event.target.value; renderFrontdeskInventoryList(); });
+      if (supplierSelect) supplierSelect.addEventListener('change', (event) => { frontdeskFilters.supplier = event.target.value; renderFrontdeskInventoryList(); });
+      if (statusSelect) statusSelect.addEventListener('change', (event) => { frontdeskFilters.status = event.target.value; renderFrontdeskInventoryList(); });
+      if (resetBtn) resetBtn.addEventListener('click', () => { frontdeskFilters = { search: '', category: 'All', location: 'All', supplier: 'All', status: 'All' }; if (searchInput) searchInput.value = ''; if (categorySelect) categorySelect.value = 'All'; if (locationSelect) locationSelect.value = 'All'; if (supplierSelect) supplierSelect.value = 'All'; if (statusSelect) statusSelect.value = 'All'; renderFrontdeskInventoryList(); });
+      if (listEl) listEl.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.getAttribute('data-action');
+        const itemId = button.getAttribute('data-id');
+        if (action === 'history') {
+          renderFrontdeskHistory(itemId);
+        } else if (action === 'delete' || action === 'edit' || action === 'increase' || action === 'decrease') {
+          applyFrontdeskAction(itemId, action);
+        }
+      });
+      if (reportClose) reportClose.addEventListener('click', () => reportModal.classList.add('hidden'));
+      if (reportModal) reportModal.addEventListener('click', (event) => { if (event.target === reportModal) reportModal.classList.add('hidden'); });
+      reportButtons.forEach((button) => button.addEventListener('click', () => {
+        const reportType = button.getAttribute('data-report');
+        if (reportType === 'excel') {
+          exportFrontdeskExcel();
+        } else if (reportType === 'pdf') {
+          exportFrontdeskPdf();
+        } else {
+          showFrontdeskReport(reportType);
+        }
+      }));
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const shell = document.getElementById('frontdeskInventoryShell');
+          const isLight = shell?.getAttribute('data-theme') === 'light';
+          shell?.setAttribute('data-theme', isLight ? 'dark' : 'light');
+          themeToggle.textContent = isLight ? '☀ Light' : '☾ Dark';
+        });
+      }
+    }
+
+    function renderFrontdeskStockHealth() {
+      loadFrontdeskItems();
+      populateFrontdeskFilters();
+      renderFrontdeskDashboard();
+      renderFrontdeskInventoryList();
+      renderFrontdeskHistory(frontdeskItems[0]?.id);
+    }
+
+    function handleFrontdeskItemSubmit(event) {
+      handleFrontdeskInventorySubmit(event);
+    }
+
     function showPinLock() {
       if (!pinOverlay) return;
       pinOverlay.classList.remove('hidden');
@@ -3326,6 +4677,17 @@
       });
     });
 
+    renderFrontdeskStockHealth();
+
+    const frontdeskItemForm = document.getElementById('frontdeskItemForm');
+    if (frontdeskItemForm) {
+      frontdeskItemForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handleFrontdeskItemSubmit(event);
+      });
+    }
+
     if (pinSubmit) {
       pinSubmit.addEventListener('click', tryUnlock);
     }
@@ -3339,9 +4701,24 @@
       });
     }
 
-    if (!isUnlocked) {
-      showPinLock();
+    const savedSession = localStorage.getItem('app_unlocked') === 'true';
+    const loginOverlay = document.querySelector('.login-overlay');
+    const mainMenuContainer = document.getElementById('mainMenuContainer');
+
+    if (savedSession) {
+      isUnlocked = true;
+    } else {
+      isUnlocked = true;
+      localStorage.setItem('app_unlocked', 'true');
     }
+
+    if (loginOverlay) {
+      loginOverlay.style.display = 'none';
+      loginOverlay.classList.add('hidden');
+    }
+    if (mainMenuContainer) mainMenuContainer.classList.remove('hidden');
+    if (mainMenu) mainMenu.classList.remove('hidden');
+    navigateTo('main');
 
     if (backButton) {
       backButton.addEventListener('click', function() {
@@ -3356,6 +4733,10 @@
       } else if (currentPage === 'room-maintenance') {
         navigateTo('room-registry');
       } else if (currentPage === 'stock-locations') {
+        navigateTo('main');
+      } else if (currentPage === 'supplyhub') {
+        navigateTo('main');
+      } else if (currentPage === 'frontdesk') {
         navigateTo('main');
       } else if (currentPage === 'stock-detail') {
         navigateTo('stock-locations');
@@ -3382,6 +4763,8 @@
       roomMaintenancePage.classList.add('hidden');
       stockLocationsPage.classList.add('hidden');
       stockDetailPage.classList.add('hidden');
+      if (supplyhubPage) supplyhubPage.classList.add('hidden');
+      if (frontdeskPage) frontdeskPage.classList.add('hidden');
 
       // Show appropriate menu/page
       if (page === 'main') {
@@ -3408,6 +4791,18 @@
         backButton.textContent = '← Back';
         mainTitle.style.display = 'none';
         currentPage = 'housekeeping';
+      } else if (page === 'supplyhub') {
+        if (supplyhubPage) supplyhubPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Dashboard';
+        mainTitle.style.display = 'none';
+        currentPage = 'supplyhub';
+      } else if (page === 'frontdesk') {
+        if (frontdeskPage) frontdeskPage.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        backButton.textContent = '← Back to Dashboard';
+        mainTitle.style.display = 'none';
+        currentPage = 'frontdesk';
       } else if (page === 'housekeeping-equipment') {
         housekeepingEquipmentPage.classList.remove('hidden');
         backButton.classList.remove('hidden');
@@ -4895,7 +6290,7 @@
 
         return `
           <div class="room-section" style="margin-bottom: 2rem;">
-            <div class="room-section-title playfair" style="font-size: 1.5rem; color: #4d6d95; margin-bottom: 1rem;">${floor.name}</div>
+            <div class="room-section-title playfair" style="font-size: 1.5rem; color: #d4af37; margin-bottom: 1rem;">${floor.name}</div>
             <div class="storage-grid">${roomsMarkup}</div>
           </div>
         `;
@@ -4923,7 +6318,7 @@
       const items = getRoomItems(roomNumber);
       const header = `
         <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-          <div style="font-size: 1.5rem; font-weight: 700; color: #4d6d95;">Room ${roomNumber}</div>
+          <div style="font-size: 1.5rem; font-weight: 700; color: #d4af37;">Room ${roomNumber}</div>
           <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
             <button class="btn-cancel" id="backToRoomsBtn">⬅ Back to Rooms</button>
             <button class="btn-submit" id="checkRoomBtn">✅ Mark as Checked Now</button>
@@ -4953,7 +6348,7 @@
                 </div>
               `;
             }).join('')
-            : `<div style="color: #dfe9f7; opacity: 0.7;">No custom items yet.</div>`;
+            : `<div style="color: #f4e4a8; opacity: 0.7;">No custom items yet.</div>`;
 
           return `
             <div class="setup-category">
@@ -5091,7 +6486,7 @@
           const itemRows = grouped[category].map(item => {
             const statusLabel = item.status === 'broken' ? 'Broken' : item.status === 'missing' ? 'Missing' : 'Good';
             return `
-              <div class="room-item" style="display:flex; justify-content: space-between; align-items:center; gap:1rem; padding:1rem 1.4rem; border-radius:999px; background:linear-gradient(140deg, rgba(14, 26, 52, 0.95), rgba(9, 17, 36, 0.95)); border:1px solid rgba(77, 109, 149, 0.6); box-shadow:0 14px 28px rgba(2, 6, 15, 0.35); flex-wrap:wrap;">
+              <div class="room-item" style="display:flex; justify-content: space-between; align-items:center; gap:1rem; padding:1rem 1.4rem; border-radius:999px; background:linear-gradient(140deg, rgba(14, 26, 52, 0.95), rgba(9, 17, 36, 0.95)); border:1px solid rgba(212, 175, 55, 0.6); box-shadow:0 14px 28px rgba(2, 6, 15, 0.35); flex-wrap:wrap;">
                 <div>
                   <div class="room-item-name">${item.item_name}</div>
                   <div class="room-item-meta">Qty: ${item.quantity || 1} • Status: ${statusLabel}</div>
@@ -5437,7 +6832,7 @@
         return `
           <div class="room-section" style="margin-bottom: 2rem;">
             <div class="room-section-header">
-              <div class="room-section-title playfair" style="font-size: 1.5rem; color: #4d6d95; margin: 0;">${section.title}</div>
+              <div class="room-section-title playfair" style="font-size: 1.5rem; color: #d4af37; margin: 0;">${section.title}</div>
               ${reportButton}
             </div>
             <div class="storage-grid">${cards}</div>
@@ -6036,7 +7431,7 @@
             <title>Order Summary - ${formattedDate}</title>
             <style>
               body { font-family: Arial, sans-serif; padding: 40px; }
-              h1 { color: #0d1b2a; border-bottom: 3px solid #4d6d95; padding-bottom: 10px; }
+              h1 { color: #0d1b2a; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
               .item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
               .qty { font-weight: bold; }
             </style>
@@ -6094,11 +7489,11 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Total Current Stock</label>
-              <input type="text" class="form-input" id="totalStock" readonly style="background: rgba(77, 109, 149, 0.1); cursor: not-allowed;" value="0">
+              <input type="text" class="form-input" id="totalStock" readonly style="background: rgba(212, 175, 55, 0.1); cursor: not-allowed;" value="0">
             </div>
             <div class="form-group">
               <label class="form-label">Recommended Order Quantity</label>
-              <input type="text" class="form-input" id="orderQuantity" readonly style="background: rgba(77, 109, 149, 0.1); cursor: not-allowed;" value="0">
+              <input type="text" class="form-input" id="orderQuantity" readonly style="background: rgba(212, 175, 55, 0.1); cursor: not-allowed;" value="0">
             </div>
           </div>
         `;
@@ -7264,9 +8659,9 @@
           <style>
             @page { margin: 10mm; }
             body { font-family: Arial, sans-serif; padding: 0; font-size: 12px; }
-            h1 { color: #0d1b2a; border-bottom: 2px solid #4d6d95; padding-bottom: 6px; margin: 0 0 10px; font-size: 16px; }
+            h1 { color: #0d1b2a; border-bottom: 2px solid #d4af37; padding-bottom: 6px; margin: 0 0 10px; font-size: 16px; }
             .item { margin-bottom: 10px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; }
-            .item-name { font-size: 13px; font-weight: bold; color: #4d6d95; margin-bottom: 4px; }
+            .item-name { font-size: 13px; font-weight: bold; color: #d4af37; margin-bottom: 4px; }
             .detail { margin: 3px 0; }
             .label { font-weight: bold; }
           </style>
