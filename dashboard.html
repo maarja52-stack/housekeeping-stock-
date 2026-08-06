@@ -842,6 +842,21 @@
         gap: 0.25rem;
       }
     }
+
+    .global-footer {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      padding: 0.25rem 1rem 2rem;
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .global-footer-version {
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
@@ -1201,6 +1216,11 @@
     </section>
   </main>
 
+  <footer class="global-footer">
+    <span>© M.A.2026</span>
+    <span class="global-footer-version">v154 (1d9f3a9).2608061321</span>
+  </footer>
+
   <script>
     const catalogArticles = [
       // Guest Items
@@ -1245,6 +1265,123 @@
       { name: "Luggage Scale", category: "Operations & Equipment" },
       { name: "Plastic Money Bags", category: "Operations & Equipment" }
     ];
+
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsojKnOgsgaKguFQFG7tA9nPijTmCyCWFqU0lu7bJCYfkunqduV4_meJiZOricnjr6/exec";
+    const FRONTDESK_STOCK_TYPE = "frontdesk_inventory";
+    const FIRST_AID_STOCK_TYPE = "first_aid_kit";
+    let remoteRows = [];
+    const firstAidRemoteByKit = new Map();
+
+    function normalizeArchived(value) {
+      if (value === true || value === false) return value;
+      if (value === null || value === undefined || value === "") return false;
+      const normalized = String(value).toLowerCase().trim();
+      return normalized === "true" || normalized === "yes" || normalized === "1";
+    }
+
+    function jsonpRequest(action, payload) {
+      return new Promise((resolve) => {
+        const callbackName = `__dashboardCb_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        const script = document.createElement("script");
+        const payloadParam = payload ? `&payload=${encodeURIComponent(JSON.stringify(payload))}` : "";
+        const timeoutId = setTimeout(() => {
+          delete window[callbackName];
+          script.remove();
+          resolve({ isOk: false, error: "Request timed out" });
+        }, 20000);
+
+        window[callbackName] = (data) => {
+          clearTimeout(timeoutId);
+          delete window[callbackName];
+          script.remove();
+          resolve({ isOk: true, data });
+        };
+
+        script.onerror = () => {
+          clearTimeout(timeoutId);
+          delete window[callbackName];
+          script.remove();
+          resolve({ isOk: false, error: "Request failed" });
+        };
+
+        script.src = `${GOOGLE_APPS_SCRIPT_URL}?action=${action}${payloadParam}&callback=${callbackName}&ts=${Date.now()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function readRemoteRows() {
+      const result = await jsonpRequest("read");
+      if (!result.isOk || !Array.isArray(result.data)) return [];
+      return result.data.filter((row) => row && typeof row === "object");
+    }
+
+    async function upsertRemoteRow(payload) {
+      const updateResult = await jsonpRequest("update", payload);
+      if (updateResult.isOk) return true;
+      const createResult = await jsonpRequest("create", payload);
+      return createResult.isOk;
+    }
+
+    function applyRemoteInventoryRows(rows) {
+      const mapped = rows
+        .filter((row) => row.stock_type === FRONTDESK_STOCK_TYPE && !normalizeArchived(row.is_archived))
+        .map((row) => {
+          const category = row.category || "Guest Items";
+          const defaults = defaultsForCategory(category);
+          const current = Number(row.current_stock || 0);
+          const min = Number(row.minimum_stock || 20);
+          const max = Number(row.maximum_stock || 100);
+          const reorderQty = Number(row.reorder_qty || 100);
+          return {
+            id: String(row.id || "").trim() || `FD-${Date.now()}`,
+            icon: row.icon || "🖼",
+            name: row.item_name || "Unnamed Item",
+            current: Number.isFinite(current) ? current : 0,
+            min: Number.isFinite(min) ? min : 20,
+            max: Number.isFinite(max) ? max : 100,
+            status: "Out of Stock",
+            storage: {
+              site: row.location_site || row.location || defaults.storage.site,
+              area: row.location_area || defaults.storage.area,
+              shelf: row.location_shelf || defaults.storage.shelf
+            },
+            supplier: row.supplier || defaults.supplier,
+            updatedAt: row.updated_at || "Not updated",
+            updatedBy: row.updated_by || "-",
+            updatedSort: row.updated_sort ? Number(row.updated_sort) : Date.now(),
+            category,
+            unit: row.unit || defaults.unit,
+            lastDelivery: row.last_delivery || "-",
+            weeklyUse: Number(row.weekly_use || 0),
+            daysLeft: Number(row.days_left || 0),
+            reorderQty: Number.isFinite(reorderQty) ? reorderQty : 100,
+            notes: row.notes || ""
+          };
+        });
+
+      mapped.forEach((incoming) => {
+        const existingIndex = inventoryItems.findIndex((item) => item.id === incoming.id);
+        if (existingIndex >= 0) inventoryItems[existingIndex] = incoming;
+        else inventoryItems.push(incoming);
+      });
+    }
+
+    function applyRemoteFirstAidRows(rows) {
+      firstAidRemoteByKit.clear();
+      rows
+        .filter((row) => row.stock_type === FIRST_AID_STOCK_TYPE && !normalizeArchived(row.is_archived))
+        .forEach((row) => {
+          const kitNumber = Number(row.kit_number);
+          if (!Number.isFinite(kitNumber)) return;
+          firstAidRemoteByKit.set(kitNumber, {
+            expiry: row.expiry_date || "",
+            lastInsp: row.last_inspection_date || "",
+            nextInsp: row.next_inspection_due || "",
+            checkedBy: row.checked_by || "",
+            notes: row.notes || ""
+          });
+        });
+    }
 
     function defaultsForCategory(category) {
       if (category === "Guest Amenities") {
@@ -1704,14 +1841,87 @@
       }
     });
 
-    document.getElementById("addItemForm").addEventListener("submit", (event) => {
+    document.getElementById("addItemForm").addEventListener("submit", async(event) => {
       event.preventDefault();
       if (addArticleNumberInput && !addArticleNumberInput.value.trim()) {
         window.alert("Article Number is required and should stay permanent for QR mapping.");
         return;
       }
-      window.alert("Item saved. You can now connect this form to your backend.");
-      event.target.reset();
+
+      const form = event.target;
+      const formData = new FormData(form);
+      const articleId = String(formData.get("articleNumber") || "").trim();
+      const itemName = String(formData.get("itemName") || "").trim();
+      const category = String(formData.get("category") || "Guest Items").trim();
+      const currentStock = Number(formData.get("currentStock") || 0);
+      const minimumStock = Number(formData.get("minimumStock") || 20);
+      const maximumStock = Number(formData.get("maximumStock") || 100);
+      const reorderQty = Number(formData.get("reorderQty") || 100);
+      const locationRaw = String(formData.get("location") || "").trim();
+      const supplierRaw = String(formData.get("supplier") || "").trim();
+      const unitRaw = String(formData.get("unit") || "").trim();
+      const notes = String(formData.get("notes") || "").trim();
+      const defaults = defaultsForCategory(category);
+      const nowIso = new Date().toISOString();
+
+      const newItem = {
+        id: articleId,
+        icon: "🖼",
+        name: itemName,
+        current: Number.isFinite(currentStock) ? currentStock : 0,
+        min: Number.isFinite(minimumStock) && minimumStock >= 0 ? minimumStock : 20,
+        max: Number.isFinite(maximumStock) && maximumStock > 0 ? maximumStock : 100,
+        status: "Out of Stock",
+        storage: {
+          site: locationRaw || defaults.storage.site,
+          area: defaults.storage.area,
+          shelf: defaults.storage.shelf
+        },
+        supplier: supplierRaw || defaults.supplier,
+        updatedAt: new Date().toLocaleString(),
+        updatedBy: "Front Desk",
+        updatedSort: Date.now(),
+        category,
+        unit: unitRaw || defaults.unit,
+        lastDelivery: "-",
+        weeklyUse: 0,
+        daysLeft: 0,
+        reorderQty: Number.isFinite(reorderQty) && reorderQty > 0 ? reorderQty : 100,
+        notes
+      };
+
+      const existingIndex = inventoryItems.findIndex((item) => item.id === articleId);
+      if (existingIndex >= 0) inventoryItems[existingIndex] = newItem;
+      else inventoryItems.push(newItem);
+
+      updateMetrics();
+      renderInventory();
+
+      const remotePayload = {
+        id: articleId,
+        stock_type: FRONTDESK_STOCK_TYPE,
+        item_name: itemName,
+        category,
+        current_stock: String(newItem.current),
+        minimum_stock: String(newItem.min),
+        maximum_stock: String(newItem.max),
+        reorder_qty: String(newItem.reorderQty),
+        location: newItem.storage.site,
+        location_site: newItem.storage.site,
+        location_area: newItem.storage.area,
+        location_shelf: newItem.storage.shelf,
+        supplier: newItem.supplier,
+        unit: newItem.unit,
+        notes: newItem.notes,
+        updated_by: "Front Desk",
+        updated_at: nowIso,
+        updated_sort: String(Date.now()),
+        is_archived: false
+      };
+      await upsertRemoteRow(remotePayload);
+
+      window.alert("Item saved and synced to Google Sheets.");
+      form.reset();
       toggleFirstAidFields();
       setAddItemPanel(false);
     });
@@ -1761,31 +1971,43 @@
 
     function faLoad() {
       FA_IDS.forEach((n) => {
-        try {
-          const saved = JSON.parse(localStorage.getItem(`firstAidKit${n}`) || "{}");
-          const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ""; };
-          set(`faExpiry${n}`,    saved.expiry);
-          set(`faLastInsp${n}`,  saved.lastInsp);
-          set(`faNextInsp${n}`,  saved.nextInsp);
-          set(`faCheckedBy${n}`, saved.checkedBy);
-          set(`faNotes${n}`,     saved.notes);
-        } catch (_) {}
+        const saved = firstAidRemoteByKit.get(n);
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ""; };
+        set(`faExpiry${n}`,    saved?.expiry || "");
+        set(`faLastInsp${n}`,  saved?.lastInsp || "");
+        set(`faNextInsp${n}`,  saved?.nextInsp || "");
+        set(`faCheckedBy${n}`, saved?.checkedBy || "");
+        set(`faNotes${n}`,     saved?.notes || "");
       });
       faUpdateBadges();
     }
 
-    function faSaveAll() {
+    async function faSaveAll() {
       FA_IDS.forEach((n) => {
         const get = (id) => { const el = document.getElementById(id); return el ? el.value : ""; };
-        localStorage.setItem(`firstAidKit${n}`, JSON.stringify({
+        const payload = {
+          id: `FA-KIT-${n}`,
+          stock_type: FIRST_AID_STOCK_TYPE,
+          kit_number: String(n),
+          expiry_date: get(`faExpiry${n}`),
+          last_inspection_date: get(`faLastInsp${n}`),
+          next_inspection_due: get(`faNextInsp${n}`),
+          checked_by: get(`faCheckedBy${n}`),
+          notes: get(`faNotes${n}`),
+          is_archived: false,
+          updated_at: new Date().toISOString()
+        };
+        firstAidRemoteByKit.set(n, {
           expiry:    get(`faExpiry${n}`),
           lastInsp:  get(`faLastInsp${n}`),
           nextInsp:  get(`faNextInsp${n}`),
           checkedBy: get(`faCheckedBy${n}`),
           notes:     get(`faNotes${n}`)
-        }));
+        });
+        upsertRemoteRow(payload);
       });
       faUpdateBadges();
+      window.alert("First aid kits saved and synced to Google Sheets.");
     }
 
     FA_IDS.forEach((n) => {
@@ -1809,23 +2031,44 @@
     }
 
     if (faSaveBtn) faSaveBtn.addEventListener("click", faSaveAll);
-    if (faClearBtn) faClearBtn.addEventListener("click", () => {
+    if (faClearBtn) faClearBtn.addEventListener("click", async() => {
       FA_IDS.forEach((n) => {
-        localStorage.removeItem(`firstAidKit${n}`);
+        firstAidRemoteByKit.delete(n);
         [`faExpiry${n}`,`faLastInsp${n}`,`faNextInsp${n}`,`faCheckedBy${n}`,`faNotes${n}`].forEach((id) => {
           const el = document.getElementById(id); if (el) el.value = "";
+        });
+        upsertRemoteRow({
+          id: `FA-KIT-${n}`,
+          stock_type: FIRST_AID_STOCK_TYPE,
+          kit_number: String(n),
+          expiry_date: "",
+          last_inspection_date: "",
+          next_inspection_due: "",
+          checked_by: "",
+          notes: "",
+          is_archived: false,
+          updated_at: new Date().toISOString()
         });
       });
       faUpdateBadges();
     });
 
-    faLoad();
+    async function initializeDashboardData() {
+      try {
+        remoteRows = await readRemoteRows();
+        applyRemoteInventoryRows(remoteRows);
+        applyRemoteFirstAidRows(remoteRows);
+      } catch (_) {
+      }
+      faLoad();
+      updateMetrics();
+      setCatalogPanel(false);
+      setNeedsAttentionPanel(false);
+      toggleFirstAidFields();
+      renderInventory();
+    }
 
-    updateMetrics();
-    setCatalogPanel(false);
-    setNeedsAttentionPanel(false);
-    toggleFirstAidFields();
-    renderInventory();
+    initializeDashboardData();
   </script>
 </body>
 </html>
