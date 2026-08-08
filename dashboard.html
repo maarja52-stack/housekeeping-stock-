@@ -1324,14 +1324,19 @@
 
     function applyRemoteInventoryRows(rows) {
       const mapped = rows
-        .filter((row) => row.stock_type === FRONTDESK_STOCK_TYPE && !normalizeArchived(row.is_archived))
+        .filter((row) => {
+          const stockType = row.stock_type || row.type || "";
+          return (stockType === FRONTDESK_STOCK_TYPE || stockType === "frontdesk") && !normalizeArchived(row.is_archived);
+        })
         .map((row) => {
           const category = row.category || "Guest Items";
           const defaults = defaultsForCategory(category);
-          const current = Number(row.current_stock || 0);
-          const min = Number(row.minimum_stock || 20);
-          const max = Number(row.maximum_stock || 100);
-          const reorderQty = Number(row.reorder_qty || 100);
+          const current = Number(row.current_stock ?? row.quantity ?? 0);
+          const min = Number(row.minimum_stock ?? row.min_stock ?? 20);
+          const max = Number(row.maximum_stock ?? row.max_stock ?? 100);
+          const reorderQty = Number(row.reorder_qty ?? row.order_quantity ?? 100);
+          const locationName = row.location_name || row.location || defaults.storage.site;
+          const updatedAt = row.updated_at || row.added_timestamp || row.last_checked || "Not updated";
           return {
             id: String(row.id || "").trim() || `FD-${Date.now()}`,
             icon: row.icon || "🖼",
@@ -1341,19 +1346,19 @@
             max: Number.isFinite(max) ? max : 100,
             status: "Out of Stock",
             storage: {
-              site: row.location_site || row.location || defaults.storage.site,
+              site: row.location_site || locationName,
               area: row.location_area || defaults.storage.area,
               shelf: row.location_shelf || defaults.storage.shelf
             },
             supplier: row.supplier || defaults.supplier,
-            updatedAt: row.updated_at || "Not updated",
+            updatedAt,
             updatedBy: row.updated_by || "-",
-            updatedSort: row.updated_sort ? Number(row.updated_sort) : Date.now(),
+            updatedSort: row.updated_sort ? Number(row.updated_sort) : Date.parse(updatedAt) || Date.now(),
             category,
             unit: row.unit || defaults.unit,
             lastDelivery: row.last_delivery || "-",
-            weeklyUse: Number(row.weekly_use || 0),
-            daysLeft: Number(row.days_left || 0),
+            weeklyUse: Number(row.weekly_use ?? 0),
+            daysLeft: Number(row.days_left ?? 0),
             reorderQty: Number.isFinite(reorderQty) ? reorderQty : 100,
             notes: row.notes || ""
           };
@@ -1369,15 +1374,18 @@
     function applyRemoteFirstAidRows(rows) {
       firstAidRemoteByKit.clear();
       rows
-        .filter((row) => row.stock_type === FIRST_AID_STOCK_TYPE && !normalizeArchived(row.is_archived))
+        .filter((row) => {
+          const stockType = row.stock_type || row.type || "";
+          return (stockType === FIRST_AID_STOCK_TYPE || stockType === "first-aid-kit") && !normalizeArchived(row.is_archived);
+        })
         .forEach((row) => {
-          const kitNumber = Number(row.kit_number);
+          const kitNumber = Number(row.kit_number ?? row.kit ?? row.item_number);
           if (!Number.isFinite(kitNumber)) return;
           firstAidRemoteByKit.set(kitNumber, {
-            expiry: row.expiry_date || "",
-            lastInsp: row.last_inspection_date || "",
-            nextInsp: row.next_inspection_due || "",
-            checkedBy: row.checked_by || "",
+            expiry: row.expiry_date || row.expiration_date || "",
+            lastInsp: row.last_inspection_date || row.last_checked || "",
+            nextInsp: row.next_inspection_due || row.next_check_due || "",
+            checkedBy: row.checked_by || row.checked_by_name || "",
             notes: row.notes || ""
           });
         });
@@ -1702,8 +1710,8 @@
             <div class="mobile-stack"><span class="mobile-label">Supplier</span><span class="mobile-value">${item.supplier}</span></div>
             <div class="mobile-stack"><span class="mobile-label">Updated</span><span class="mobile-value">${item.updatedAt} by ${item.updatedBy}</span></div>
             <div class="actions-row" style="margin-top:0.3rem;">
-              <button class="btn primary" type="button">Adjust Stock</button>
-              <button class="btn" type="button">Edit</button>
+              <button class="btn primary" type="button" data-inventory-action="adjust" data-article="${item.id}">Adjust Stock</button>
+              <button class="btn" type="button" data-inventory-action="edit" data-article="${item.id}">Edit</button>
             </div>
           </article>
         `;
@@ -1775,6 +1783,149 @@
       setFirstAidRequired(isFirstAid);
     }
 
+    function findInventoryItem(itemId) {
+      return inventoryItems.find((item) => item.id === itemId) || null;
+    }
+
+    function buildRemotePayload(item, overrides = {}) {
+      const nowIso = new Date().toISOString();
+      const current = Number(overrides.current ?? item.current ?? 0);
+      const min = Number(overrides.min ?? item.min ?? 0);
+      const max = Number(overrides.max ?? item.max ?? Math.max(min + 20, current + 20));
+      const reorderQty = Number(overrides.reorderQty ?? item.reorderQty ?? 10);
+      const storageSite = overrides.storageSite || item.storage?.site || "Front Desk";
+      const storageArea = overrides.storageArea || item.storage?.area || "";
+      const storageShelf = overrides.storageShelf || item.storage?.shelf || "";
+      return {
+        id: item.id,
+        stock_type: FRONTDESK_STOCK_TYPE,
+        type: FRONTDESK_STOCK_TYPE,
+        item_name: overrides.name || item.name,
+        category: overrides.category || item.category,
+        current_stock: String(current),
+        quantity: String(current),
+        minimum_stock: String(min),
+        min_stock: String(min),
+        maximum_stock: String(max),
+        max_stock: String(max),
+        reorder_qty: String(reorderQty),
+        order_quantity: String(reorderQty),
+        location: storageSite,
+        location_name: storageSite,
+        location_site: storageSite,
+        location_area: storageArea,
+        location_shelf: storageShelf,
+        supplier: overrides.supplier || item.supplier,
+        unit: overrides.unit || item.unit,
+        notes: overrides.notes ?? item.notes ?? "",
+        updated_by: overrides.updatedBy || "Front Desk",
+        updated_at: nowIso,
+        last_checked: nowIso,
+        added_timestamp: item.updatedAt && item.updatedAt !== "Not updated" ? item.updatedAt : nowIso,
+        date_added: nowIso.slice(0, 10),
+        updated_sort: String(Date.now()),
+        is_archived: false
+      };
+    }
+
+    async function saveInventoryItem(item, overrides = {}, successMessage = "Item saved and synced to Google Sheets.") {
+      const payload = buildRemotePayload(item, overrides);
+      const existingIndex = inventoryItems.findIndex((entry) => entry.id === item.id);
+      const updatedItem = {
+        ...item,
+        id: payload.id,
+        name: payload.item_name,
+        category: payload.category,
+        current: Number(payload.current_stock),
+        min: Number(payload.minimum_stock),
+        max: Number(payload.maximum_stock),
+        reorderQty: Number(payload.reorder_qty),
+        storage: {
+          site: payload.location_site || payload.location || item.storage?.site || "Front Desk",
+          area: payload.location_area || item.storage?.area || "",
+          shelf: payload.location_shelf || item.storage?.shelf || ""
+        },
+        supplier: payload.supplier,
+        unit: payload.unit,
+        notes: payload.notes,
+        updatedAt: new Date().toLocaleString(),
+        updatedBy: payload.updated_by,
+        updatedSort: Date.now(),
+        status: statusFromStock({ ...item, current: Number(payload.current_stock), min: Number(payload.minimum_stock) })
+      };
+
+      if (existingIndex >= 0) inventoryItems[existingIndex] = updatedItem;
+      else inventoryItems.push(updatedItem);
+
+      updateMetrics();
+      renderInventory();
+      const result = await upsertRemoteRow(payload);
+      if (result) {
+        window.alert(successMessage);
+        return true;
+      }
+      window.alert("Save failed. Please try again.");
+      return false;
+    }
+
+    function openInventoryEditor(itemId) {
+      const item = findInventoryItem(itemId);
+      if (!item || !addItemForm) return;
+      if (addItemToggle) setAddItemPanel(true);
+      if (addArticleNumberInput) addArticleNumberInput.value = item.id;
+      if (addItemNameInput) addItemNameInput.value = item.name;
+      if (addCategorySelect) addCategorySelect.value = item.category;
+      const locationInput = document.getElementById("location");
+      const currentStockInput = document.getElementById("currentStock");
+      const minimumStockInput = document.getElementById("minimumStock");
+      const maximumStockInput = document.getElementById("maximumStock");
+      const reorderQtyInput = document.getElementById("reorderQty");
+      const supplierInput = document.getElementById("supplier");
+      const unitInput = document.getElementById("unit");
+      const notesInput = document.getElementById("notes");
+      if (locationInput) locationInput.value = item.storage?.site || "";
+      if (currentStockInput) currentStockInput.value = String(item.current ?? 0);
+      if (minimumStockInput) minimumStockInput.value = String(item.min ?? 0);
+      if (maximumStockInput) maximumStockInput.value = String(item.max ?? 0);
+      if (reorderQtyInput) reorderQtyInput.value = String(item.reorderQty ?? 10);
+      if (supplierInput) supplierInput.value = item.supplier || "";
+      if (unitInput) unitInput.value = item.unit || "";
+      if (notesInput) notesInput.value = item.notes || "";
+      toggleFirstAidFields();
+      addItemPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (addItemNameInput) addItemNameInput.focus();
+    }
+
+    async function adjustInventoryStock(itemId) {
+      const item = findInventoryItem(itemId);
+      if (!item) return;
+      const nextValue = window.prompt(`Set new current stock for ${item.name}:`, String(item.current));
+      if (nextValue === null) return;
+      const parsedValue = Number(nextValue);
+      if (!Number.isFinite(parsedValue) || parsedValue < 0) {
+        window.alert("Please enter a valid stock number.");
+        return;
+      }
+      await saveInventoryItem(item, { current: parsedValue }, `${item.name} stock updated and synced to Google Sheets.`);
+    }
+
+    async function createInventoryOrder(itemId) {
+      const item = findInventoryItem(itemId);
+      if (!item) return;
+      const suggestedOrder = Math.max(0, item.max - item.current);
+      const quantity = window.prompt(`Order quantity for ${item.name}:`, String(suggestedOrder || item.reorderQty || 10));
+      if (quantity === null) return;
+      const parsedQuantity = Number(quantity);
+      if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0) {
+        window.alert("Please enter a valid order quantity.");
+        return;
+      }
+      await saveInventoryItem(item, {
+        reorderQty: parsedQuantity,
+        notes: `${item.notes ? `${item.notes}\n` : ""}Order requested: ${parsedQuantity} ${item.unit}`
+      }, `${item.name} order request saved and synced to Google Sheets.`);
+    }
+
     if (addItemToggle) {
       addItemToggle.addEventListener("click", () => {
         const expanded = addItemToggle.getAttribute("aria-expanded") === "true";
@@ -1830,14 +1981,25 @@
     document.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
+      const inventoryActionBtn = target.closest("button[data-inventory-action]");
+      if (inventoryActionBtn instanceof HTMLButtonElement) {
+        const action = inventoryActionBtn.getAttribute("data-inventory-action");
+        const article = inventoryActionBtn.getAttribute("data-article");
+        if (action === "adjust") {
+          adjustInventoryStock(article || "");
+        } else if (action === "edit") {
+          openInventoryEditor(article || "");
+        }
+        return;
+      }
       const actionBtn = target.closest("button[data-attention-action]");
       if (!(actionBtn instanceof HTMLButtonElement)) return;
       const action = actionBtn.getAttribute("data-attention-action");
       const article = actionBtn.getAttribute("data-article");
       if (action === "order") {
-        window.alert(`Create Order workflow for ${article} is ready for hookup.`);
+        createInventoryOrder(article || "");
       } else if (action === "adjust") {
-        window.alert(`Adjust Stock workflow for ${article} is ready for hookup.`);
+        adjustInventoryStock(article || "");
       }
     });
 
@@ -1900,13 +2062,19 @@
       const remotePayload = {
         id: articleId,
         stock_type: FRONTDESK_STOCK_TYPE,
+        type: FRONTDESK_STOCK_TYPE,
         item_name: itemName,
         category,
         current_stock: String(newItem.current),
+        quantity: String(newItem.current),
         minimum_stock: String(newItem.min),
+        min_stock: String(newItem.min),
         maximum_stock: String(newItem.max),
+        max_stock: String(newItem.max),
         reorder_qty: String(newItem.reorderQty),
+        order_quantity: String(newItem.reorderQty),
         location: newItem.storage.site,
+        location_name: newItem.storage.site,
         location_site: newItem.storage.site,
         location_area: newItem.storage.area,
         location_shelf: newItem.storage.shelf,
@@ -1915,6 +2083,9 @@
         notes: newItem.notes,
         updated_by: "Front Desk",
         updated_at: nowIso,
+        last_checked: nowIso,
+        added_timestamp: nowIso,
+        date_added: nowIso.slice(0, 10),
         updated_sort: String(Date.now()),
         is_archived: false
       };
@@ -1985,17 +2156,28 @@
     async function faSaveAll() {
       FA_IDS.forEach((n) => {
         const get = (id) => { const el = document.getElementById(id); return el ? el.value : ""; };
+        const nowIso = new Date().toISOString();
         const payload = {
           id: `FA-KIT-${n}`,
           stock_type: FIRST_AID_STOCK_TYPE,
+          type: FIRST_AID_STOCK_TYPE,
+          item_name: `First Aid Kit ${n}`,
           kit_number: String(n),
+          quantity: "1",
+          location: "Front Desk",
+          location_name: "Front Desk",
           expiry_date: get(`faExpiry${n}`),
+          expiration_date: get(`faExpiry${n}`),
           last_inspection_date: get(`faLastInsp${n}`),
+          last_checked: get(`faLastInsp${n}`),
           next_inspection_due: get(`faNextInsp${n}`),
+          next_check_due: get(`faNextInsp${n}`),
           checked_by: get(`faCheckedBy${n}`),
           notes: get(`faNotes${n}`),
           is_archived: false,
-          updated_at: new Date().toISOString()
+          updated_at: nowIso,
+          added_timestamp: nowIso,
+          date_added: nowIso.slice(0, 10)
         };
         firstAidRemoteByKit.set(n, {
           expiry:    get(`faExpiry${n}`),
@@ -2037,17 +2219,28 @@
         [`faExpiry${n}`,`faLastInsp${n}`,`faNextInsp${n}`,`faCheckedBy${n}`,`faNotes${n}`].forEach((id) => {
           const el = document.getElementById(id); if (el) el.value = "";
         });
+        const nowIso = new Date().toISOString();
         upsertRemoteRow({
           id: `FA-KIT-${n}`,
           stock_type: FIRST_AID_STOCK_TYPE,
+          type: FIRST_AID_STOCK_TYPE,
+          item_name: `First Aid Kit ${n}`,
           kit_number: String(n),
+          quantity: "1",
+          location: "Front Desk",
+          location_name: "Front Desk",
           expiry_date: "",
+          expiration_date: "",
           last_inspection_date: "",
           next_inspection_due: "",
+          last_checked: "",
+          next_check_due: "",
           checked_by: "",
           notes: "",
           is_archived: false,
-          updated_at: new Date().toISOString()
+          updated_at: nowIso,
+          added_timestamp: nowIso,
+          date_added: nowIso.slice(0, 10)
         });
       });
       faUpdateBadges();

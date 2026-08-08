@@ -3679,6 +3679,9 @@
         archivedItems = normalizedData.filter(item => !item.type && !item.stock_type && !item.equipment_type && item.is_archived);
         archivedNotifications = normalizedData.filter(item => item.type && item.is_archived);
         archivedStockCounts = normalizedData.filter(item => item.stock_type === 'minibar_count' && item.is_archived);
+        const syncedFrontdeskItems = getFrontdeskItemsFromData(normalizedData);
+        frontdeskItems = syncedFrontdeskItems.length ? syncedFrontdeskItems : cloneDefaultFrontdeskItems();
+        frontdeskSelectedItemId = frontdeskItems[0]?.id || null;
         
         updateExpirationDisplay();
         updateNotificationsDisplay();
@@ -4019,16 +4022,49 @@
       }
     }
 
-    let frontdeskItems = [
+    const DEFAULT_FRONTDESK_ITEMS = [
       { id: 'water', sku: 'GA-001', name: 'Water', category: 'Guest Amenities', location: 'Front Desk Cabinet', current: 120, minimum: 50, maximum: 180, reorderQty: 20, supplier: 'Hotel Supplies Co.', unit: 'cases', notes: 'High demand during check-in', history: [{ title: 'Added item', detail: 'Initial stock', date: 'Jul 29, 2026' }] },
       { id: 'coffee', sku: 'GA-002', name: 'Coffee Capsules', category: 'Guest Amenities', location: 'Lobby Pantry', current: 8, minimum: 20, maximum: 80, reorderQty: 12, supplier: 'Brew Supply', unit: 'boxes', notes: 'Reorder soon', history: [{ title: 'Restocked', detail: 'Added 6 units', date: 'Jul 30, 2026' }] },
       { id: 'pens', sku: 'OS-001', name: 'Pens', category: 'Office Supplies', location: 'Front Desk Drawer', current: 0, minimum: 8, maximum: 40, reorderQty: 10, supplier: 'Office Essentials', unit: 'packs', notes: 'Out of stock', history: [{ title: 'Stock update', detail: 'Marked empty', date: 'Jul 31, 2026' }] },
       { id: 'batteries', sku: 'OP-001', name: 'Batteries', category: 'Operations', location: 'Housekeeping Closet', current: 35, minimum: 15, maximum: 60, reorderQty: 8, supplier: 'Tech Supply', unit: 'packs', notes: 'Good standing', history: [{ title: 'Inventory review', detail: 'Verified count', date: 'Jul 31, 2026' }] }
     ];
+    let frontdeskItems = cloneDefaultFrontdeskItems();
     let frontdeskSelectedItemId = frontdeskItems[0]?.id || null;
     let frontdeskSearchTerm = '';
     let frontdeskCategoryFilter = 'All';
     let frontdeskStatusFilter = 'All';
+
+    function cloneDefaultFrontdeskItems() {
+      return DEFAULT_FRONTDESK_ITEMS.map((item) => ({
+        ...item,
+        history: Array.isArray(item.history) ? item.history.map((entry) => ({ ...entry })) : []
+      }));
+    }
+
+    function getFrontdeskItemsFromData(data) {
+      return (Array.isArray(data) ? data : [])
+        .filter((item) => item && typeof item === 'object' && String(item.stock_type || item.type || '').toLowerCase() === 'frontdesk_inventory' && !item.is_archived)
+        .map((item) => {
+          const current = Number(item.current_stock ?? item.quantity ?? item.current ?? 0);
+          const minimum = Number(item.minimum_stock ?? item.min_stock ?? item.minimum ?? 0);
+          const maximum = Number(item.maximum_stock ?? item.max_stock ?? item.maximum ?? Math.max(minimum + 20, current + 20));
+          return {
+            id: String(item.id || item.sku || item.item_name || `frontdesk-${Date.now()}`),
+            sku: String(item.sku || item.article_number || item.id || '').trim() || `FD-${String(Date.now()).slice(-6)}`,
+            name: item.item_name || item.name || 'Unnamed Item',
+            category: item.category || 'Guest Amenities',
+            location: item.location_name || item.location || 'Front Desk',
+            current: Number.isFinite(current) ? current : 0,
+            minimum: Number.isFinite(minimum) ? minimum : 0,
+            maximum: Number.isFinite(maximum) ? maximum : Math.max((Number.isFinite(minimum) ? minimum : 0) + 20, (Number.isFinite(current) ? current : 0) + 20),
+            reorderQty: Number(item.reorder_qty ?? item.order_quantity ?? item.reorderQty ?? 10) || 10,
+            supplier: item.supplier || 'Hotel Supplies Co.',
+            unit: item.unit || 'units',
+            notes: item.notes || '',
+            history: Array.isArray(item.history) && item.history.length ? item.history : [{ title: 'Synced item', detail: 'Loaded from Google Sheets', date: item.updated_at || item.added_timestamp || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }]
+          };
+        });
+    }
 
     function getFrontdeskStatus(item) {
       if (item.current <= 0) return 'Out of Stock';
@@ -4163,10 +4199,43 @@
         history: [{ title: 'Added item', detail: 'New item entered', date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }]
       };
 
-      frontdeskItems = [item, ...frontdeskItems];
-      frontdeskSelectedItemId = item.id;
-      renderFrontdeskInventory();
-      if (messageEl) messageEl.textContent = `${name} added successfully.`;
+      const nowIso = new Date().toISOString();
+      const existingItem = frontdeskItems.find((entry) => entry.sku === item.sku || entry.name === item.name);
+      const payload = {
+        id: existingItem?.id || item.id,
+        type: 'frontdesk_inventory',
+        stock_type: 'frontdesk_inventory',
+        item_name: item.name,
+        sku: item.sku,
+        category: item.category,
+        location: item.location,
+        location_name: item.location,
+        current_stock: String(item.current),
+        quantity: String(item.current),
+        minimum_stock: String(item.minimum),
+        min_stock: String(item.minimum),
+        maximum_stock: String(item.maximum),
+        max_stock: String(item.maximum),
+        reorder_qty: String(item.reorderQty),
+        order_quantity: String(item.reorderQty),
+        supplier: item.supplier,
+        unit: item.unit,
+        notes: item.notes,
+        updated_by: 'Front Desk',
+        updated_at: nowIso,
+        last_checked: nowIso,
+        added_timestamp: nowIso,
+        date_added: nowIso.slice(0, 10),
+        is_archived: false
+      };
+
+      const savedResult = existingItem ? await window.dataSdk.update(payload) : await window.dataSdk.create(payload);
+      if (!savedResult || !savedResult.isOk) {
+        if (messageEl) messageEl.textContent = 'Save failed. Please try again.';
+        return;
+      }
+
+      if (messageEl) messageEl.textContent = `${name} synced to Google Sheets.`;
       if (nameInput) nameInput.value = '';
       if (skuInput) skuInput.value = '';
       if (categoryInput) categoryInput.value = 'Guest Amenities';
@@ -4178,6 +4247,92 @@
       if (supplierInput) supplierInput.value = '';
       if (unitInput) unitInput.value = '';
       if (notesInput) notesInput.value = '';
+    }
+
+    function getFrontdeskReportItems(statusFilter) {
+      return frontdeskItems.filter((item) => !statusFilter || getFrontdeskStatus(item) === statusFilter);
+    }
+
+    function buildFrontdeskReportHtml(title, items) {
+      const rows = items.map((item) => `
+        <tr>
+          <td>${item.sku}</td>
+          <td>${item.name}</td>
+          <td>${item.category}</td>
+          <td>${item.location}</td>
+          <td>${item.current}</td>
+          <td>${item.minimum}</td>
+          <td>${getFrontdeskStatus(item)}</td>
+        </tr>
+      `).join('');
+      return `
+        <html>
+          <head>
+            <title>${title}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 24px; color: #1f1f1f; }
+              h1 { margin: 0 0 12px; }
+              .sub { margin: 0 0 20px; color: #666; }
+              table { width: 100%; border-collapse: collapse; font-size: 14px; }
+              th, td { border: 1px solid #cfc6b8; padding: 8px 10px; text-align: left; }
+              th { background: #f3efe7; }
+              .meta { margin-top: 16px; font-size: 12px; color: #666; }
+              @media print { .no-print { display: none; } }
+            </style>
+          </head>
+          <body>
+            <div class="no-print" style="margin-bottom:16px;"><button onclick="window.print()">Print / Save PDF</button></div>
+            <h1>${title}</h1>
+            <p class="sub">Generated from Front Desk Inventory</p>
+            <table>
+              <thead>
+                <tr><th>SKU</th><th>Item</th><th>Category</th><th>Location</th><th>Current</th><th>Minimum</th><th>Status</th></tr>
+              </thead>
+              <tbody>${rows || '<tr><td colspan="7">No items to show.</td></tr>'}</tbody>
+            </table>
+            <div class="meta">Generated ${new Date().toLocaleString()}</div>
+          </body>
+        </html>
+      `;
+    }
+
+    function openFrontdeskReport(title, items) {
+      const reportWindow = window.open('', '_blank', 'noopener,noreferrer,width=1100,height=800');
+      if (!reportWindow) {
+        window.alert('Popup blocked. Please allow popups to open the report.');
+        return;
+      }
+      reportWindow.document.open();
+      reportWindow.document.write(buildFrontdeskReportHtml(title, items));
+      reportWindow.document.close();
+      reportWindow.focus();
+    }
+
+    function downloadFrontdeskCsv(filename, items) {
+      const header = ['SKU', 'Item', 'Category', 'Location', 'Current', 'Minimum', 'Maximum', 'Status', 'Supplier', 'Notes'];
+      const lines = [header.join(',')];
+      items.forEach((item) => {
+        lines.push([
+          item.sku,
+          item.name,
+          item.category,
+          item.location,
+          item.current,
+          item.minimum,
+          item.maximum,
+          getFrontdeskStatus(item),
+          item.supplier,
+          item.notes
+        ].map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(','));
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     }
 
     function showPinLock() {
@@ -4295,6 +4450,10 @@
     const frontdeskResetFiltersBtn = document.getElementById('frontdeskResetFilters');
     const frontdeskAddToggleBtn = document.getElementById('frontdeskAddToggle');
     const frontdeskCancelBtn = document.getElementById('frontdeskCancelBtn');
+    const frontdeskLowStockBtn = document.getElementById('frontdeskLowStockBtn');
+    const frontdeskOutOfStockBtn = document.getElementById('frontdeskOutOfStockBtn');
+    const frontdeskExportPdfBtn = document.getElementById('frontdeskExportPdfBtn');
+    const frontdeskExportExcelBtn = document.getElementById('frontdeskExportExcelBtn');
 
     [frontdeskSearchInput, frontdeskCategoryFilterEl, frontdeskStatusFilterEl].forEach((el) => {
       if (el) el.addEventListener('input', renderFrontdeskInventory);
@@ -4321,6 +4480,31 @@
       frontdeskCancelBtn.addEventListener('click', () => {
         const form = document.getElementById('frontdeskItemForm');
         if (form) form.reset();
+      });
+    }
+
+    if (frontdeskLowStockBtn) {
+      frontdeskLowStockBtn.addEventListener('click', () => {
+        openFrontdeskReport('Front Desk Low Stock Report', getFrontdeskReportItems('Low Stock'));
+      });
+    }
+
+    if (frontdeskOutOfStockBtn) {
+      frontdeskOutOfStockBtn.addEventListener('click', () => {
+        openFrontdeskReport('Front Desk Out of Stock Report', getFrontdeskReportItems('Out of Stock'));
+      });
+    }
+
+    if (frontdeskExportPdfBtn) {
+      frontdeskExportPdfBtn.addEventListener('click', () => {
+        openFrontdeskReport('Front Desk Inventory Report', frontdeskItems);
+      });
+    }
+
+    if (frontdeskExportExcelBtn) {
+      frontdeskExportExcelBtn.addEventListener('click', () => {
+        const reportDate = new Date().toISOString().slice(0, 10);
+        downloadFrontdeskCsv(`front-desk-inventory-${reportDate}.csv`, frontdeskItems);
       });
     }
 
