@@ -3785,6 +3785,36 @@
 
       function selectPayload(payload) {
         if (!payload || typeof payload !== 'object') return payload;
+        const stockType = String(payload.stock_type || payload.type || '').toLowerCase();
+        if (stockType === 'frontdesk_inventory') {
+          return {
+            id: payload.id,
+            stock_type: payload.stock_type || payload.type,
+            type: payload.type || payload.stock_type,
+            item_name: payload.item_name,
+            sku: payload.sku,
+            category: payload.category,
+            location_name: payload.location_name,
+            location: payload.location || payload.location_name,
+            current_stock: payload.current_stock,
+            quantity: payload.quantity,
+            minimum_stock: payload.minimum_stock,
+            min_stock: payload.min_stock,
+            maximum_stock: payload.maximum_stock,
+            max_stock: payload.max_stock,
+            reorder_qty: payload.reorder_qty,
+            order_quantity: payload.order_quantity,
+            supplier: payload.supplier,
+            unit: payload.unit,
+            notes: payload.notes,
+            updated_by: payload.updated_by,
+            updated_at: payload.updated_at,
+            last_checked: payload.last_checked,
+            added_timestamp: payload.added_timestamp,
+            date_added: payload.date_added,
+            is_archived: payload.is_archived
+          };
+        }
         if (payload.type) {
           return {
             id: payload.id,
@@ -4199,6 +4229,11 @@
         history: [{ title: 'Added item', detail: 'New item entered', date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }]
       };
 
+      const localFrontdeskItem = {
+        ...item,
+        history: Array.isArray(item.history) ? item.history.map((entry) => ({ ...entry })) : []
+      };
+
       const nowIso = new Date().toISOString();
       const existingItem = frontdeskItems.find((entry) => entry.sku === item.sku || entry.name === item.name);
       const payload = {
@@ -4234,6 +4269,10 @@
         if (messageEl) messageEl.textContent = 'Save failed. Please try again.';
         return;
       }
+
+      frontdeskItems = [localFrontdeskItem, ...frontdeskItems.filter((entry) => entry.id !== localFrontdeskItem.id)];
+      frontdeskSelectedItemId = localFrontdeskItem.id;
+      renderFrontdeskInventory();
 
       if (messageEl) messageEl.textContent = `${name} synced to Google Sheets.`;
       if (nameInput) nameInput.value = '';
